@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio & Portfólio | Fabio Benedetti</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; }
+        .bg-grain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('https://grainy-gradients.vercel.app/noise.svg'); opacity: 0.02; pointer-events: none; z-index: 9999; }
+        .bio-text { line-height: 1.8; color: #ccc; font-weight: 300; white-space: pre-wrap; }
+        .section-title { letter-spacing: -0.05em; }
+        .video-card { background: #111; border: 1px solid #222; transition: all 0.4s; }
+        .video-card:hover { border-color: #444; transform: translateY(-3px); }
+    </style>
+</head>
+<body class="selection:bg-white selection:text-black">
+    <div class="bg-grain"></div>
+
+    <nav class="p-8 flex justify-between items-center border-b border-white/5">
+        <a href="index.html" class="text-sm font-bold tracking-tighter hover:text-neutral-500 transition-colors">← VOLTAR AO STUDIO</a>
+        <h1 class="text-xs uppercase tracking-[0.3em] font-light text-neutral-500">Fabio Benedetti • Biografia</h1>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-6 py-20">
+        <!-- SEÇÃO BIO -->
+        <section class="grid md:grid-cols-2 gap-20 items-start mb-32">
+            <div>
+                <h2 class="text-5xl md:text-7xl font-bold section-title mb-10">O Humano por trás do <span class="italic text-neutral-600">Som.</span></h2>
+                <div id="bio-content" class="bio-text text-lg">
+                    <div class="animate-pulse space-y-4">
+                        <div class="h-4 bg-neutral-900 rounded w-full"></div>
+                        <div class="h-4 bg-neutral-900 rounded w-5/6"></div>
+                        <div class="h-4 bg-neutral-900 rounded w-4/6"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="sticky top-20">
+                <div class="aspect-[4/5] bg-neutral-900 rounded-3xl overflow-hidden grayscale hover:grayscale-0 transition-all duration-1000 border border-white/10">
+                    <img src="https://images.unsplash.

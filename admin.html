@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -13,6 +14,8 @@
         .btn-primary:hover { background: #ccc; transform: translateY(-2px); }
         .btn-primary:disabled { background: #444; color: #888; cursor: not-allowed; }
         .hidden { display: none; }
+        .tab-btn { border-bottom: 2px solid transparent; color: #666; transition: all 0.3s; padding: 10px 0; }
+        .tab-btn.active { border-color: white; color: white; }
     </style>
 </head>
 <body class="p-6 md:p-12">
@@ -24,16 +27,22 @@
             <input type="password" id="login-pass" placeholder="Senha" class="input-dark" required>
             <button type="submit" class="w-full btn-primary">ENTRAR</button>
         </form>
-        <p class="text-[10px] text-neutral-600 mt-4 text-center">Use o e-mail cadastrado no seu Firebase Authentication.</p>
     </div>
 
-    <div id="admin-dashboard" class="max-w-5xl mx-auto hidden">
+    <div id="admin-dashboard" class="max-w-6xl mx-auto hidden">
         <div class="flex justify-between items-center mb-12 border-b border-white/10 pb-6">
             <h1 class="text-2xl font-bold tracking-tighter">PAINEL <span class="text-neutral-500">HUMANO</span></h1>
             <button id="logout-btn" class="bg-red-900/20 text-red-500 px-4 py-2 rounded-lg text-xs font-bold hover:bg-red-900/40">SAIR</button>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-12">
+        <!-- NAVEGAÇÃO DE ABAS -->
+        <div class="flex space-x-8 mb-12 overflow-x-auto whitespace-nowrap">
+            <button onclick="switchTab('conteudo')" id="tab-conteudo" class="tab-btn active uppercase text-[10px] tracking-widest font-bold">Conteúdo Principal</button>
+            <button onclick="switchTab('bio')" id="tab-bio" class="tab-btn uppercase text-[10px] tracking-widest font-bold">Biografia & Bio</button>
+        </div>
+
+        <!-- ABA CONTEÚDO PRINCIPAL -->
+        <div id="section-conteudo" class="grid md:grid-cols-2 gap-12">
             <section class="bg-neutral-900 p-8 rounded-3xl border border-white/5">
                 <h2 class="text-xl font-bold mb-6 italic">🎬 Novo Vídeo</h2>
                 <form id="video-form" class="space-y-4 mb-8">
@@ -41,7 +50,7 @@
                     <input type="url" id="video-url" placeholder="URL do YouTube" class="input-dark" required>
                     <button type="submit" id="video-btn" class="w-full btn-primary">ADICIONAR</button>
                 </form>
-                <div id="admin-videos-list" class="space-y-2"></div>
+                <div id="admin-videos-list" class="space-y-2 max-h-[400px] overflow-y-auto"></div>
             </section>
 
             <section class="bg-neutral-900 p-8 rounded-3xl border border-white/5">
@@ -53,15 +62,37 @@
                         <div id="progress-bar" class="bg-white h-full transition-all w-0"></div>
                     </div>
                 </div>
-                <div id="admin-photos-list" class="grid grid-cols-3 gap-2"></div>
+                <div id="admin-photos-list" class="grid grid-cols-3 gap-2 max-h-[400px] overflow-y-auto"></div>
             </section>
+        </div>
+
+        <!-- ABA BIO & PORTFÓLIO -->
+        <div id="section-bio" class="hidden">
+            <div class="bg-neutral-900 p-8 rounded-3xl border border-white/5 max-w-3xl mx-auto">
+                <h2 class="text-2xl font-bold mb-8 italic text-gradient">Gerenciar Biografia</h2>
+                <form id="bio-form" class="space-y-6">
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-neutral-500 mb-2">Texto da Biografia</label>
+                        <textarea id="admin-bio-text" rows="8" class="input-dark" placeholder="Escreva sua história aqui..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-neutral-500 mb-2">Introdução do Portfólio</label>
+                        <textarea id="admin-portfolio-text" rows="4" class="input-dark" placeholder="Fale sobre seu estilo de produção..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-neutral-500 mb-2">URL da Foto de Perfil (Opcional)</label>
+                        <input type="url" id="admin-bio-photo" class="input-dark" placeholder="Link de uma imagem sua">
+                    </div>
+                    <button type="submit" id="bio-save-btn" class="w-full btn-primary">SALVAR ALTERAÇÕES DA BIO</button>
+                </form>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp, query, orderBy, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
@@ -79,12 +110,20 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
+        // ABAS
+        window.switchTab = (tab) => {
+            document.getElementById('section-conteudo').classList.toggle('hidden', tab !== 'conteudo');
+            document.getElementById('section-bio').classList.toggle('hidden', tab !== 'bio');
+            document.getElementById('tab-conteudo').classList.toggle('active', tab === 'conteudo');
+            document.getElementById('tab-bio').classList.toggle('active', tab === 'bio');
+        };
+
         // LOGIN
         document.getElementById('login-form').onsubmit = async (e) => {
             e.preventDefault();
             try {
                 await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value);
-            } catch (err) { alert('Erro de Login: Verifique se o e-mail e senha estão corretos no seu Firebase.'); }
+            } catch (err) { alert('Erro de Login!'); }
         };
 
         document.getElementById('logout-btn').onclick = () => signOut(auth);
@@ -94,20 +133,51 @@
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 loadContent();
+                loadBioData();
             } else {
                 document.getElementById('login-screen').classList.remove('hidden');
                 document.getElementById('admin-dashboard').classList.add('hidden');
             }
         });
 
+        async function loadBioData() {
+            const docSnap = await getDoc(doc(db, "site_content", "bio_page"));
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                document.getElementById('admin-bio-text').value = data.bioText || '';
+                document.getElementById('admin-portfolio-text').value = data.portfolioText || '';
+                document.getElementById('admin-bio-photo').value = data.photoUrl || '';
+            }
+        }
+
+        document.getElementById('bio-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('bio-save-btn');
+            btn.disabled = true;
+            btn.innerText = 'SALVANDO...';
+            try {
+                await setDoc(doc(db, "site_content", "bio_page"), {
+                    bioText: document.getElementById('admin-bio-text').value,
+                    portfolioText: document.getElementById('admin-portfolio-text').value,
+                    photoUrl: document.getElementById('admin-bio-photo').value,
+                    updatedAt: serverTimestamp()
+                }, { merge: true });
+                alert('Bio atualizada com sucesso!');
+            } catch(e) { alert('Erro ao salvar Bio.'); }
+            finally {
+                btn.disabled = false;
+                btn.innerText = 'SALVAR ALTERAÇÕES DA BIO';
+            }
+        };
+
         function loadContent() {
             onSnapshot(query(collection(db, "videos"), orderBy("timestamp", "desc")), (snap) => {
                 const list = document.getElementById('admin-videos-list');
                 list.innerHTML = '';
                 snap.forEach(d => {
-                    list.innerHTML += `<div class="flex justify-between p-2 bg-black/40 rounded text-[10px]">
-                        <span class="truncate pr-2">${d.data().titulo}</span>
-                        <button onclick="deleteVideo('${d.id}')" class="text-red-500 font-bold">REMOVER</button>
+                    list.innerHTML += `<div class="flex justify-between items-center p-3 bg-black/40 rounded border border-white/5 text-[10px]">
+                        <span class="truncate pr-4">${d.data().titulo}</span>
+                        <button onclick="deleteVideo('${d.id}')" class="text-red-500 font-bold hover:text-red-400">EXCLUIR</button>
                     </div>`;
                 });
             });
@@ -143,38 +213,28 @@
                     timestamp: serverTimestamp()
                 });
                 e.target.reset();
-            } catch(err) { alert('Erro de permissão no Firestore. Verifique as Rules.'); }
+            } catch(err) { alert('Erro ao adicionar vídeo.'); }
             finally { btn.disabled = false; }
         };
 
         document.getElementById('upload-photo-btn').onclick = async () => {
             const file = document.getElementById('photo-file').files[0];
             if(!file) return alert('Selecione uma imagem');
-            
             const btn = document.getElementById('upload-photo-btn');
             const bar = document.getElementById('progress-bar');
             const progressContainer = document.getElementById('upload-progress');
-            
             const path = `galeria/${Date.now()}_${file.name}`;
             const storageRef = ref(storage, path);
             const uploadTask = uploadBytesResumable(storageRef, file);
-            
             btn.disabled = true;
-            btn.innerText = 'ENVIANDO...';
             progressContainer.classList.remove('hidden');
-
             uploadTask.on('state_changed', 
                 (snap) => { bar.style.width = (snap.bytesTransferred / snap.totalBytes) * 100 + '%'; }, 
-                (err) => { 
-                    alert('Erro no Storage: ' + err.message + '. Verifique as Rules do Storage!'); 
-                    btn.disabled = false; 
-                    btn.innerText = 'ENVIAR FOTO';
-                }, 
+                (err) => { alert('Erro no Upload'); btn.disabled = false; }, 
                 async () => {
                     const url = await getDownloadURL(uploadTask.snapshot.ref);
                     await addDoc(collection(db, "fotos"), { url, path, timestamp: serverTimestamp() });
                     btn.disabled = false;
-                    btn.innerText = 'ENVIAR FOTO';
                     progressContainer.classList.add('hidden');
                     bar.style.width = '0%';
                 }
