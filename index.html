@@ -11,7 +11,7 @@
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
-            background-color: #000;
+            background-color: #0a0a0a;
             margin: 0;
             padding: 0;
             color: #fff;
@@ -21,7 +21,7 @@
         }
     </style>
     <script>
-        // Previne erro de 'process is not defined' que quebra o React em alguns ambientes de produção
+        // Shim essencial para evitar que bibliotecas que dependem de 'process' quebrem o site
         window.process = { env: { NODE_ENV: 'production' } };
     </script>
     <script type="importmap">
@@ -40,8 +40,12 @@
 </head>
 <body class="bg-neutral-950 text-neutral-100">
     <div id="root">
-        <!-- O conteúdo será montado pelo React aqui -->
+        <div class="flex items-center justify-center h-screen">
+            <p class="text-neutral-500 animate-pulse uppercase tracking-widest text-xs">Carregando Studio...</p>
+        </div>
     </div>
+    <!-- Esta linha abaixo é o que faz o site funcionar -->
+    <script type="module" src="index.tsx"></script>
 <script type="module" src="/index.tsx"></script>
 </body>
 </html>
