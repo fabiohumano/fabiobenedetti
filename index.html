@@ -6,14 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- 2. PRIORIDADE ABSOLUTA PARA IMAGEM (O WhatsApp lê os primeiros 10-15 lines) -->
-    <!-- Plano A: Cartão de Visita Customizado -->
-    <meta itemprop="image" content="https://fabiohumano.github.io/studio/cartao.jpg?v=3.0">
-    <meta property="og:image" content="https://fabiohumano.github.io/studio/cartao.jpg?v=3.0">
-    <meta property="og:image:secure_url" content="https://fabiohumano.github.io/studio/cartao.jpg?v=3.0">
-    
-    <!-- Plano B: Imagem de Alta Qualidade do Estúdio (Fallback caso o cartão falhe) -->
-    <meta property="og:image" content="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop">
+    <!-- 2. PRIORIDADE ABSOLUTA PARA IMAGEM (Apenas o cartao.jpg v4.0) -->
+    <!-- Removido o Plano B do cabeçalho para evitar que o WhatsApp escolha a imagem errada -->
+    <meta itemprop="image" content="https://fabiohumano.github.io/studio/cartao.jpg?v=4.0">
+    <meta property="og:image" content="https://fabiohumano.github.io/studio/cartao.jpg?v=4.0">
+    <meta property="og:image:secure_url" content="https://fabiohumano.github.io/studio/cartao.jpg?v=4.0">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -31,7 +28,9 @@
     <meta property="og:site_name" content="HUMANO Studio">
     
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://fabiohumano.github.io/studio/cartao.jpg?v=3.0">
+    <meta name="twitter:title" content="HUMANO Studio | Fabio Benedetti">
+    <meta name="twitter:description" content="Produções Musicais e Trilhas Sonoras.">
+    <meta name="twitter:image" content="https://fabiohumano.github.io/studio/cartao.jpg?v=4.0">
 
     <!-- 5. SCHEMA.ORG (JSON-LD) - Redundância Estrutural -->
     <script type="application/ld+json">
@@ -40,7 +39,7 @@
       "@type": "MusicStudio",
       "name": "HUMANO Studio",
       "url": "https://fabiohumano.github.io/studio/",
-      "image": "https://fabiohumano.github.io/studio/cartao.jpg?v=3.0",
+      "image": "https://fabiohumano.github.io/studio/cartao.jpg?v=4.0",
       "description": "Produções Musicais e Trilhas Sonoras por Fabio Benedetti."
     }
     </script>
