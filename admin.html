@@ -73,6 +73,20 @@
                 <h2 class="text-2xl font-bold mb-8 italic text-gradient">Sua História no Site</h2>
                 <form id="bio-form" class="space-y-8">
                     <div>
+                        <label class="block text-[10px] uppercase tracking-[0.2em] text-neutral-500 mb-3">Sua Foto de Perfil</label>
+                        <div class="flex flex-col gap-4">
+                            <div id="bio-photo-preview-container" class="hidden mb-2">
+                                <img id="bio-photo-preview" src="" class="w-32 h-40 object-cover rounded-xl border border-white/10 shadow-lg">
+                            </div>
+                            <div class="flex flex-col md:flex-row gap-4 items-center">
+                                <input type="file" id="admin-bio-photo-file" accept="image/*" class="text-xs text-neutral-400 bg-black/20 p-2 rounded-lg w-full md:w-auto">
+                                <button type="button" id="upload-bio-photo-btn" class="w-full md:w-auto bg-neutral-800 hover:bg-neutral-700 text-white text-[10px] font-bold py-3 px-6 rounded-lg uppercase tracking-widest transition-all">Upload Foto</button>
+                            </div>
+                            <!-- Campo escondido para guardar a URL final -->
+                            <input type="hidden" id="admin-bio-photo-url">
+                        </div>
+                    </div>
+                    <div>
                         <label class="block text-[10px] uppercase tracking-[0.2em] text-neutral-500 mb-3">Sua Biografia</label>
                         <textarea id="admin-bio-text" rows="12" class="input-dark text-sm" placeholder="Escreva sua trajetória aqui..."></textarea>
                     </div>
@@ -80,11 +94,7 @@
                         <label class="block text-[10px] uppercase tracking-[0.2em] text-neutral-500 mb-3">Introdução do Portfólio</label>
                         <textarea id="admin-portfolio-text" rows="4" class="input-dark text-sm" placeholder="Texto curto sobre seus vídeos..."></textarea>
                     </div>
-                    <div>
-                        <label class="block text-[10px] uppercase tracking-[0.2em] text-neutral-500 mb-3">URL da sua Foto (Opcional)</label>
-                        <input type="url" id="admin-bio-photo" class="input-dark text-sm" placeholder="https://exemplo.com/suafoto.jpg">
-                    </div>
-                    <button type="submit" id="bio-save-btn" class="w-full btn-primary uppercase tracking-widest py-4">SALVAR NO SITE AGORA</button>
+                    <button type="submit" id="bio-save-btn" class="w-full btn-primary uppercase tracking-widest py-4 mt-8">SALVAR TUDO NO SITE</button>
                 </form>
             </div>
         </div>
@@ -144,9 +154,48 @@
                 const data = docSnap.data();
                 document.getElementById('admin-bio-text').value = data.bioText || '';
                 document.getElementById('admin-portfolio-text').value = data.portfolioText || '';
-                document.getElementById('admin-bio-photo').value = data.photoUrl || '';
+                if (data.photoUrl) {
+                    document.getElementById('admin-bio-photo-url').value = data.photoUrl;
+                    document.getElementById('bio-photo-preview').src = data.photoUrl;
+                    document.getElementById('bio-photo-preview-container').classList.remove('hidden');
+                }
             }
         }
+
+        // --- SISTEMA DE UPLOAD DA FOTO DE PERFIL ---
+        document.getElementById('upload-bio-photo-btn').onclick = async () => {
+            const file = document.getElementById('admin-bio-photo-file').files[0];
+            if(!file) { alert('Selecione uma foto primeiro.'); return; }
+            
+            const btn = document.getElementById('upload-bio-photo-btn');
+            btn.disabled = true;
+            btn.innerText = 'ENVIANDO...';
+
+            const path = `perfil/${Date.now()}_${file.name}`;
+            const storageRef = ref(storage, path);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on('state_changed', 
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    btn.innerText = `LENDO ${Math.round(progress)}%`;
+                }, 
+                (error) => {
+                    alert('Erro no upload.');
+                    btn.disabled = false;
+                    btn.innerText = 'UPLOAD FOTO';
+                }, 
+                async () => {
+                    const url = await getDownloadURL(uploadTask.snapshot.ref);
+                    document.getElementById('admin-bio-photo-url').value = url;
+                    document.getElementById('bio-photo-preview').src = url;
+                    document.getElementById('bio-photo-preview-container').classList.remove('hidden');
+                    alert('Foto de perfil carregada com sucesso! Não esqueça de Salvar a Bio abaixo.');
+                    btn.disabled = false;
+                    btn.innerText = 'FOTO PRONTA';
+                }
+            );
+        };
 
         document.getElementById('bio-form').onsubmit = async (e) => {
             e.preventDefault();
@@ -157,12 +206,12 @@
                 await setDoc(doc(db, "site_content", "bio_page"), {
                     bioText: document.getElementById('admin-bio-text').value,
                     portfolioText: document.getElementById('admin-portfolio-text').value,
-                    photoUrl: document.getElementById('admin-bio-photo').value,
+                    photoUrl: document.getElementById('admin-bio-photo-url').value,
                     updatedAt: serverTimestamp()
                 }, { merge: true });
-                alert('Atualizado com sucesso!');
+                alert('Tudo atualizado com sucesso!');
             } catch(e) { alert('Erro ao salvar.'); }
-            finally { btn.disabled = false; btn.innerText = 'SALVAR NO SITE AGORA'; }
+            finally { btn.disabled = false; btn.innerText = 'SALVAR TUDO NO SITE'; }
         };
 
         function loadContent() {
