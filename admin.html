@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | HUMANO Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #0a0a0a; color: white; font-family: 'Inter', sans-serif; }
@@ -18,6 +19,12 @@
         .tab-btn { border-bottom: 2px solid transparent; color: #666; transition: all 0.3s; padding: 10px 0; font-size: 10px; letter-spacing: 0.1em; font-weight: bold; }
         .tab-btn.active { border-color: white; color: white; }
         .text-gradient { background: linear-gradient(to right, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Drag and Drop Styles */
+        .drag-handle { cursor: grab; color: #444; transition: color 0.3s; }
+        .drag-handle:hover { color: #fff; }
+        .sortable-ghost { opacity: 0.3; background: #222 !important; border: 1px dashed #444 !important; }
+        .sortable-chosen { background: #111 !important; }
     </style>
 </head>
 <body class="p-6 md:p-12">
@@ -46,16 +53,17 @@
             <button onclick="switchTab('bio')" id="tab-bio" class="tab-btn uppercase">Biografia</button>
         </div>
 
-        <!-- ABA CONTEÚDO (VÍDEOS E GALERIA) -->
+        <!-- ABA CONTEÚDO -->
         <div id="section-conteudo" class="grid md:grid-cols-2 gap-12">
             <section class="bg-neutral-900 p-8 rounded-3xl border border-white/5">
-                <h2 class="text-xl font-bold mb-6 italic text-gradient">🎬 Vídeos (Home/Bio)</h2>
+                <h2 class="text-xl font-bold mb-2 italic text-gradient">🎬 Vídeos (Home/Bio)</h2>
+                <p class="text-[9px] text-neutral-500 uppercase mb-6 tracking-widest">Arraste para organizar a ordem de exibição</p>
                 <form id="video-form" class="space-y-4 mb-8">
                     <input type="text" id="video-title" placeholder="Título" class="input-dark" required>
                     <input type="url" id="video-url" placeholder="URL YouTube" class="input-dark" required>
-                    <button type="submit" id="video-btn" class="w-full btn-primary uppercase text-xs">Adicionar</button>
+                    <button type="submit" id="video-btn" class="w-full btn-primary uppercase text-xs">Adicionar Vídeo</button>
                 </form>
-                <div id="admin-videos-list" class="space-y-2 max-h-[400px] overflow-y-auto"></div>
+                <div id="admin-videos-list" class="space-y-2 max-h-[500px] overflow-y-auto pr-2"></div>
             </section>
 
             <section class="bg-neutral-900 p-8 rounded-3xl border border-white/5">
@@ -68,11 +76,11 @@
             </section>
         </div>
 
-        <!-- ABA PORTFÓLIO DETALHADO (NOVA) -->
+        <!-- ABA PORTFÓLIO DETALHADO -->
         <div id="section-trabalhos" class="hidden">
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="md:col-span-1">
-                    <section class="bg-neutral-900 p-8 rounded-3xl border border-white/5">
+                    <section class="bg-neutral-900 p-8 rounded-3xl border border-white/5 sticky top-12">
                         <h2 class="text-xl font-bold mb-6 italic text-gradient">Novo Trabalho</h2>
                         <form id="work-form" class="space-y-4">
                             <input type="text" id="work-title" placeholder="Título do Projeto" class="input-dark" required>
@@ -88,8 +96,9 @@
                 </div>
                 <div class="md:col-span-2">
                     <section class="bg-neutral-900 p-8 rounded-3xl border border-white/5">
-                        <h2 class="text-xl font-bold mb-6 italic text-gradient">Trabalhos Publicados</h2>
-                        <div id="admin-works-list" class="space-y-4 max-h-[600px] overflow-y-auto">
+                        <h2 class="text-xl font-bold mb-2 italic text-gradient">Trabalhos Publicados</h2>
+                        <p class="text-[9px] text-neutral-500 uppercase mb-6 tracking-widest">Arraste para organizar seu portfólio</p>
+                        <div id="admin-works-list" class="space-y-4 max-h-[800px] overflow-y-auto pr-2">
                             <!-- Lista de trabalhos -->
                         </div>
                     </section>
@@ -132,7 +141,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp, query, orderBy, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp, query, orderBy, setDoc, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
@@ -150,6 +159,7 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
+        // --- SISTEMA DE TABS ---
         window.switchTab = (tab) => {
             document.getElementById('section-conteudo').classList.toggle('hidden', tab !== 'conteudo');
             document.getElementById('section-trabalhos').classList.toggle('hidden', tab !== 'trabalhos');
@@ -160,6 +170,7 @@
             document.getElementById('tab-bio').classList.toggle('active', tab === 'bio');
         };
 
+        // --- AUTENTICAÇÃO ---
         document.getElementById('login-form').onsubmit = async (e) => {
             e.preventDefault();
             try { await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value); } 
@@ -172,6 +183,7 @@
             if (user) {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.remove('hidden');
+                initReordering();
                 loadContent();
                 loadBioData();
                 loadWorks();
@@ -180,6 +192,43 @@
                 document.getElementById('admin-dashboard').classList.add('hidden');
             }
         });
+
+        // --- REORDENAÇÃO (DRAG & DROP) ---
+        function initReordering() {
+            // Reordenar Trabalhos
+            const worksList = document.getElementById('admin-works-list');
+            Sortable.create(worksList, {
+                animation: 150,
+                handle: '.drag-handle',
+                ghostClass: 'sortable-ghost',
+                onEnd: async () => {
+                    const items = worksList.querySelectorAll('[data-id]');
+                    const batch = writeBatch(db);
+                    items.forEach((item, index) => {
+                        const id = item.getAttribute('data-id');
+                        batch.update(doc(db, "trabalhos", id), { ordem: index });
+                    });
+                    await batch.commit();
+                }
+            });
+
+            // Reordenar Vídeos
+            const videosList = document.getElementById('admin-videos-list');
+            Sortable.create(videosList, {
+                animation: 150,
+                handle: '.drag-handle',
+                ghostClass: 'sortable-ghost',
+                onEnd: async () => {
+                    const items = videosList.querySelectorAll('[data-id]');
+                    const batch = writeBatch(db);
+                    items.forEach((item, index) => {
+                        const id = item.getAttribute('data-id');
+                        batch.update(doc(db, "videos", id), { ordem: index });
+                    });
+                    await batch.commit();
+                }
+            });
+        }
 
         // --- ABA PORTFÓLIO (TRABALHOS) ---
         document.getElementById('work-form').onsubmit = async (e) => {
@@ -201,12 +250,15 @@
             }
 
             try {
+                // Novo item entra com ordem negativa para ser o primeiro no "ordem asc"
+                const novaOrdem = Date.now() * -1;
                 await addDoc(collection(db, "trabalhos"), {
                     titulo: document.getElementById('work-title').value,
                     data: document.getElementById('work-date').value,
                     descricao: document.getElementById('work-desc').value,
                     fotoUrl,
                     fotoPath,
+                    ordem: novaOrdem,
                     timestamp: serverTimestamp()
                 });
                 alert('Trabalho publicado!');
@@ -216,19 +268,30 @@
         };
 
         function loadWorks() {
-            onSnapshot(query(collection(db, "trabalhos"), orderBy("timestamp", "desc")), (snap) => {
+            onSnapshot(collection(db, "trabalhos"), (snap) => {
                 const list = document.getElementById('admin-works-list');
+                let works = [];
+                snap.forEach(d => works.push({id: d.id, ...d.data()}));
+                
+                // Ordenação inteligente: prioriza 'ordem', senão 'timestamp'
+                works.sort((a, b) => {
+                    if (a.ordem !== undefined && b.ordem !== undefined) return a.ordem - b.ordem;
+                    return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0);
+                });
+
                 list.innerHTML = '';
-                snap.forEach(d => {
-                    const data = d.data();
+                works.forEach(data => {
                     list.innerHTML += `
-                        <div class="flex items-center gap-4 bg-black/40 p-4 rounded-xl border border-white/5">
-                            <img src="${data.fotoUrl || 'https://via.placeholder.com/100'}" class="w-16 h-16 object-cover rounded">
+                        <div data-id="${data.id}" class="flex items-center gap-4 bg-black/40 p-4 rounded-xl border border-white/5 transition-colors hover:border-white/10">
+                            <div class="drag-handle p-2">
+                                <svg width="12" height="18" viewBox="0 0 12 18" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="2" cy="9" r="1.5"/><circle cx="2" cy="16" r="1.5"/><circle cx="10" cy="2" r="1.5"/><circle cx="10" cy="9" r="1.5"/><circle cx="10" cy="16" r="1.5"/></svg>
+                            </div>
+                            <img src="${data.fotoUrl || 'https://via.placeholder.com/100'}" class="w-12 h-12 object-cover rounded shadow-lg">
                             <div class="flex-1">
                                 <h4 class="font-bold text-sm">${data.titulo}</h4>
                                 <p class="text-[10px] text-neutral-500">${data.data || ''}</p>
                             </div>
-                            <button onclick="deleteWork('${d.id}', '${data.fotoPath}')" class="text-red-500 text-[10px] font-bold">APAGAR</button>
+                            <button onclick="deleteWork('${data.id}', '${data.fotoPath}')" class="text-red-500/50 hover:text-red-500 text-[10px] font-bold px-4">APAGAR</button>
                         </div>
                     `;
                 });
@@ -285,11 +348,27 @@
         };
 
         function loadContent() {
-            onSnapshot(query(collection(db, "videos"), orderBy("timestamp", "desc")), (snap) => {
+            onSnapshot(collection(db, "videos"), (snap) => {
                 const list = document.getElementById('admin-videos-list');
+                let videos = [];
+                snap.forEach(d => videos.push({id: d.id, ...d.data()}));
+                
+                videos.sort((a, b) => {
+                    if (a.ordem !== undefined && b.ordem !== undefined) return a.ordem - b.ordem;
+                    return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0);
+                });
+
                 list.innerHTML = '';
-                snap.forEach(d => {
-                    list.innerHTML += `<div class="p-2 border border-white/5 flex justify-between bg-black/20 text-[10px]"><span class="truncate">${d.data().titulo}</span><button onclick="deleteVideo('${d.id}')" class="text-red-500 ml-4">APAGAR</button></div>`;
+                videos.forEach(d => {
+                    list.innerHTML += `
+                        <div data-id="${d.id}" class="p-3 border border-white/5 flex items-center bg-black/20 text-[10px] rounded-lg">
+                            <div class="drag-handle mr-3">
+                                <svg width="10" height="14" viewBox="0 0 12 18" fill="currentColor" opacity="0.3"><circle cx="2" cy="2" r="1.5"/><circle cx="2" cy="9" r="1.5"/><circle cx="2" cy="16" r="1.5"/><circle cx="10" cy="2" r="1.5"/><circle cx="10" cy="9" r="1.5"/><circle cx="10" cy="16" r="1.5"/></svg>
+                            </div>
+                            <span class="truncate flex-1 font-semibold">${d.titulo}</span>
+                            <button onclick="deleteVideo('${d.id}')" class="text-red-500/50 hover:text-red-500 ml-4 font-bold uppercase">Apagar</button>
+                        </div>
+                    `;
                 });
             });
 
@@ -297,17 +376,23 @@
                 const list = document.getElementById('admin-photos-list');
                 list.innerHTML = '';
                 snap.forEach(d => {
-                    list.innerHTML += `<div class="relative"><img src="${d.data().url}" class="aspect-square object-cover rounded"><button onclick="deletePhoto('${d.id}', '${d.data().path}')" class="absolute top-0 right-0 bg-red-600 p-1 text-[8px]">X</button></div>`;
+                    list.innerHTML += `<div class="relative group"><img src="${d.data().url}" class="aspect-square object-cover rounded border border-white/5"><button onclick="deletePhoto('${d.id}', '${d.data().path}')" class="absolute top-1 right-1 bg-red-600 p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity text-[8px] font-bold">X</button></div>`;
                 });
             });
         }
 
-        window.deleteVideo = async (id) => { if(confirm('Excluir?')) await deleteDoc(doc(db, "videos", id)); };
+        window.deleteVideo = async (id) => { if(confirm('Excluir vídeo?')) await deleteDoc(doc(db, "videos", id)); };
         window.deletePhoto = async (id, path) => { if(confirm('Excluir foto?')) { await deleteDoc(doc(db, "fotos", id)); try{ await deleteObject(ref(storage, path)); }catch(e){} } };
 
         document.getElementById('video-form').onsubmit = async (e) => {
             e.preventDefault();
-            await addDoc(collection(db, "videos"), { titulo: document.getElementById('video-title').value, url: document.getElementById('video-url').value, timestamp: serverTimestamp() });
+            const novaOrdem = Date.now() * -1;
+            await addDoc(collection(db, "videos"), { 
+                titulo: document.getElementById('video-title').value, 
+                url: document.getElementById('video-url').value, 
+                ordem: novaOrdem,
+                timestamp: serverTimestamp() 
+            });
             e.target.reset();
         };
 

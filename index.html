@@ -200,7 +200,6 @@
         <div class="max-w-7xl">
             <div class="flex justify-between items-end mb-16">
                 <h3 style="font-size: 2rem; font-weight: 700;">Trabalhos <span style="color: #525252; font-style: italic;">Recentes</span></h3>
-                <!-- Removido link antigo para centralizar no novo botão principal -->
             </div>
             <div id="videos-container" class="grid md-grid-2" style="gap: 2.5rem;">
                 <div class="animate-pulse" style="background: #171717; height: 16rem; border-radius: 1.5rem;"></div>
@@ -245,11 +244,19 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        onSnapshot(query(collection(db, "videos"), orderBy("timestamp", "desc"), limit(4)), (snapshot) => {
+        onSnapshot(collection(db, "videos"), (snapshot) => {
             const container = document.getElementById('videos-container');
+            let videos = [];
+            snapshot.forEach(doc => videos.push({id: doc.id, ...doc.data()}));
+            
+            // Ordenação por campo manual, com limite de 4 para a Home
+            videos.sort((a, b) => {
+                if (a.ordem !== undefined && b.ordem !== undefined) return a.ordem - b.ordem;
+                return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0);
+            });
+
             container.innerHTML = '';
-            snapshot.forEach((doc) => {
-                const video = doc.data();
+            videos.slice(0, 4).forEach((video) => {
                 let videoId = '';
                 try {
                     const url = video.url;
