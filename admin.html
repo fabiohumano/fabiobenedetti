@@ -20,11 +20,11 @@
         .tab-btn.active { border-color: white; color: white; }
         .text-gradient { background: linear-gradient(to right, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* Drag and Drop Styles */
         .drag-handle { cursor: grab; color: #444; transition: color 0.3s; }
         .drag-handle:hover { color: #fff; }
         .sortable-ghost { opacity: 0.3; background: #222 !important; border: 1px dashed #444 !important; }
-        .sortable-chosen { background: #111 !important; }
+        
+        .edit-mode-active { border: 2px solid #ffffff !important; box-shadow: 0 0 30px rgba(255,255,255,0.05); }
     </style>
 </head>
 <body class="p-6 md:p-12">
@@ -40,106 +40,106 @@
 
     <div id="admin-dashboard" class="max-w-6xl mx-auto hidden">
         <div class="flex justify-between items-center mb-12 border-b border-white/10 pb-6">
-            <h1 class="text-2xl font-bold tracking-tighter">PAINEL <span class="text-neutral-500">HUMANO</span></h1>
-            <div class="flex items-center gap-4">
-                <a href="index.html" class="text-[10px] uppercase text-neutral-500 hover:text-white transition-colors">Ver Site</a>
-                <button id="logout-btn" class="bg-red-900/20 text-red-500 px-4 py-2 rounded-lg text-[10px] font-bold hover:bg-red-900/40 uppercase tracking-widest">Sair</button>
+            <h1 class="text-2xl font-bold tracking-tighter text-gradient">CÉREBRO <span class="text-neutral-600 font-light italic">Studio</span></h1>
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="text-[10px] uppercase text-neutral-500 hover:text-white transition-colors tracking-widest">Ver Site</a>
+                <button id="logout-btn" class="bg-red-900/10 text-red-500 px-4 py-2 rounded-lg text-[10px] font-bold hover:bg-red-900/30 uppercase tracking-widest transition-all">Sair</button>
             </div>
         </div>
 
-        <div class="flex space-x-8 mb-12 border-b border-white/5 overflow-x-auto">
-            <button onclick="switchTab('conteudo')" id="tab-conteudo" class="tab-btn active uppercase">Mídias Rápidas</button>
-            <button onclick="switchTab('trabalhos')" id="tab-trabalhos" class="tab-btn uppercase">Portfólio Detalhado</button>
-            <button onclick="switchTab('bio')" id="tab-bio" class="tab-btn uppercase">Biografia</button>
+        <div class="flex space-x-8 mb-12 border-b border-white/5">
+            <button onclick="switchTab('trabalhos')" id="tab-trabalhos" class="tab-btn active uppercase tracking-widest">Portfólio Completo</button>
+            <button onclick="switchTab('conteudo')" id="tab-conteudo" class="tab-btn uppercase tracking-widest">Mídias Rápidas</button>
+            <button onclick="switchTab('bio')" id="tab-bio" class="tab-btn uppercase tracking-widest">Biografia</button>
         </div>
 
-        <!-- ABA CONTEÚDO -->
-        <div id="section-conteudo" class="grid md:grid-cols-2 gap-12">
+        <!-- ABA PORTFÓLIO COMPLETO -->
+        <div id="section-trabalhos" class="grid md:grid-cols-3 gap-12">
+            <div class="md:col-span-1">
+                <section id="work-editor-container" class="bg-neutral-900 p-8 rounded-3xl border border-white/5 sticky top-12 transition-all duration-500">
+                    <h2 id="editor-title" class="text-xl font-bold mb-6 italic text-gradient">Novo Trabalho</h2>
+                    <form id="work-form" class="space-y-5">
+                        <input type="hidden" id="work-id">
+                        <input type="text" id="work-title" placeholder="Título do Projeto" class="input-dark" required>
+                        <input type="text" id="work-date" placeholder="Data (ex: Nov 2024)" class="input-dark">
+                        
+                        <div>
+                            <label class="block text-[10px] text-neutral-500 mb-2 uppercase tracking-widest">Foto Principal (Destaque)</label>
+                            <input type="file" id="work-file" accept="image/*" class="text-xs bg-black/30 p-2 rounded w-full">
+                            <div id="edit-photo-notice" class="hidden mt-2 text-[10px] text-neutral-500 italic">Deixe vazio para manter a foto atual.</div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] text-neutral-500 mb-2 uppercase tracking-widest">Vídeo do Projeto (Link YouTube)</label>
+                            <input type="url" id="work-video-url" placeholder="https://youtube.com/watch?v=..." class="input-dark text-xs">
+                        </div>
+
+                        <textarea id="work-desc" rows="5" placeholder="Descrição técnica e artística..." class="input-dark text-sm" required></textarea>
+                        
+                        <div class="pt-4 border-t border-white/5">
+                            <label class="block text-[10px] text-neutral-500 mb-2 uppercase tracking-widest">Galeria do Projeto (Várias Fotos)</label>
+                            <input type="file" id="work-gallery-files" accept="image/*" multiple class="text-xs bg-black/30 p-2 rounded w-full">
+                            <p id="gallery-info" class="text-[9px] text-neutral-600 mt-1">Fotos dos bastidores aparecem em mosaico.</p>
+                        </div>
+
+                        <div class="pt-4 border-t border-white/5 grid grid-cols-2 gap-2">
+                            <div class="col-span-2"><label class="block text-[10px] text-neutral-500 mb-2 uppercase tracking-widest">Botão de Link (Opcional)</label></div>
+                            <input type="url" id="work-link-url" placeholder="URL Link" class="input-dark text-[10px]">
+                            <input type="text" id="work-link-text" placeholder="Texto (ex: Spotify)" class="input-dark text-[10px]">
+                        </div>
+
+                        <div class="flex gap-2 pt-4">
+                            <button type="submit" id="work-submit-btn" class="flex-1 btn-primary uppercase tracking-widest py-4 text-xs">PUBLICAR</button>
+                            <button type="button" id="cancel-edit-btn" onclick="resetWorkEditor()" class="hidden bg-neutral-800 text-white px-5 rounded-lg text-xs uppercase font-bold hover:bg-neutral-700">X</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+            
+            <div class="md:col-span-2">
+                <section class="bg-neutral-900 p-8 rounded-3xl border border-white/5">
+                    <h2 class="text-xl font-bold mb-2 italic text-gradient">Seus Projetos</h2>
+                    <p class="text-[9px] text-neutral-600 uppercase mb-8 tracking-widest">Arraste para organizar a ordem no site</p>
+                    <div id="admin-works-list" class="space-y-4 max-h-[1000px] overflow-y-auto pr-4">
+                        <!-- Itens injetados -->
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- OUTRAS ABAS (Conteúdo e Bio) -->
+        <div id="section-conteudo" class="hidden grid md:grid-cols-2 gap-12">
+            <!-- ... código de vídeos rápidos ... -->
             <section class="bg-neutral-900 p-8 rounded-3xl border border-white/5">
-                <h2 class="text-xl font-bold mb-2 italic text-gradient">🎬 Vídeos (Home/Bio)</h2>
-                <p class="text-[9px] text-neutral-500 uppercase mb-6 tracking-widest">Arraste para organizar a ordem de exibição</p>
+                <h2 class="text-xl font-bold mb-6 italic text-gradient">🎬 Vídeos Curtos</h2>
                 <form id="video-form" class="space-y-4 mb-8">
                     <input type="text" id="video-title" placeholder="Título" class="input-dark" required>
                     <input type="url" id="video-url" placeholder="URL YouTube" class="input-dark" required>
-                    <button type="submit" id="video-btn" class="w-full btn-primary uppercase text-xs">Adicionar Vídeo</button>
+                    <button type="submit" class="w-full btn-primary uppercase text-xs">Adicionar</button>
                 </form>
-                <div id="admin-videos-list" class="space-y-2 max-h-[500px] overflow-y-auto pr-2"></div>
+                <div id="admin-videos-list" class="space-y-2"></div>
             </section>
-
             <section class="bg-neutral-900 p-8 rounded-3xl border border-white/5">
-                <h2 class="text-xl font-bold mb-6 italic text-gradient">📸 Galeria Estúdio</h2>
-                <div class="space-y-4 mb-8">
-                    <input type="file" id="photo-file" accept="image/*" class="text-xs">
-                    <button id="upload-photo-btn" class="w-full btn-primary uppercase text-xs">Fazer Upload</button>
-                </div>
-                <div id="admin-photos-list" class="grid grid-cols-3 gap-2 max-h-[400px] overflow-y-auto"></div>
+                <h2 class="text-xl font-bold mb-6 italic text-gradient">📸 Galeria Geral</h2>
+                <input type="file" id="photo-file" accept="image/*" class="text-xs mb-4">
+                <button id="upload-photo-btn" class="w-full btn-primary uppercase text-xs mb-8">Subir Foto</button>
+                <div id="admin-photos-list" class="grid grid-cols-4 gap-2"></div>
             </section>
         </div>
 
-        <!-- ABA PORTFÓLIO DETALHADO -->
-        <div id="section-trabalhos" class="hidden">
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="md:col-span-1">
-                    <section class="bg-neutral-900 p-8 rounded-3xl border border-white/5 sticky top-12">
-                        <h2 class="text-xl font-bold mb-6 italic text-gradient">Novo Trabalho</h2>
-                        <form id="work-form" class="space-y-4">
-                            <input type="text" id="work-title" placeholder="Título do Projeto" class="input-dark" required>
-                            <input type="text" id="work-date" placeholder="Data (ex: Outubro 2024)" class="input-dark">
-                            <div>
-                                <label class="block text-[10px] text-neutral-500 mb-1 uppercase">Foto do Trabalho</label>
-                                <input type="file" id="work-file" accept="image/*" class="text-xs bg-black/30 p-2 rounded w-full">
-                            </div>
-                            <textarea id="work-desc" rows="6" placeholder="Descrição/História do trabalho..." class="input-dark text-sm" required></textarea>
-                            
-                            <div class="pt-4 border-t border-white/5 space-y-4">
-                                <label class="block text-[10px] text-neutral-500 uppercase tracking-widest">Link Externo (Opcional)</label>
-                                <input type="url" id="work-link-url" placeholder="https://..." class="input-dark text-xs">
-                                <input type="text" id="work-link-text" placeholder="Texto do Botão (ex: Ouvir no Spotify)" class="input-dark text-xs">
-                            </div>
-
-                            <button type="submit" id="work-submit-btn" class="w-full btn-primary uppercase tracking-widest py-4">PUBLICAR NO PORTFÓLIO</button>
-                        </form>
-                    </section>
-                </div>
-                <div class="md:col-span-2">
-                    <section class="bg-neutral-900 p-8 rounded-3xl border border-white/5">
-                        <h2 class="text-xl font-bold mb-2 italic text-gradient">Trabalhos Publicados</h2>
-                        <p class="text-[9px] text-neutral-500 uppercase mb-6 tracking-widest">Arraste para organizar seu portfólio</p>
-                        <div id="admin-works-list" class="space-y-4 max-h-[800px] overflow-y-auto pr-2">
-                            <!-- Lista de trabalhos -->
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </div>
-
-        <!-- ABA BIO -->
         <div id="section-bio" class="hidden">
-            <div class="bg-neutral-900 p-8 rounded-3xl border border-white/5 max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold mb-8 italic text-gradient">Sua História</h2>
-                <form id="bio-form" class="space-y-8">
+            <div class="bg-neutral-900 p-8 rounded-3xl border border-white/5 max-w-3xl mx-auto">
+                <h2 class="text-xl font-bold mb-8 italic text-gradient">Biografia e Textos</h2>
+                <form id="bio-form" class="space-y-6">
+                    <input type="hidden" id="admin-bio-photo-url">
                     <div>
-                        <label class="block text-[10px] uppercase tracking-[0.2em] text-neutral-500 mb-3">Sua Foto de Perfil</label>
-                        <div class="flex flex-col gap-4">
-                            <div id="bio-photo-preview-container" class="hidden mb-2">
-                                <img id="bio-photo-preview" src="" class="w-32 h-40 object-cover rounded-xl border border-white/10">
-                            </div>
-                            <div class="flex flex-col md:flex-row gap-4 items-center">
-                                <input type="file" id="admin-bio-photo-file" accept="image/*" class="text-xs text-neutral-400 bg-black/20 p-2 rounded-lg w-full md:w-auto">
-                                <button type="button" id="upload-bio-photo-btn" class="w-full md:w-auto bg-neutral-800 hover:bg-neutral-700 text-white text-[10px] font-bold py-3 px-6 rounded-lg uppercase tracking-widest">Upload Foto</button>
-                            </div>
-                            <input type="hidden" id="admin-bio-photo-url">
-                        </div>
+                        <label class="block text-[10px] text-neutral-500 mb-3 uppercase tracking-widest">Foto de Perfil</label>
+                        <input type="file" id="admin-bio-photo-file" accept="image/*" class="text-xs mb-2">
+                        <button type="button" id="upload-bio-photo-btn" class="bg-neutral-800 text-[10px] px-4 py-2 rounded uppercase font-bold">Subir Foto</button>
                     </div>
-                    <div>
-                        <label class="block text-[10px] uppercase tracking-[0.2em] text-neutral-500 mb-3">Sua Biografia</label>
-                        <textarea id="admin-bio-text" rows="12" class="input-dark text-sm" placeholder="Escreva sua trajetória aqui..."></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] uppercase tracking-[0.2em] text-neutral-500 mb-3">Introdução do Portfólio</label>
-                        <textarea id="admin-portfolio-text" rows="4" class="input-dark text-sm" placeholder="Texto curto sobre seus vídeos..."></textarea>
-                    </div>
-                    <button type="submit" id="bio-save-btn" class="w-full btn-primary uppercase tracking-widest py-4 mt-8">SALVAR TEXTOS</button>
+                    <textarea id="admin-bio-text" rows="10" class="input-dark text-sm" placeholder="Sua história..."></textarea>
+                    <textarea id="admin-portfolio-text" rows="3" class="input-dark text-sm" placeholder="Texto curto do portfólio..."></textarea>
+                    <button type="submit" class="w-full btn-primary uppercase py-4">SALVAR TEXTOS</button>
                 </form>
             </div>
         </div>
@@ -148,7 +148,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp, query, orderBy, setDoc, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp, query, orderBy, setDoc, getDoc, updateDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
@@ -166,256 +166,269 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
+        let currentEditingId = null;
+
         // --- SISTEMA DE TABS ---
         window.switchTab = (tab) => {
-            document.getElementById('section-conteudo').classList.toggle('hidden', tab !== 'conteudo');
-            document.getElementById('section-trabalhos').classList.toggle('hidden', tab !== 'trabalhos');
-            document.getElementById('section-bio').classList.toggle('hidden', tab !== 'bio');
-            
-            document.getElementById('tab-conteudo').classList.toggle('active', tab === 'conteudo');
-            document.getElementById('tab-trabalhos').classList.toggle('active', tab === 'trabalhos');
-            document.getElementById('tab-bio').classList.toggle('active', tab === 'bio');
+            ['section-conteudo', 'section-trabalhos', 'section-bio'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
         };
 
-        // --- AUTENTICAÇÃO ---
+        // --- LOGIN ---
         document.getElementById('login-form').onsubmit = async (e) => {
             e.preventDefault();
             try { await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value); } 
-            catch (err) { alert('Erro de Login.'); }
+            catch { alert('Acesso negado.'); }
         };
-
         document.getElementById('logout-btn').onclick = () => signOut(auth);
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.remove('hidden');
-                initReordering();
-                loadContent();
-                loadBioData();
-                loadWorks();
+                loadAll();
             } else {
                 document.getElementById('login-screen').classList.remove('hidden');
                 document.getElementById('admin-dashboard').classList.add('hidden');
             }
         });
 
-        // --- REORDENAÇÃO (DRAG & DROP) ---
-        function initReordering() {
-            // Reordenar Trabalhos
-            const worksList = document.getElementById('admin-works-list');
-            Sortable.create(worksList, {
-                animation: 150,
-                handle: '.drag-handle',
-                ghostClass: 'sortable-ghost',
-                onEnd: async () => {
-                    const items = worksList.querySelectorAll('[data-id]');
-                    const batch = writeBatch(db);
-                    items.forEach((item, index) => {
-                        const id = item.getAttribute('data-id');
-                        batch.update(doc(db, "trabalhos", id), { ordem: index });
-                    });
-                    await batch.commit();
-                }
-            });
-
-            // Reordenar Vídeos
-            const videosList = document.getElementById('admin-videos-list');
-            Sortable.create(videosList, {
-                animation: 150,
-                handle: '.drag-handle',
-                ghostClass: 'sortable-ghost',
-                onEnd: async () => {
-                    const items = videosList.querySelectorAll('[data-id]');
-                    const batch = writeBatch(db);
-                    items.forEach((item, index) => {
-                        const id = item.getAttribute('data-id');
-                        batch.update(doc(db, "videos", id), { ordem: index });
-                    });
-                    await batch.commit();
-                }
-            });
+        function loadAll() {
+            initSortable();
+            loadWorks();
+            loadVideos();
+            loadPhotos();
+            loadBio();
         }
 
-        // --- ABA PORTFÓLIO (TRABALHOS) ---
+        // --- EDIÇÃO DE TRABALHOS ---
+        window.prepareEditWork = async (id) => {
+            const snap = await getDoc(doc(db, "trabalhos", id));
+            if (!snap.exists()) return;
+            const data = snap.data();
+            
+            currentEditingId = id;
+            document.getElementById('work-id').value = id;
+            document.getElementById('work-title').value = data.titulo || '';
+            document.getElementById('work-date').value = data.data || '';
+            document.getElementById('work-desc').value = data.descricao || '';
+            document.getElementById('work-video-url').value = data.videoUrl || '';
+            document.getElementById('work-link-url').value = data.linkUrl || '';
+            document.getElementById('work-link-text').value = data.linkText || '';
+            
+            document.getElementById('editor-title').innerText = "Editando Projeto";
+            document.getElementById('work-submit-btn').innerText = "SALVAR ALTERAÇÕES";
+            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+            document.getElementById('work-editor-container').classList.add('edit-mode-active');
+            document.getElementById('edit-photo-notice').classList.remove('hidden');
+            
+            if (data.galeria) document.getElementById('gallery-info').innerText = `● Este projeto já tem ${data.galeria.length} fotos extras. Novas fotos serão adicionadas à galeria existente.`;
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.resetWorkEditor = () => {
+            currentEditingId = null;
+            document.getElementById('work-form').reset();
+            document.getElementById('editor-title').innerText = "Novo Trabalho";
+            document.getElementById('work-submit-btn').innerText = "PUBLICAR";
+            document.getElementById('cancel-edit-btn').classList.add('hidden');
+            document.getElementById('work-editor-container').classList.remove('edit-mode-active');
+            document.getElementById('edit-photo-notice').classList.add('hidden');
+            document.getElementById('gallery-info').innerText = "Fotos dos bastidores aparecem em mosaico.";
+        };
+
         document.getElementById('work-form').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('work-submit-btn');
             const file = document.getElementById('work-file').files[0];
+            const galleryFiles = document.getElementById('work-gallery-files').files;
             
             btn.disabled = true;
-            btn.innerText = 'ENVIANDO...';
-
-            let fotoUrl = "";
-            let fotoPath = "";
-
-            if (file) {
-                fotoPath = `trabalhos/${Date.now()}_${file.name}`;
-                const storageRef = ref(storage, fotoPath);
-                const uploadTask = await uploadBytesResumable(storageRef, file);
-                fotoUrl = await getDownloadURL(uploadTask.ref);
-            }
+            btn.innerText = 'PROCESSANDO...';
 
             try {
-                // Novo item entra com ordem negativa para ser o primeiro no "ordem asc"
-                const novaOrdem = Date.now() * -1;
-                await addDoc(collection(db, "trabalhos"), {
+                let payload = {
                     titulo: document.getElementById('work-title').value,
                     data: document.getElementById('work-date').value,
                     descricao: document.getElementById('work-desc').value,
+                    videoUrl: document.getElementById('work-video-url').value,
                     linkUrl: document.getElementById('work-link-url').value,
                     linkText: document.getElementById('work-link-text').value,
-                    fotoUrl,
-                    fotoPath,
-                    ordem: novaOrdem,
-                    timestamp: serverTimestamp()
-                });
-                alert('Trabalho publicado!');
-                e.target.reset();
-            } catch(err) { alert('Erro ao salvar trabalho.'); }
-            finally { btn.disabled = false; btn.innerText = 'PUBLICAR NO PORTFÓLIO'; }
+                    updatedAt: serverTimestamp()
+                };
+
+                // Foto Principal
+                if (file) {
+                    const path = `trabalhos/${Date.now()}_${file.name}`;
+                    const snap = await uploadBytesResumable(ref(storage, path), file);
+                    payload.fotoUrl = await getDownloadURL(snap.ref);
+                    payload.fotoPath = path;
+
+                    // Se editar, apaga a antiga
+                    if (currentEditingId) {
+                        const old = await getDoc(doc(db, "trabalhos", currentEditingId));
+                        if (old.data()?.fotoPath) try { await deleteObject(ref(storage, old.data().fotoPath)); } catch(e){}
+                    }
+                }
+
+                // Galeria Extra
+                if (galleryFiles.length > 0) {
+                    let galeria = [];
+                    for (let f of galleryFiles) {
+                        const path = `galerias/${Date.now()}_${f.name}`;
+                        const snap = await uploadBytesResumable(ref(storage, path), f);
+                        const url = await getDownloadURL(snap.ref);
+                        galeria.push({ url, path });
+                    }
+                    if (currentEditingId) {
+                        const old = await getDoc(doc(db, "trabalhos", currentEditingId));
+                        payload.galeria = [...(old.data()?.galeria || []), ...galeria];
+                    } else {
+                        payload.galeria = galeria;
+                    }
+                }
+
+                if (currentEditingId) {
+                    await updateDoc(doc(db, "trabalhos", currentEditingId), payload);
+                    alert('Projeto atualizado com sucesso!');
+                } else {
+                    payload.ordem = Date.now() * -1;
+                    payload.timestamp = serverTimestamp();
+                    await addDoc(collection(db, "trabalhos"), payload);
+                    alert('Novo projeto publicado!');
+                }
+                resetWorkEditor();
+            } catch(e) { alert('Erro: ' + e.message); }
+            finally { btn.disabled = false; btn.innerText = currentEditingId ? 'SALVAR ALTERAÇÕES' : 'PUBLICAR'; }
         };
 
+        // --- CARREGAMENTO ---
         function loadWorks() {
             onSnapshot(collection(db, "trabalhos"), (snap) => {
                 const list = document.getElementById('admin-works-list');
                 let works = [];
                 snap.forEach(d => works.push({id: d.id, ...d.data()}));
-                
-                // Ordenação inteligente: prioriza 'ordem', senão 'timestamp'
-                works.sort((a, b) => {
-                    if (a.ordem !== undefined && b.ordem !== undefined) return a.ordem - b.ordem;
-                    return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0);
-                });
+                works.sort((a,b) => (a.ordem || 0) - (b.ordem || 0));
 
                 list.innerHTML = '';
-                works.forEach(data => {
+                works.forEach(w => {
                     list.innerHTML += `
-                        <div data-id="${data.id}" class="flex items-center gap-4 bg-black/40 p-4 rounded-xl border border-white/5 transition-colors hover:border-white/10">
-                            <div class="drag-handle p-2">
+                        <div data-id="${w.id}" class="flex items-center gap-4 bg-black/40 p-4 rounded-xl border border-white/5 hover:border-white/20 transition-all group">
+                            <div class="drag-handle p-2 opacity-30 group-hover:opacity-100 transition-opacity">
                                 <svg width="12" height="18" viewBox="0 0 12 18" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="2" cy="9" r="1.5"/><circle cx="2" cy="16" r="1.5"/><circle cx="10" cy="2" r="1.5"/><circle cx="10" cy="9" r="1.5"/><circle cx="10" cy="16" r="1.5"/></svg>
                             </div>
-                            <img src="${data.fotoUrl || 'https://via.placeholder.com/100'}" class="w-12 h-12 object-cover rounded shadow-lg">
+                            <img src="${w.fotoUrl || 'https://via.placeholder.com/100'}" class="w-14 h-14 object-cover rounded-lg shadow-lg grayscale group-hover:grayscale-0 transition-all">
                             <div class="flex-1">
-                                <h4 class="font-bold text-sm">${data.titulo}</h4>
-                                <p class="text-[10px] text-neutral-500">${data.data || ''}</p>
-                                ${data.linkUrl ? `<span class="text-[8px] text-green-500 uppercase font-bold">● Com Link</span>` : ''}
+                                <h4 class="font-bold text-[11px] uppercase tracking-widest truncate max-w-[200px]">${w.titulo}</h4>
+                                <div class="flex gap-2 items-center mt-1">
+                                    <span class="text-[8px] text-neutral-500 uppercase">${w.data || ''}</span>
+                                    ${w.videoUrl ? '<span class="text-[7px] bg-red-900/40 text-red-500 px-1 rounded font-bold">VÍDEO</span>' : ''}
+                                    ${w.galeria ? `<span class="text-[7px] bg-blue-900/40 text-blue-400 px-1 rounded font-bold">+${w.galeria.length} FOTOS</span>` : ''}
+                                </div>
                             </div>
-                            <button onclick="deleteWork('${data.id}', '${data.fotoPath}')" class="text-red-500/50 hover:text-red-500 text-[10px] font-bold px-4">APAGAR</button>
+                            <div class="flex gap-2">
+                                <button onclick="prepareEditWork('${w.id}')" class="text-[9px] font-bold bg-white/5 px-3 py-2 rounded-lg hover:bg-white/10 uppercase tracking-widest">Editar</button>
+                                <button onclick="deleteWork('${w.id}', '${w.fotoPath}', ${JSON.stringify(w.galeria || []).replace(/"/g, '&quot;')})" class="text-[9px] font-bold text-red-500/50 hover:text-red-500 px-3 py-2 uppercase">Apagar</button>
+                            </div>
                         </div>
                     `;
                 });
             });
         }
 
-        window.deleteWork = async (id, path) => {
-            if(confirm('Deseja excluir este trabalho do portfólio?')) {
-                await deleteDoc(doc(db, "trabalhos", id));
-                if(path) { try { await deleteObject(ref(storage, path)); } catch(e) {} }
+        window.deleteWork = async (id, mainPath, gallery) => {
+            if(!confirm('Deseja apagar este projeto e todos os seus arquivos permanentemente?')) return;
+            await deleteDoc(doc(db, "trabalhos", id));
+            if(mainPath) try { await deleteObject(ref(storage, mainPath)); } catch(e){}
+            if(gallery) {
+                for(let item of gallery) { try { await deleteObject(ref(storage, item.path)); } catch(e){} }
             }
         };
 
-        // --- ABA BIO E CONTEÚDO ---
-        async function loadBioData() {
-            const docSnap = await getDoc(doc(db, "site_content", "bio_page"));
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                document.getElementById('admin-bio-text').value = data.bioText || '';
-                document.getElementById('admin-portfolio-text').value = data.portfolioText || '';
-                if (data.photoUrl) {
-                    document.getElementById('admin-bio-photo-url').value = data.photoUrl;
-                    document.getElementById('bio-photo-preview').src = data.photoUrl;
-                    document.getElementById('bio-photo-preview-container').classList.remove('hidden');
+        // --- OUTRAS FUNÇÕES ---
+        function initSortable() {
+            Sortable.create(document.getElementById('admin-works-list'), {
+                animation: 150, handle: '.drag-handle',
+                onEnd: async () => {
+                    const batch = writeBatch(db);
+                    document.querySelectorAll('#admin-works-list > div').forEach((el, i) => {
+                        batch.update(doc(db, "trabalhos", el.dataset.id), { ordem: i });
+                    });
+                    await batch.commit();
                 }
-            }
+            });
         }
 
-        document.getElementById('upload-bio-photo-btn').onclick = async () => {
-            const file = document.getElementById('admin-bio-photo-file').files[0];
-            if(!file) return;
-            const path = `perfil/${Date.now()}_${file.name}`;
-            const uploadTask = uploadBytesResumable(ref(storage, path), file);
-            uploadTask.on('state_changed', null, null, async () => {
-                const url = await getDownloadURL(uploadTask.snapshot.ref);
-                document.getElementById('admin-bio-photo-url').value = url;
-                document.getElementById('bio-photo-preview').src = url;
-                document.getElementById('bio-photo-preview-container').classList.remove('hidden');
-                alert('Foto pronta!');
-            });
-        };
-
+        async function loadBio() {
+            const snap = await getDoc(doc(db, "site_content", "bio_page"));
+            if (snap.exists()) {
+                const d = snap.data();
+                document.getElementById('admin-bio-text').value = d.bioText || '';
+                document.getElementById('admin-portfolio-text').value = d.portfolioText || '';
+                document.getElementById('admin-bio-photo-url').value = d.photoUrl || '';
+            }
+        }
         document.getElementById('bio-form').onsubmit = async (e) => {
             e.preventDefault();
-            try {
-                await setDoc(doc(db, "site_content", "bio_page"), {
-                    bioText: document.getElementById('admin-bio-text').value,
-                    portfolioText: document.getElementById('admin-portfolio-text').value,
-                    photoUrl: document.getElementById('admin-bio-photo-url').value,
-                    updatedAt: serverTimestamp()
-                }, { merge: true });
-                alert('Bio atualizada!');
-            } catch(e) { alert('Erro ao salvar.'); }
+            await setDoc(doc(db, "site_content", "bio_page"), {
+                bioText: document.getElementById('admin-bio-text').value,
+                portfolioText: document.getElementById('admin-portfolio-text').value,
+                photoUrl: document.getElementById('admin-bio-photo-url').value
+            }, {merge: true});
+            alert('Bio atualizada!');
+        };
+        document.getElementById('upload-bio-photo-btn').onclick = async () => {
+            const f = document.getElementById('admin-bio-photo-file').files[0];
+            if(!f) return;
+            const path = `perfil/${Date.now()}`;
+            const snap = await uploadBytesResumable(ref(storage, path), f);
+            document.getElementById('admin-bio-photo-url').value = await getDownloadURL(snap.ref);
+            alert('Foto pronta!');
         };
 
-        function loadContent() {
+        function loadVideos() {
             onSnapshot(collection(db, "videos"), (snap) => {
-                const list = document.getElementById('admin-videos-list');
-                let videos = [];
-                snap.forEach(d => videos.push({id: d.id, ...d.data()}));
-                
-                videos.sort((a, b) => {
-                    if (a.ordem !== undefined && b.ordem !== undefined) return a.ordem - b.ordem;
-                    return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0);
-                });
-
-                list.innerHTML = '';
-                videos.forEach(d => {
-                    list.innerHTML += `
-                        <div data-id="${d.id}" class="p-3 border border-white/5 flex items-center bg-black/20 text-[10px] rounded-lg">
-                            <div class="drag-handle mr-3">
-                                <svg width="10" height="14" viewBox="0 0 12 18" fill="currentColor" opacity="0.3"><circle cx="2" cy="2" r="1.5"/><circle cx="2" cy="9" r="1.5"/><circle cx="2" cy="16" r="1.5"/><circle cx="10" cy="2" r="1.5"/><circle cx="10" cy="9" r="1.5"/><circle cx="10" cy="16" r="1.5"/></svg>
-                            </div>
-                            <span class="truncate flex-1 font-semibold">${d.titulo}</span>
-                            <button onclick="deleteVideo('${d.id}')" class="text-red-500/50 hover:text-red-500 ml-4 font-bold uppercase">Apagar</button>
-                        </div>
-                    `;
-                });
-            });
-
-            onSnapshot(query(collection(db, "fotos"), orderBy("timestamp", "desc")), (snap) => {
-                const list = document.getElementById('admin-photos-list');
-                list.innerHTML = '';
+                const l = document.getElementById('admin-videos-list');
+                l.innerHTML = '';
                 snap.forEach(d => {
-                    list.innerHTML += `<div class="relative group"><img src="${d.data().url}" class="aspect-square object-cover rounded border border-white/5"><button onclick="deletePhoto('${d.id}', '${d.data().path}')" class="absolute top-1 right-1 bg-red-600 p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity text-[8px] font-bold">X</button></div>`;
+                    l.innerHTML += `<div class="p-2 border border-white/5 text-[9px] flex justify-between bg-black/20 rounded">${d.data().titulo} <button onclick="deleteVideo('${d.id}')" class="text-red-500 font-bold">X</button></div>`;
                 });
             });
         }
-
-        window.deleteVideo = async (id) => { if(confirm('Excluir vídeo?')) await deleteDoc(doc(db, "videos", id)); };
-        window.deletePhoto = async (id, path) => { if(confirm('Excluir foto?')) { await deleteDoc(doc(db, "fotos", id)); try{ await deleteObject(ref(storage, path)); }catch(e){} } };
-
+        window.deleteVideo = (id) => deleteDoc(doc(db, "videos", id));
         document.getElementById('video-form').onsubmit = async (e) => {
             e.preventDefault();
-            const novaOrdem = Date.now() * -1;
-            await addDoc(collection(db, "videos"), { 
-                titulo: document.getElementById('video-title').value, 
-                url: document.getElementById('video-url').value, 
-                ordem: novaOrdem,
-                timestamp: serverTimestamp() 
+            await addDoc(collection(db, "videos"), {
+                titulo: document.getElementById('video-title').value,
+                url: document.getElementById('video-url').value,
+                timestamp: serverTimestamp()
             });
             e.target.reset();
         };
 
-        document.getElementById('upload-photo-btn').onclick = async () => {
-            const file = document.getElementById('photo-file').files[0];
-            if(!file) return;
-            const path = `galeria/${Date.now()}_${file.name}`;
-            const uploadTask = uploadBytesResumable(ref(storage, path), file);
-            uploadTask.on('state_changed', null, null, async () => {
-                const url = await getDownloadURL(uploadTask.snapshot.ref);
-                await addDoc(collection(db, "fotos"), { url, path, timestamp: serverTimestamp() });
-                alert('Foto enviada!');
+        function loadPhotos() {
+            onSnapshot(query(collection(db, "fotos"), orderBy("timestamp", "desc")), (snap) => {
+                const l = document.getElementById('admin-photos-list');
+                l.innerHTML = '';
+                snap.forEach(d => {
+                    l.innerHTML += `<div class="relative group"><img src="${d.data().url}" class="aspect-square object-cover rounded grayscale hover:grayscale-0 transition-all border border-white/5"><button onclick="deletePhoto('${d.id}', '${d.data().path}')" class="absolute top-1 right-1 bg-red-600 p-1 rounded opacity-0 group-hover:opacity-100 text-[8px] font-bold">X</button></div>`;
+                });
             });
+        }
+        window.deletePhoto = async (id, path) => {
+            await deleteDoc(doc(db, "fotos", id));
+            try { await deleteObject(ref(storage, path)); } catch(e){}
+        };
+        document.getElementById('upload-photo-btn').onclick = async () => {
+            const f = document.getElementById('photo-file').files[0];
+            if(!f) return;
+            const path = `galeria/${Date.now()}`;
+            const snap = await uploadBytesResumable(ref(storage, path), f);
+            const url = await getDownloadURL(snap.ref);
+            await addDoc(collection(db, "fotos"), { url, path, timestamp: serverTimestamp() });
         };
     </script>
 </body>
