@@ -8,7 +8,6 @@
     <link rel="canonical" href="https://fabiohumano.github.io/studio/">
 
     <!-- 2. PRIORIDADE CRÍTICA PARA ROBÔS (WhatsApp/Facebook) -->
-    <!-- Colocamos a imagem aqui para garantir que seja lida nos primeiros bytes do arquivo -->
     <meta itemprop="image" content="https://fabiohumano.github.io/studio/cartao.jpg?v=4.0">
     <meta property="og:image" content="https://fabiohumano.github.io/studio/cartao.jpg?v=4.0">
     <meta property="og:image:secure_url" content="https://fabiohumano.github.io/studio/cartao.jpg?v=4.0">
@@ -81,6 +80,12 @@
             background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0,0,0,0.7) 100%);
             pointer-events: none;
         }
+
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px 5px rgba(22, 163, 74, 0.2); }
+        }
+        .animate-whatsapp { animation: pulse-soft 3s infinite ease-in-out; }
     </style>
 <link rel="stylesheet" href="/index.css">
 </head>
@@ -108,29 +113,33 @@
             <h2 class="text-5xl md:text-8xl font-bold tracking-tighter mb-8 leading-none">A Arte de ser <br><span class="text-gradient">HUMANO.</span></h2>
             <p class="text-base md:text-xl text-white/80 font-light mb-12 max-w-xl mx-auto tracking-wide">Onde a essência humana encontra a vibração da arte e a tecnologia do som.</p>
             
-            <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12 mt-4">
+            <!-- Redes Sociais em Linha Única -->
+            <div class="flex flex-nowrap items-center justify-center gap-6 md:gap-12 mt-4 px-4">
                 <a href="https://open.spotify.com/intl-pt/artist/2BIEgnchM2L1arz2Liw1aY?si=8YzSiKpKROOtqblXn5SA0Q" target="_blank" class="social-icon" title="Spotify">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 md:w-9 md:h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"/><path d="M8 14.5c2.5-1 5.5-1 8 0"/><path d="M7 11.5c3-1.5 7-1.5 10 0"/><path d="M6 8.5c4-2 9-2 13 0"/>
                     </svg>
                 </a>
                 <a href="https://www.youtube.com/channel/UCYYT-iBxv3t2bA2eMfjVWKw" target="_blank" class="social-icon" title="YouTube">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 md:w-9 md:h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 68.4 68.4 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 68.4 68.4 0 0 1-15 0 2 2 0 0 1-2-2Z"/><path d="m10 15 5-3-5-3z"/>
                     </svg>
                 </a>
                 <a href="https://www.instagram.com/fabio.humano/" target="_blank" class="social-icon" title="Instagram">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
                 </a>
                 <a href="https://www.tiktok.com/@fabiohumano" target="_blank" class="social-icon" title="TikTok">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
                 </a>
                 <a href="https://www.facebook.com/fabiobndtt" target="_blank" class="social-icon" title="Facebook">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                 </a>
                 <a href="https://wa.me/5532991064759" target="_blank" class="social-icon" title="WhatsApp">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-7.6 8.38 8.38 0 0 1 3.8.9L21 4.5z"/>
+                        <!-- Carinha sorrindo HUMANA -->
+                        <circle cx="11" cy="11.5" r="0.5" fill="currentColor"/><circle cx="15" cy="11.5" r="0.5" fill="currentColor"/>
+                        <path d="M10 14.5c1 1.5 4 1.5 6 0" stroke-width="1.2"/>
                     </svg>
                 </a>
             </div>
@@ -157,9 +166,20 @@
         </div>
     </section>
 
-    <footer class="py-24 border-t border-white/5 bg-black text-center px-6">
-        <a href="https://wa.me/5532991064759" target="_blank" class="text-3xl md:text-6xl font-bold hover:text-neutral-400 transition-colors uppercase tracking-tighter">VAMOS CRIAR JUNTOS?</a>
-        <p class="mt-12 text-neutral-600 text-[9px] uppercase tracking-[0.3em]">© 2024 HUMANO Studio • Fabio Benedetti</p>
+    <footer class="py-24 border-t border-white/5 bg-black text-center px-6 flex flex-col items-center">
+        <h3 class="text-3xl md:text-6xl font-bold hover:text-neutral-400 transition-colors uppercase tracking-tighter mb-8">VAMOS CRIAR JUNTOS?</h3>
+        
+        <!-- Botão WhatsApp com Carinha -->
+        <a href="https://wa.me/5532991064759" target="_blank" class="animate-whatsapp inline-flex items-center gap-3 bg-green-600 hover:bg-green-500 text-white px-10 py-5 rounded-full text-sm font-bold uppercase tracking-[0.2em] transition-all hover:scale-105 shadow-xl shadow-green-900/20">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-7.6 8.38 8.38 0 0 1 3.8.9L21 4.5z"/>
+                <circle cx="11" cy="11.5" r="0.6" fill="currentColor"/><circle cx="15" cy="11.5" r="0.6" fill="currentColor"/>
+                <path d="M10 14.5c1 1.5 4 1.5 6 0" stroke-width="1.5"/>
+            </svg>
+            WhatsApp
+        </a>
+
+        <p class="mt-16 text-neutral-600 text-[9px] uppercase tracking-[0.3em]">© 2024 HUMANO Studio • Fabio Benedetti</p>
     </footer>
 
     <script type="module">
