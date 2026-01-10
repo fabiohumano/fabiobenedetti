@@ -2,234 +2,240 @@
 <!DOCTYPE html>
 <html lang="pt-BR" prefix="og: http://ogp.me/ns#">
 <head>
-    <!-- 1. IDENTIFICAÇÃO E ENCODE -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="canonical" href="https://fabiohumano.github.io/studio/">
+    <link rel="canonical" href="https://fabiobenedetti.com.br">
 
-    <!-- 2. DICAS DE PERFORMANCE -->
+    <!-- SEO GOOGLE -->
+    <title>Fabio Benedetti | Produtor Musical</title>
+    <meta name="description" content="Produtor Musical Fabio Benedetti em Sapucaia, RJ. Especialista em Produção Musical, Mixagem e Masterização. A Arte de ser HUMANO em cada som.">
+    <meta name="keywords" content="Produtor Musical, Sapucaia RJ, Fabio Benedetti, Mixagem, Masterização, Estúdio de Gravação, Rio de Janeiro">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MusicProducer",
+      "name": "Fabio Benedetti",
+      "url": "https://fabiobenedetti.com.br",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Rua Quinze de Novembro, 91",
+        "addressLocality": "Sapucaia",
+        "addressRegion": "RJ",
+        "postalCode": "25880-000",
+        "addressCountry": "BR"
+      }
+    }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://images.unsplash.com">
-
-    <!-- 3. REDES SOCIAIS -->
-    <meta itemprop="image" content="https://fabiohumano.github.io/studio/cartao.jpg?v=4.0">
-    <meta property="og:image" content="https://fabiohumano.github.io/studio/cartao.jpg?v=4.0">
-    <meta property="og:title" content="HUMANO Studio | Fabio Benedetti">
-    <meta property="og:description" content="Clique para conhecer o estúdio e ouvir minhas produções musicais.">
-    
-    <title>HUMANO Studio | Fabio Benedetti</title>
-    <meta name="description" content="Essência humana, vibração da arte e tecnologia do som. Produções Musicais e Trilhas Sonoras por Fabio Benedetti.">
-
-    <!-- 4. ESTILOS OTIMIZADOS -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --bg: #0a0a0a; --accent: #16a34a; --text-muted: #a3a3a3; }
+        :root { --bg: #020202; --accent: #ffffff; --text-muted: #555; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #ffffff; overflow-x: hidden; }
-        
-        .max-w-7xl { max-width: 80rem; margin: 0 auto; }
-        .flex { display: flex; }
-        .grid { display: grid; }
-        .hidden { display: none; }
-        .relative { position: relative; }
-        .fixed { position: fixed; }
-        .items-center { align-items: center; }
-        .justify-center { justify-content: center; }
-        .justify-between { justify-content: space-between; }
-        .text-center { text-align: center; }
-        .uppercase { text-transform: uppercase; }
-        .tracking-tighter { letter-spacing: -0.05em; }
-        .tracking-widest { letter-spacing: 0.1em; }
-        .font-bold { font-weight: 700; }
-        .font-light { font-weight: 300; }
-        .italic { font-style: italic; }
-        .rounded-full { border-radius: 9999px; }
-        .rounded-2xl { border-radius: 1rem; }
-        .overflow-hidden { overflow: hidden; }
-        .transition-all { transition: all 0.4s ease; }
-        
         .bg-grain { position: fixed; inset: 0; background: url('https://grainy-gradients.vercel.app/noise.svg'); opacity: 0.03; pointer-events: none; z-index: 9999; }
-        .text-gradient { background: linear-gradient(to right, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        nav { width: 100%; z-index: 50; height: 5rem; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.5); backdrop-filter: blur(12px); display: flex; align-items: center; padding: 0 1.5rem; }
-        nav a { text-decoration: none; color: var(--text-muted); font-size: 10px; transition: color 0.3s; }
+        nav { width: 100%; z-index: 100; height: 6rem; border-bottom: 1px solid rgba(255,255,255,0.03); background: rgba(0,0,0,0.7); backdrop-filter: blur(25px); display: flex; align-items: center; padding: 0 2rem; position: fixed; top: 0; }
+        nav a { text-decoration: none; color: var(--text-muted); font-size: 10px; transition: color 0.3s; text-transform: uppercase; letter-spacing: 0.3em; font-weight: 600; }
         nav a:hover { color: white; }
         
-        .hero-bg {
+        .hero-section {
+            position: relative;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #000;
+            overflow: hidden;
+            background: black;
+        }
+
+        .hero-bg-layer {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(to bottom, rgba(0,0,0,0.3), var(--bg) 95%),
+                url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920&auto=format&fit=crop'), /* Terra */
+                url('https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1920&auto=format&fit=crop'); /* Studio Clean */
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(10,10,10,1)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=60&w=800&auto=format&fit=crop');
-        }
-        @media (min-width: 1024px) {
-            .hero-bg { background-image: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(10,10,10,1)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=75&w=1920&auto=format&fit=crop'); }
-            .md-flex { display: flex; gap: 2.5rem; }
-            .md-grid-2 { grid-template-columns: repeat(2, 1fr); }
-            .md-grid-4 { grid-template-columns: repeat(4, 1fr); }
-            .md-text-8xl { font-size: 6rem; }
+            background-blend-mode: overlay;
+            opacity: 0.7;
+            filter: brightness(0.6) contrast(1.1);
         }
 
-        .social-icon { color: rgba(255,255,255,0.7); display: inline-flex; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .social-icon:hover { color: #ffffff; transform: scale(1.3); filter: drop-shadow(0 0 15px rgba(255,255,255,0.6)); }
+        .hero-content { position: relative; z-index: 10; text-align: center; padding: 0 1.5rem; width: 100%; }
+        
+        .text-gradient { 
+            background: linear-gradient(to bottom, #fff 40%, #555 100%); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
 
-        .btn-portfolio-hero {
+        .social-grid { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 2.2rem; 
+            margin: 4rem 0; 
+            flex-wrap: wrap; 
+        }
+        .social-grid svg { 
+            width: 24px; 
+            height: 24px; 
+            fill: none;
+            stroke: rgba(255,255,255,0.4);
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1); 
+        }
+        .social-grid a:hover svg { 
+            stroke: white; 
+            transform: translateY(-5px) scale(1.1); 
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.4)); 
+        }
+
+        .btn-cta {
             display: inline-block;
-            margin-top: 2.5rem;
-            padding: 0.9rem 2.2rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 9999px;
+            margin-top: 2rem;
+            padding: 1.2rem 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 60px;
             color: white;
             text-decoration: none;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: transparent;
-            backdrop-filter: blur(5px);
+            letter-spacing: 0.5em;
+            transition: all 0.5s;
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(15px);
         }
-        .btn-portfolio-hero:hover {
-            border-color: white;
-            background: white;
-            color: black;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
-        }
-        
-        .card-art { background: rgba(23, 23, 23, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 2rem; transition: all 0.4s; }
-        .card-art:hover { border-color: rgba(255,255,255,0.3); transform: translateY(-5px); }
+        .btn-cta:hover { background: white; color: black; transform: scale(1.05); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
 
-        .btn-whatsapp {
-            background: #16a34a;
-            color: white;
-            padding: 1.25rem 2.5rem;
+        /* Botão WhatsApp Rodapé */
+        .btn-whatsapp-footer {
             display: inline-flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 15px;
+            background: #ffffff;
+            color: #000000;
+            padding: 1.2rem 3rem;
+            border-radius: 100px;
             text-decoration: none;
-            font-size: 14px;
-            font-weight: 700;
-            box-shadow: 0 10px 30px -10px rgba(22, 163, 74, 0.5);
-            animation: pulse-soft 3s infinite ease-in-out;
+            font-weight: 800;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            margin-top: 2rem;
+        }
+        .btn-whatsapp-footer:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 20px 40px rgba(255,255,255,0.1);
         }
 
-        @keyframes pulse-soft {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 0 20px 5px rgba(22, 163, 74, 0.2); }
-        }
-        
-        .aspect-video { aspect-ratio: 16 / 9; }
-        .aspect-square { aspect-ratio: 1 / 1; }
-        .animate-pulse { animation: pulse-loading 2s infinite; }
-        @keyframes pulse-loading { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.2; } }
+        .card-art { background: rgba(10, 10, 10, 0.4); border: 1px solid rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 2.5rem; transition: all 0.4s; }
+        .card-art:hover { border-color: rgba(255,255,255,0.1); transform: translateY(-5px); }
+
+        footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 12rem 2rem; text-align: center; background: #000; }
+        .address-footer { color: #222; font-size: 9px; margin-top: 5rem; line-height: 2.5; text-transform: uppercase; letter-spacing: 0.4em; }
+
+        .aspect-video { aspect-ratio: 16 / 9; border-radius: 1.8rem; overflow: hidden; margin-bottom: 1.5rem; }
     </style>
 <link rel="stylesheet" href="/index.css">
 </head>
 <body>
     <div class="bg-grain"></div>
 
-    <nav class="fixed">
-        <div class="max-w-7xl flex justify-between items-center w-full">
-            <a href="index.html" style="font-size: 1.25rem; font-weight: 700; color: white; text-decoration: none;">HUMANO<span style="color: #737373; font-weight: 300; font-style: italic;">Studio</span></a>
-            <div class="hidden md-flex">
-                <a href="index.html" class="tracking-widest uppercase">Início</a>
-                <a href="bio.html" class="tracking-widest uppercase">Bio</a>
-                <a href="portfolio.html" class="tracking-widest uppercase">Portfólio</a>
-                <a href="#galeria" class="tracking-widest uppercase">Estúdio</a>
-                <a href="admin.html" style="border: 1px solid rgba(255,255,255,0.1); padding: 0.25rem 0.75rem; border-radius: 4px;">Admin</a>
+    <nav>
+        <div style="max-width: 80rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a href="index.html" style="color: white; text-decoration: none;">
+                <span style="font-weight: 700; font-size: 1.3rem; letter-spacing: -0.04em; font-style: italic;">FABIO BENEDETTI</span>
+                <span style="display: block; font-size: 8px; color: #333; letter-spacing: 0.5em; margin-top: 4px; font-weight: 700;">PRODUTOR MUSICAL</span>
+            </a>
+            <div style="display: flex; gap: 4rem;">
+                <a href="index.html" style="color: white;">Início</a>
+                <a href="bio.html">Bio</a>
+                <a href="portfolio.html">Portfólio</a>
+                <a href="admin.html" style="opacity: 0.1;">Admin</a>
             </div>
         </div>
     </nav>
 
-    <section id="home" class="hero-bg relative">
-        <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0,0,0,0.7) 100%); pointer-events: none;"></div>
-        <div class="relative text-center max-w-7xl px-6 flex items-center justify-center flex-direction-column" style="flex-direction: column;">
-            <h2 class="font-bold tracking-tighter mb-8 md-text-8xl" style="font-size: 3rem; line-height: 1.1;">A Arte de ser <br><span class="text-gradient">HUMANO.</span></h2>
-            <p style="font-size: 1rem; color: rgba(255,255,255,0.8); font-weight: 300; margin-bottom: 3.5rem; max-width: 32rem; margin-left: auto; margin-right: auto; line-height: 1.6;">Onde a essência humana encontra a vibração da arte e a tecnologia do som.</p>
+    <section class="hero-section">
+        <div class="hero-bg-layer"></div>
+        <div class="hero-content">
+            <h1 id="dyn-slogan" class="text-gradient font-bold tracking-tighter mb-8" style="font-size: clamp(3.5rem, 10vw, 8rem); line-height: 0.85;">A Arte de ser <br>HUMANO.</h1>
+            <p id="dyn-seo-desc" style="font-size: 1rem; color: #444; font-weight: 300; max-width: 35rem; margin: 0 auto; line-height: 2; letter-spacing: 0.08em; text-transform: uppercase;">A união entre a alma do artista e a precisão da tecnologia digital.</p>
             
-            <!-- REDES SOCIAIS -->
-            <div class="flex items-center justify-center" style="gap: 1.1rem; flex-wrap: nowrap;">
-                <!-- Spotify -->
-                <a href="https://open.spotify.com/intl-pt/artist/2BIEgnchM2L1arz2Liw1aY" target="_blank" class="social-icon" title="Spotify">
-                    <svg style="width: 1.6rem; height: 1.6rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14.5c2.5-1 5.5-1 8 0"/><path d="M7 11.5c3-1.5 7-1.5 10 0"/><path d="M6 8.5c4-2 9-2 13 0"/></svg>
+            <div class="social-grid">
+                <!-- 1. Spotify -->
+                <a href="https://open.spotify.com/intl-pt/artist/2BIEgnchM2L1arz2Liw1aY" target="_blank" title="Spotify">
+                    <svg viewBox="0 0 24 24"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/><path d="M7 12C9.5 11 14.5 11 17 12"/><path d="M8 14.5C10 13.7 14 13.7 16 14.5"/><path d="M9 9.5C11 8.7 13 8.7 15 9.5"/></svg>
                 </a>
-                <!-- YouTube -->
-                <a href="https://www.youtube.com/channel/UCYYT-iBxv3t2bA2eMfjVWKw" target="_blank" class="social-icon" title="YouTube">
-                    <svg style="width: 1.6rem; height: 1.6rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 68.4 68.4 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 68.4 68.4 0 0 1-15 0 2 2 0 0 1-2-2Z"/><path d="m10 15 5-3-5-3z"/></svg>
+                <!-- 2. YouTube -->
+                <a href="https://www.youtube.com/@FabioBenedettiProdutor" target="_blank" title="YouTube">
+                    <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9L15 12L10 15V9Z"/></svg>
                 </a>
-                <!-- Instagram -->
-                <a href="https://www.instagram.com/fabio.humano/" target="_blank" class="social-icon" title="Instagram">
-                    <svg style="width: 1.6rem; height: 1.6rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                <!-- 3. Instagram -->
+                <a href="https://www.instagram.com/fabio.humano/" target="_blank" title="Instagram">
+                    <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="18" cy="6" r="1"/></svg>
                 </a>
-                <!-- TikTok -->
-                <a href="https://www.tiktok.com/@fabiohumano" target="_blank" class="social-icon" title="TikTok">
-                    <svg style="width: 1.6rem; height: 1.6rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                <!-- 4. TikTok -->
+                <a href="https://www.tiktok.com/@fabio.humano" target="_blank" title="TikTok">
+                    <svg viewBox="0 0 24 24"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
                 </a>
-                <!-- Facebook -->
-                <a href="https://www.facebook.com/fabiobndtt" target="_blank" class="social-icon" title="Facebook">
-                    <svg style="width: 1.6rem; height: 1.6rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                <!-- 5. Facebook -->
+                <a href="https://www.facebook.com/fabio.benedetti.9" target="_blank" title="Facebook">
+                    <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                 </a>
-                <!-- WhatsApp -->
-                <a href="https://wa.me/5532991064759" target="_blank" class="social-icon" title="WhatsApp">
-                    <svg style="width: 1.6rem; height: 1.6rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-7.6 8.38 8.38 0 0 1 3.8.9L21 4.5z"/>
-                        <circle cx="11" cy="11.5" r="0.5" fill="currentColor"/><circle cx="15" cy="11.5" r="0.5" fill="currentColor"/>
-                        <path d="M10 14.5c1 1.5 4 1.5 6 0" stroke-width="1.2"/>
-                    </svg>
+                <!-- 6. WhatsApp -->
+                <a href="https://wa.me/5532991064759" target="_blank" title="WhatsApp">
+                    <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-7.6 8.38 8.38 0 0 1 3.8.9L21 7.5z"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
                 </a>
-                <!-- E-mail -->
-                <a href="mailto:humanoprojeto@gmail.com" class="social-icon" title="Email">
-                    <svg style="width: 1.6rem; height: 1.6rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/><rect width="20" height="16" x="2" y="4" rx="2"/></svg>
+                <!-- 7. Email -->
+                <a href="mailto:fabio@benedetti.com.br" title="E-mail">
+                    <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6L12 13L2 6"/></svg>
                 </a>
             </div>
 
-            <!-- NOVO BOTÃO DE PORTFÓLIO EM DESTAQUE -->
-            <a href="portfolio.html" class="btn-portfolio-hero">Ver Portfólio Completo</a>
+            <a href="portfolio.html" class="btn-cta">Abrir Portfólio</a>
         </div>
     </section>
 
-    <section id="portfolio" class="py-32 bg-neutral-950 px-6">
-        <div class="max-w-7xl">
-            <div class="flex justify-between items-end mb-16">
-                <h3 style="font-size: 2rem; font-weight: 700;">Trabalhos <span style="color: #525252; font-style: italic;">Recentes</span></h3>
-            </div>
-            <div id="videos-container" class="grid md-grid-2" style="gap: 2.5rem;">
-                <div class="animate-pulse" style="background: #171717; height: 16rem; border-radius: 1.5rem;"></div>
+    <section class="py-32 px-6">
+        <div style="max-width: 80rem; margin: 0 auto;">
+            <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 5rem; letter-spacing: -0.05em; font-style: italic;">Obras <span style="color: #111;">Recentes</span></h2>
+            <div id="videos-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 4rem;">
+                <!-- Dinâmico via Firebase -->
             </div>
         </div>
     </section>
 
-    <section id="galeria" class="py-32 bg-black px-6">
-        <div class="max-w-7xl">
-            <h3 style="font-size: 2rem; font-weight: 700; margin-bottom: 4rem; font-style: italic;">No <span style="color: #525252;">Estúdio</span></h3>
-            <div id="galeria-container" class="grid md-grid-4" style="grid-template-columns: repeat(2, 1fr); gap: 1.5rem;"></div>
-        </div>
-    </section>
-
-    <footer class="py-24 bg-black text-center px-6 flex items-center" style="border-top: 1px solid rgba(255,255,255,0.05); flex-direction: column;">
-        <h3 class="font-bold uppercase tracking-tighter mb-8" style="font-size: 2rem;">VAMOS CRIAR JUNTOS?</h3>
-        <a href="https://wa.me/5532991064759" target="_blank" class="btn-whatsapp rounded-full shadow-xl">
-            <svg style="width: 1.5rem; height: 1.5rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-7.6 8.38 8.38 0 0 1 3.8.9L21 4.5z"/>
-                <circle cx="11" cy="11.5" r="0.6" fill="currentColor"/><circle cx="15" cy="11.5" r="0.6" fill="currentColor"/>
-                <path d="M10 14.5c1 1.5 4 1.5 6 0" stroke-width="1.5"/>
+    <footer>
+        <h2 style="font-size: 2.5rem; font-weight: 700; letter-spacing: -0.05em; margin-bottom: 1rem; font-style: italic;">VAMOS DAR VIDA AO SEU SOM?</h2>
+        
+        <!-- Botão WhatsApp Substituindo o Texto de Email -->
+        <a href="https://wa.me/5532991064759" target="_blank" class="btn-whatsapp-footer">
+            <svg style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2;" viewBox="0 0 24 24">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-7.6 8.38 8.38 0 0 1 3.8.9L21 7.5z"/>
             </svg>
-            WhatsApp
+            Falar no WhatsApp
         </a>
-        <p style="margin-top: 4rem; color: #525252; font-size: 9px; text-transform: uppercase; letter-spacing: 0.3em;">© 2024 HUMANO Studio • Fabio Benedetti</p>
+
+        <div id="dyn-footer-address" class="address-footer">
+            FABIO BENEDETTI | PRODUTOR MUSICAL<br>
+            RUA QUINZE DE NOVEMBRO, 91 - CENTRO - SAPUCAIA, RJ
+        </div>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ",
@@ -237,53 +243,38 @@
           projectId: "humano-studio",
           storageBucket: "humano-studio.firebasestorage.app",
           messagingSenderId: "938534325822",
-          appId: "1:938534325822:web:abf5443336ce3224190b6f",
-          measurementId: "G-CT1NF7WLBJ"
+          appId: "1:938534325822:web:abf5443336ce3224190b6f"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        onSnapshot(doc(db, "site_content", "settings"), (snap) => {
+            if(snap.exists()){
+                const d = snap.data();
+                if(d.slogan) document.getElementById('dyn-slogan').innerHTML = d.slogan.replace(/\n/g, '<br>');
+                if(d.seoDesc) document.getElementById('dyn-seo-desc').innerText = d.seoDesc;
+                if(d.footerAddress) document.getElementById('dyn-footer-address').innerHTML = d.footerAddress.replace(/\n/g, '<br>');
+            }
+        });
+
         onSnapshot(collection(db, "videos"), (snapshot) => {
             const container = document.getElementById('videos-container');
             let videos = [];
             snapshot.forEach(doc => videos.push({id: doc.id, ...doc.data()}));
-            
-            // Ordenação por campo manual, com limite de 4 para a Home
-            videos.sort((a, b) => {
-                if (a.ordem !== undefined && b.ordem !== undefined) return a.ordem - b.ordem;
-                return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0);
-            });
-
+            videos.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
             container.innerHTML = '';
             videos.slice(0, 4).forEach((video) => {
                 let videoId = '';
-                try {
-                    const url = video.url;
-                    if (url.includes('v=')) videoId = url.split('v=')[1].split('&')[0];
-                    else if (url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
-                    else videoId = url.split('/').pop();
-
-                    container.innerHTML += `
-                        <div class="card-art">
-                            <div class="aspect-video rounded-2xl overflow-hidden" style="margin-bottom: 1.5rem;">
-                                <iframe src="https://www.youtube.com/embed/${videoId}" style="width:100%; height:100%; border:0;" allowfullscreen loading="lazy"></iframe>
-                            </div>
-                            <h4 style="font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #a3a3a3;">${video.titulo || 'Produção HUMANO'}</h4>
-                        </div>
-                    `;
-                } catch(e) {}
-            });
-        });
-
-        onSnapshot(query(collection(db, "fotos"), orderBy("timestamp", "desc"), limit(8)), (snapshot) => {
-            const container = document.getElementById('galeria-container');
-            container.innerHTML = '';
-            snapshot.forEach((doc) => {
-                const foto = doc.data();
+                const url = video.url;
+                if (url.includes('v=')) videoId = url.split('v=')[1].split('&')[0];
+                else if (url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
                 container.innerHTML += `
-                    <div class="aspect-square rounded-2xl overflow-hidden" style="border: 1px solid rgba(255,255,255,0.05); cursor: crosshair;">
-                        <img src="${foto.url}" style="width:100%; height:100%; object-fit: cover; filter: grayscale(100%); transition: filter 1s;" onmouseover="this.style.filter='grayscale(0)'" onmouseout="this.style.filter='grayscale(100%)'" loading="lazy">
+                    <div class="card-art">
+                        <div class="aspect-video">
+                            <iframe src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0" allowfullscreen loading="lazy"></iframe>
+                        </div>
+                        <h4 style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4em; color: #222;">${video.titulo}</h4>
                     </div>
                 `;
             });
