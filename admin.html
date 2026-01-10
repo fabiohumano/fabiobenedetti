@@ -175,10 +175,6 @@
             });
             document.getElementById('section-' + tab).classList.remove('hidden');
             document.getElementById('tab-' + tab).classList.add('active');
-            
-            // Recarregar dados ao trocar de aba para garantir visualização do conteúdo atual
-            if(tab === 'identidade') loadSettings();
-            if(tab === 'bio') loadBio();
         };
 
         function init(){
@@ -264,20 +260,26 @@
 
         window.deleteWork = (id) => confirm('Deseja excluir este trabalho do portfólio?') && deleteDoc(doc(db, "trabalhos", id));
 
-        async function loadSettings(){
-            const snap = await getDoc(doc(db, "site_content", "settings"));
-            if(snap.exists()){
-                const d = snap.data();
-                // Preenche Referência Visual (Conteúdo Atual)
-                document.getElementById('ref-slogan').innerText = d.slogan || '(Vazio)';
-                document.getElementById('ref-seo').innerText = d.seoDesc || '(Vazio)';
-                document.getElementById('ref-footer').innerText = d.footerAddress || '(Vazio)';
+        function loadSettings(){
+            onSnapshot(doc(db, "site_content", "settings"), (snap) => {
+                const d = snap.data() || {};
+                const refSlogan = document.getElementById('ref-slogan');
+                const refSeo = document.getElementById('ref-seo');
+                const refFooter = document.getElementById('ref-footer');
                 
-                // Preenche os campos de edição para facilitar a alteração
-                document.getElementById('set-slogan').value = d.slogan || '';
-                document.getElementById('set-seo-desc').value = d.seoDesc || '';
-                document.getElementById('set-footer').value = d.footerAddress || '';
-            }
+                refSlogan.innerText = d.slogan || '(Ainda não definido)';
+                refSeo.innerText = d.seoDesc || '(Ainda não definido)';
+                refFooter.innerText = d.footerAddress || '(Ainda não definido)';
+                
+                // Preenche os campos apenas se o usuário ainda não começou a escrever
+                const inSlogan = document.getElementById('set-slogan');
+                const inSeo = document.getElementById('set-seo-desc');
+                const inFooter = document.getElementById('set-footer');
+                
+                if(!inSlogan.value) inSlogan.value = d.slogan || '';
+                if(!inSeo.value) inSeo.value = d.seoDesc || '';
+                if(!inFooter.value) inFooter.value = d.footerAddress || '';
+            });
         }
 
         document.getElementById('settings-form').onsubmit = async (e) => {
@@ -291,19 +293,20 @@
                 footerAddress: document.getElementById('set-footer').value
             }, {merge: true});
             
-            await loadSettings(); // Recarrega referências
             btn.disabled = false; btn.innerText = "Sincronizar com o Site";
             alert('Identidade atualizada no servidor!');
         };
 
-        async function loadBio(){
-            const snap = await getDoc(doc(db, "site_content", "bio_page"));
-            if(snap.exists()) {
-                const text = snap.data().bioText || '';
-                document.getElementById('ref-bio').innerText = text || '(Vazio)';
-                document.getElementById('admin-bio-text').value = text;
-            }
+        function loadBio(){
+            onSnapshot(doc(db, "site_content", "bio_page"), (snap) => {
+                const text = snap.exists() ? snap.data().bioText : '';
+                document.getElementById('ref-bio').innerText = text || '(Ainda não definido)';
+                
+                const inBio = document.getElementById('admin-bio-text');
+                if(!inBio.value) inBio.value = text || '';
+            });
         }
+        
         document.getElementById('bio-form').onsubmit = async (e) => {
             e.preventDefault();
             const btn = e.submitter;
@@ -311,7 +314,6 @@
             
             await setDoc(doc(db, "site_content", "bio_page"), { bioText: document.getElementById('admin-bio-text').value }, {merge: true});
             
-            await loadBio(); // Recarrega referência
             btn.disabled = false; btn.innerText = "Salvar Biografia";
             alert('Biografia atualizada!');
         };
