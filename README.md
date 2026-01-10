@@ -1,7 +1,7 @@
 
 # 🎸 HUMANO Studio - Guia do Usuário
 
-Parabéns pelo seu novo site, Fabio! Este guia explica como você mesmo pode fazer pequenas alterações sem precisar de um programador.
+Parabéns pelo seu novo site, Fabio! ok Este guia explica como você mesmo pode fazer pequenas alterações sem precisar de um programador.
 
 ## 📝 Como trocar os textos
 1. Abra o arquivo `index.html`.
