@@ -16,6 +16,18 @@
         .tab-btn { color: #444; transition: all 0.3s; padding: 12px 0; font-size: 10px; font-weight: bold; letter-spacing: 0.25em; border-bottom: 2px solid transparent; text-transform: uppercase; }
         .tab-btn.active { color: white; border-color: white; }
         .hidden { display: none; }
+        
+        /* Estilo para o texto de referência */
+        .live-reference { 
+            background: rgba(255,255,255,0.02); 
+            border-left: 2px solid #333; 
+            padding: 12px 16px; 
+            margin-bottom: 12px; 
+            font-size: 11px; 
+            color: #666; 
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
     </style>
 </head>
 <body class="p-6 md:p-12">
@@ -79,18 +91,24 @@
                 <h2 class="text-lg font-bold mb-10 italic">Marca & Google</h2>
                 <form id="settings-form" class="space-y-6">
                     <div>
-                        <label class="block text-[9px] text-neutral-600 mb-3 uppercase font-bold tracking-widest">Slogan Principal (Use Enter para quebrar linha)</label>
-                        <textarea id="set-slogan" rows="3" class="input-dark text-sm"></textarea>
+                        <label class="block text-[9px] text-neutral-400 mb-1 uppercase font-bold tracking-widest">Slogan Principal Atual:</label>
+                        <div id="ref-slogan" class="live-reference">Carregando...</div>
+                        <label class="block text-[8px] text-neutral-700 mb-2 uppercase font-medium">Novo texto para o Slogan:</label>
+                        <textarea id="set-slogan" rows="3" class="input-dark text-sm" placeholder="Escreva o novo slogan aqui..."></textarea>
                     </div>
                     <div>
-                        <label class="block text-[9px] text-neutral-600 mb-3 uppercase font-bold tracking-widest">SEO: Descrição para o Google</label>
-                        <textarea id="set-seo-desc" rows="3" class="input-dark text-sm"></textarea>
+                        <label class="block text-[9px] text-neutral-400 mb-1 uppercase font-bold tracking-widest">SEO Atual (Google):</label>
+                        <div id="ref-seo" class="live-reference">Carregando...</div>
+                        <label class="block text-[8px] text-neutral-700 mb-2 uppercase font-medium">Nova descrição SEO:</label>
+                        <textarea id="set-seo-desc" rows="3" class="input-dark text-sm" placeholder="Escreva a nova descrição para o Google..."></textarea>
                     </div>
                     <div>
-                        <label class="block text-[9px] text-neutral-600 mb-3 uppercase font-bold tracking-widest">Rodapé (Endereço Completo)</label>
-                        <textarea id="set-footer" rows="5" class="input-dark text-sm"></textarea>
+                        <label class="block text-[9px] text-neutral-400 mb-1 uppercase font-bold tracking-widest">Rodapé Atual:</label>
+                        <div id="ref-footer" class="live-reference">Carregando...</div>
+                        <label class="block text-[8px] text-neutral-700 mb-2 uppercase font-medium">Novo texto para o rodapé:</label>
+                        <textarea id="set-footer" rows="5" class="input-dark text-sm" placeholder="Escreva o novo endereço/rodapé..."></textarea>
                     </div>
-                    <button type="submit" class="w-full btn-primary mt-6">Atualizar Identidade Digital</button>
+                    <button type="submit" class="w-full btn-primary mt-6">Sincronizar com o Site</button>
                 </form>
             </div>
         </div>
@@ -100,6 +118,9 @@
             <div class="bg-neutral-950 p-12 rounded-[3rem] border border-white/5">
                 <h2 class="text-lg font-bold mb-10 italic">Sua História</h2>
                 <form id="bio-form" class="space-y-6">
+                    <label class="block text-[9px] text-neutral-400 mb-1 uppercase font-bold tracking-widest">Biografia Atual:</label>
+                    <div id="ref-bio" class="live-reference">Carregando...</div>
+                    <label class="block text-[8px] text-neutral-700 mb-2 uppercase font-medium">Editar Biografia:</label>
                     <textarea id="admin-bio-text" rows="15" class="input-dark text-sm" placeholder="Sua biografia completa aqui..."></textarea>
                     <button type="submit" class="w-full btn-primary">Salvar Biografia</button>
                 </form>
@@ -154,6 +175,10 @@
             });
             document.getElementById('section-' + tab).classList.remove('hidden');
             document.getElementById('tab-' + tab).classList.add('active');
+            
+            // Recarregar dados ao trocar de aba para garantir visualização do conteúdo atual
+            if(tab === 'identidade') loadSettings();
+            if(tab === 'bio') loadBio();
         };
 
         function init(){
@@ -243,6 +268,12 @@
             const snap = await getDoc(doc(db, "site_content", "settings"));
             if(snap.exists()){
                 const d = snap.data();
+                // Preenche Referência Visual (Conteúdo Atual)
+                document.getElementById('ref-slogan').innerText = d.slogan || '(Vazio)';
+                document.getElementById('ref-seo').innerText = d.seoDesc || '(Vazio)';
+                document.getElementById('ref-footer').innerText = d.footerAddress || '(Vazio)';
+                
+                // Preenche os campos de edição para facilitar a alteração
                 document.getElementById('set-slogan').value = d.slogan || '';
                 document.getElementById('set-seo-desc').value = d.seoDesc || '';
                 document.getElementById('set-footer').value = d.footerAddress || '';
@@ -251,21 +282,37 @@
 
         document.getElementById('settings-form').onsubmit = async (e) => {
             e.preventDefault();
+            const btn = e.submitter;
+            btn.disabled = true; btn.innerText = "Atualizando...";
+            
             await setDoc(doc(db, "site_content", "settings"), {
                 slogan: document.getElementById('set-slogan').value,
                 seoDesc: document.getElementById('set-seo-desc').value,
                 footerAddress: document.getElementById('set-footer').value
             }, {merge: true});
+            
+            await loadSettings(); // Recarrega referências
+            btn.disabled = false; btn.innerText = "Sincronizar com o Site";
             alert('Identidade atualizada no servidor!');
         };
 
         async function loadBio(){
             const snap = await getDoc(doc(db, "site_content", "bio_page"));
-            if(snap.exists()) document.getElementById('admin-bio-text').value = snap.data().bioText || '';
+            if(snap.exists()) {
+                const text = snap.data().bioText || '';
+                document.getElementById('ref-bio').innerText = text || '(Vazio)';
+                document.getElementById('admin-bio-text').value = text;
+            }
         }
         document.getElementById('bio-form').onsubmit = async (e) => {
             e.preventDefault();
+            const btn = e.submitter;
+            btn.disabled = true; btn.innerText = "Salvando...";
+            
             await setDoc(doc(db, "site_content", "bio_page"), { bioText: document.getElementById('admin-bio-text').value }, {merge: true});
+            
+            await loadBio(); // Recarrega referência
+            btn.disabled = false; btn.innerText = "Salvar Biografia";
             alert('Biografia atualizada!');
         };
 
