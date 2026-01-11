@@ -97,7 +97,7 @@
             </div>
 
             <!-- Mobile Toggle -->
-            <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2 z-[110]">
+            <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2 z-[160] relative">
                 <span id="line1" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
                 <span id="line2" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
                 <span id="line3" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
@@ -106,13 +106,13 @@
     </nav>
 
     <!-- Mobile Overlay -->
-    <div id="mobile-overlay" class="fixed inset-0 bg-black/98 z-[90] flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-all duration-500">
-        <a href="index.html" class="text-3xl font-bold uppercase tracking-widest text-white">Início</a>
-        <a href="portfolio.html" class="text-3xl font-bold uppercase tracking-widest text-neutral-500">Portfólio</a>
-        <a href="bio.html" class="text-3xl font-bold uppercase tracking-widest text-neutral-500">Bio</a>
-        <a href="galeria.html" class="text-3xl font-bold uppercase tracking-widest text-neutral-500">Galeria</a>
+    <div id="mobile-overlay" class="fixed inset-0 bg-black z-[150] flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-all duration-500">
+        <a href="index.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-white">Início</a>
+        <a href="portfolio.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-neutral-500">Portfólio</a>
+        <a href="bio.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-neutral-500">Bio</a>
+        <a href="galeria.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-neutral-500">Galeria</a>
         <div class="w-12 h-px bg-white/10 my-4"></div>
-        <a href="admin.html" class="cerebro-btn px-12 py-4 rounded-full text-sm">Cérebro</a>
+        <a href="admin.html" class="mobile-nav-link cerebro-btn px-12 py-4 rounded-full text-sm">Cérebro</a>
     </div>
 
     <section class="hero-section">
@@ -175,22 +175,28 @@
         const line1 = document.getElementById('line1');
         const line2 = document.getElementById('line2');
         const line3 = document.getElementById('line3');
+        const mobileLinks = document.querySelectorAll('.mobile-nav-link');
         let isMenuOpen = false;
 
-        menuToggle.addEventListener('click', () => {
+        function toggleMenu() {
             isMenuOpen = !isMenuOpen;
             if (isMenuOpen) {
                 mobileOverlay.classList.remove('opacity-0', 'pointer-events-none');
                 line1.style.transform = 'translateY(8px) rotate(45deg)';
                 line2.style.opacity = '0';
                 line3.style.transform = 'translateY(-8px) rotate(-45deg)';
+                document.body.style.overflow = 'hidden';
             } else {
                 mobileOverlay.classList.add('opacity-0', 'pointer-events-none');
                 line1.style.transform = 'none';
                 line2.style.opacity = '1';
                 line3.style.transform = 'none';
+                document.body.style.overflow = '';
             }
-        });
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
 
         // Content
         onSnapshot(doc(db, "site_content", "settings"), (snap) => {
