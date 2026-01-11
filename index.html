@@ -34,7 +34,7 @@
         .cerebro-btn { border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
         .cerebro-btn:hover { background: white; color: black; border-color: white; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255,255,255,0.1); }
         .hero-section { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: #000; }
-        .hero-bg-layer { position: absolute; inset: 0; background-image: url('./fabiobenedetti.jpg'); background-size: cover; background-position: center; filter: brightness(0.35); z-index: 0; }
+        .hero-bg-layer { position: absolute; inset: 0; background-image: url('./fabiobenedetti.jpg'); background-size: cover; background-position: center; filter: brightness(0.35); z-index: 0; transition: background-image 1.2s ease-in-out; }
         .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 10%, rgba(0,0,0,0.8) 100%), linear-gradient(to bottom, transparent 60%, #000 100%); z-index: 1; }
         .hero-content { position: relative; z-index: 10; text-align: center; padding: 0 1.5rem; width: 100%; }
         .text-gradient { background: linear-gradient(to bottom, #ffffff 60%, #eeeeee 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -84,7 +84,7 @@
     </div>
 
     <section class="hero-section">
-        <div class="hero-bg-layer"></div>
+        <div id="dynamic-bg-layer" class="hero-bg-layer"></div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1 id="dyn-slogan" class="text-gradient font-black tracking-tighter mb-8" style="font-size: clamp(3.5rem, 10vw, 8.5rem); line-height: 0.85;">A Arte de ser <br>HUMANO.</h1>
@@ -120,24 +120,29 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // DINAMISMO SEO
-        async function applyDynamicSEO() {
+        // DINAMISMO SEO & BACKGROUND
+        async function applyPageDynamics() {
             const pageId = window.location.pathname.split('/').pop() || 'index.html';
-            const snap = await getDoc(doc(db, "seo_metadata", pageId));
-            if(snap.exists()){
-                const d = snap.data();
-                if(d.title) {
-                    document.title = d.title;
-                    document.getElementById('og-title').setAttribute('content', d.title);
-                }
-                if(d.description) {
-                    document.querySelector('meta[name="description"]').setAttribute('content', d.description);
-                    document.getElementById('og-desc').setAttribute('content', d.description);
-                }
+            
+            // SEO
+            const seoSnap = await getDoc(doc(db, "seo_metadata", pageId));
+            if(seoSnap.exists()){
+                const d = seoSnap.data();
+                if(d.title) { document.title = d.title; document.getElementById('og-title').setAttribute('content', d.title); }
+                if(d.description) { document.querySelector('meta[name="description"]').setAttribute('content', d.description); document.getElementById('og-desc').setAttribute('content', d.description); }
                 if(d.imageUrl) document.getElementById('og-img').setAttribute('content', d.imageUrl);
             }
+
+            // BACKGROUND
+            onSnapshot(doc(db, "site_content", "backgrounds"), (snap) => {
+                if(snap.exists()) {
+                    const bgs = snap.data();
+                    const bgUrl = bgs['home'] || ''; // Na Home sempre usa o 'home'
+                    if(bgUrl) document.getElementById('dynamic-bg-layer').style.backgroundImage = `url('${bgUrl}')`;
+                }
+            });
         }
-        applyDynamicSEO();
+        applyPageDynamics();
 
         const menuToggle = document.getElementById('menu-toggle');
         const mobileOverlay = document.getElementById('mobile-overlay');
@@ -149,19 +154,7 @@
 
         function toggleMenu() {
             isMenuOpen = !isMenuOpen;
-            if (isMenuOpen) {
-                mobileOverlay.classList.remove('opacity-0', 'pointer-events-none');
-                line1.style.transform = 'translateY(8px) rotate(45deg)';
-                line2.style.opacity = '0';
-                line3.style.transform = 'translateY(-8px) rotate(-45deg)';
-                document.body.style.overflow = 'hidden';
-            } else {
-                mobileOverlay.classList.add('opacity-0', 'pointer-events-none');
-                line1.style.transform = 'none';
-                line2.style.opacity = '1';
-                line3.style.transform = 'none';
-                document.body.style.overflow = '';
-            }
+            if (isMenuOpen) { mobileOverlay.classList.remove('opacity-0', 'pointer-events-none'); line1.style.transform = 'translateY(8px) rotate(45deg)'; line2.style.opacity = '0'; line3.style.transform = 'translateY(-8px) rotate(-45deg)'; document.body.style.overflow = 'hidden'; } else { mobileOverlay.classList.add('opacity-0', 'pointer-events-none'); line1.style.transform = 'none'; line2.style.opacity = '1'; line3.style.transform = 'none'; document.body.style.overflow = ''; }
         }
         menuToggle.addEventListener('click', toggleMenu);
         mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
@@ -170,15 +163,14 @@
             if(snap.exists()){
                 const d = snap.data();
                 if(d.slogan) document.getElementById('dyn-slogan').innerHTML = d.slogan.replace(/\n/g, '<br>');
-                if(d.seoDesc && !document.title.includes('Custom')) document.getElementById('dyn-seo-desc').innerText = d.seoDesc;
+                if(d.seoDesc) document.getElementById('dyn-seo-desc').innerText = d.seoDesc;
                 if(d.footerAddress) document.getElementById('dyn-footer-address').innerHTML = d.footerAddress.replace(/\n/g, '<br>');
             }
         });
 
         onSnapshot(collection(db, "videos"), (snapshot) => {
             const container = document.getElementById('videos-container');
-            let videos = [];
-            snapshot.forEach(doc => videos.push({id: doc.id, ...doc.data()}));
+            let videos = []; snapshot.forEach(doc => videos.push({id: doc.id, ...doc.data()}));
             videos.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
             container.innerHTML = '';
             videos.slice(0, 4).forEach((video) => {
