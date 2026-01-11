@@ -4,79 +4,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carregando Obra... | Fabio Benedetti</title>
-
-    <!-- OPEN GRAPH -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Confira este trabalho | Fabio Benedetti">
-    <meta property="og:description" content="Veja os detalhes deste projeto produzido por Fabio Benedetti.">
-    <meta property="og:image" content="https://fabiobenedetti.com.br/fabio_benedetti_produtor.jpg">
-
+    <title>Obra | Fabio Benedetti</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #000000; color: #ffffff; overflow-x: hidden; }
-        nav { background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        #main-nav { background: rgba(0,0,0,0.8); backdrop-filter: blur(25px); transition: all 0.4s ease; }
+        .nav-link { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.25em; transition: all 0.3s; color: #888; }
+        .nav-link:hover, .nav-link.active { color: white; }
+        .cerebro-btn { border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; transition: all 0.4s; }
+        .cerebro-btn:hover { background: white; color: black; border-color: white; transform: translateY(-2px); }
         .obra-container { animation: fadeIn 1s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .feature-box { border-radius: 2.5rem; overflow: hidden; background: #080808; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 50px 100px -20px rgba(0,0,0,1); }
+        .feature-box { border-radius: 2rem; overflow: hidden; background: #080808; border: 1px solid rgba(255,255,255,0.1); }
         iframe { width: 100%; height: 100%; border: 0; }
-        .btn-whatsapp { background: #25D366; color: white; padding: 1.2rem 3rem; border-radius: 100px; text-decoration: none; font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em; display: inline-flex; align-items: center; gap: 10px; transition: all 0.4s; }
-        .btn-whatsapp:hover { transform: scale(1.05); filter: brightness(1.1); box-shadow: 0 0 30px rgba(37, 211, 102, 0.3); }
+        .btn-whatsapp { background: #25D366; color: white; padding: 1.2rem 3rem; border-radius: 100px; text-decoration: none; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; display: inline-flex; align-items: center; gap: 10px; transition: all 0.4s; }
+        .btn-whatsapp:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(37, 211, 102, 0.2); }
     </style>
 </head>
 <body class="selection:bg-white selection:text-black">
-    <nav class="fixed top-0 left-0 w-full z-50 p-8 flex justify-between items-center">
-        <a href="index.html" class="text-white no-underline font-bold tracking-tighter text-lg uppercase">FABIO BENEDETTI</a>
-        <div class="flex gap-8 md:gap-12 uppercase tracking-widest text-[9px] font-bold">
-            <a href="index.html" class="text-neutral-400 hover:text-white transition-colors">Início</a>
-            <a href="portfolio.html" class="text-neutral-400 hover:text-white transition-colors">Portfólio</a>
+    <nav id="main-nav" class="fixed top-0 left-0 w-full z-[100] h-24 border-b border-white/5 flex items-center">
+        <div class="max-w-7xl mx-auto w-full px-6 flex justify-between items-center">
+            <a href="index.html" class="flex flex-col">
+                <span class="font-extrabold text-lg tracking-tighter uppercase italic leading-none">FABIO BENEDETTI</span>
+                <span class="text-[8px] tracking-[0.5em] font-bold text-neutral-500 uppercase mt-1">Produtor Musical</span>
+            </a>
+
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center gap-12">
+                <div class="flex gap-8">
+                    <a href="index.html" class="nav-link">Início</a>
+                    <a href="portfolio.html" class="nav-link">Portfólio</a>
+                    <a href="bio.html" class="nav-link">Bio</a>
+                    <a href="galeria.html" class="nav-link">Galeria</a>
+                </div>
+                <a href="admin.html" class="cerebro-btn px-6 py-2.5 rounded-full">Cérebro</a>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2 z-[110]">
+                <span id="line1" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
+                <span id="line2" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
+                <span id="line3" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
+            </button>
         </div>
     </nav>
 
+    <!-- Mobile Overlay -->
+    <div id="mobile-overlay" class="fixed inset-0 bg-black/98 z-[90] flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-all duration-500">
+        <a href="index.html" class="text-3xl font-bold uppercase tracking-widest text-neutral-500">Início</a>
+        <a href="portfolio.html" class="text-3xl font-bold uppercase tracking-widest text-neutral-500">Portfólio</a>
+        <a href="bio.html" class="text-3xl font-bold uppercase tracking-widest text-neutral-500">Bio</a>
+        <a href="galeria.html" class="text-3xl font-bold uppercase tracking-widest text-neutral-500">Galeria</a>
+        <div class="w-12 h-px bg-white/10 my-4"></div>
+        <a href="admin.html" class="cerebro-btn px-12 py-4 rounded-full text-sm">Cérebro</a>
+    </div>
+
     <main id="obra-content" class="max-w-7xl mx-auto px-6 pt-56 pb-40 obra-container hidden">
         <header class="mb-20">
-            <div id="obra-data" class="text-[10px] uppercase tracking-[0.5em] text-neutral-500 font-bold mb-4">Carregando...</div>
-            <h1 id="obra-titulo" class="text-5xl md:text-8xl font-bold tracking-tighter leading-[0.9]">Título da Obra</h1>
+            <div id="obra-data" class="text-[9px] uppercase tracking-[0.5em] text-neutral-600 font-bold mb-4">Carregando...</div>
+            <h1 id="obra-titulo" class="text-5xl md:text-8xl font-black tracking-tighter leading-none">Título da Obra</h1>
         </header>
-
-        <div class="grid lg:grid-cols-12 gap-16 lg:gap-24">
+        <div class="grid lg:grid-cols-12 gap-16">
             <div class="lg:col-span-8">
-                <div id="media-container" class="feature-box aspect-video mb-12">
-                    <!-- Vídeo ou Imagem aqui -->
-                </div>
-                <div id="obra-descricao" class="text-xl md:text-2xl text-neutral-300 font-light leading-relaxed max-w-3xl">
-                    <!-- Descrição aqui -->
-                </div>
+                <div id="media-container" class="feature-box aspect-video mb-12"></div>
+                <div id="obra-descricao" class="text-xl text-neutral-300 font-light leading-relaxed max-w-3xl"></div>
             </div>
-
             <div class="lg:col-span-4">
                 <div class="sticky top-40 bg-neutral-950 p-10 rounded-[2.5rem] border border-white/5">
-                    <h3 class="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-8">Vamos produzir o seu som?</h3>
-                    <p class="text-sm text-neutral-400 mb-10 leading-relaxed">Gostou desse resultado? Clique no botão abaixo para iniciarmos seu projeto com a mesma excelência.</p>
-                    
-                    <a id="whatsapp-link" href="#" target="_blank" class="btn-whatsapp w-full justify-center">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-2.203 0-4.391 1.203-4.391 4.391 0 1.25.484 2.375 1.297 3.234l-.547 2.031 2.094-.547c.797.438 1.688.672 2.625.672 3.141 0 5.688-2.547 5.688-5.688s-2.547-6.094-5.688-6.094zm3.953 8.359c-.156.438-.906.844-1.25.875-.328.031-.75.141-2.141-.422-1.688-.688-2.766-2.406-2.844-2.516-.078-.109-.656-.875-.656-1.672s.422-1.188.562-1.344c.141-.156.313-.188.422-.188h.297c.094 0 .234-.016.359.281.141.344.484 1.188.531 1.281.047.094.078.203.016.328-.063.125-.094.203-.188.313-.094.109-.203.25-.297.344-.109.109-.219.234-.094.453.125.219.562.922 1.203 1.484.828.719 1.531.938 1.75 1.047.219.109.344.094.469-.047.125-.141.547-.641.688-.859.141-.219.281-.188.469-.125.188.063 1.203.562 1.406.672.203.109.344.156.391.25.047.094.047.547-.109.984z"/></svg>
-                        Conversar Agora
-                    </a>
-
-                    <div class="mt-12 pt-12 border-t border-white/5">
-                        <h4 class="text-[9px] font-bold uppercase tracking-widest text-neutral-600 mb-6">Compartilhar Obra</h4>
-                        <div class="flex gap-6">
-                            <button onclick="shareDirect('whatsapp')" class="hover:opacity-60 transition-opacity"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 20.25c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9c0 1.28.27 2.5.75 3.6l-.75 3.4 3.4-.75c1.1.48 2.32.75 3.6.75z"/></svg></button>
-                            <button onclick="shareDirect('facebook')" class="hover:opacity-60 transition-opacity"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></button>
-                            <button onclick="copyObraLink()" class="hover:opacity-60 transition-opacity"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg></button>
-                        </div>
-                    </div>
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-8">Vamos produzir?</h3>
+                    <a id="whatsapp-link" href="#" target="_blank" class="btn-whatsapp w-full justify-center">Conversar Agora</a>
                 </div>
             </div>
         </div>
     </main>
 
     <footer class="py-24 text-center border-t border-white/10 bg-black">
-        <div id="dyn-footer-address" class="text-[10px] text-white font-bold uppercase tracking-[0.4em] opacity-90 leading-loose">
+        <div id="dyn-footer-address" class="text-[10px] text-white font-bold uppercase tracking-[0.4em] opacity-80 leading-loose">
             FABIO BENEDETTI | PRODUTOR MUSICAL<br>
-            SAPUCAIA - RJ
+            SAPUCAIA, RJ
         </div>
     </footer>
 
@@ -96,67 +102,50 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Pegar ID da URL
+        // Header Control
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+        const line1 = document.getElementById('line1');
+        const line2 = document.getElementById('line2');
+        const line3 = document.getElementById('line3');
+        let isMenuOpen = false;
+
+        menuToggle.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                line1.style.transform = 'translateY(8px) rotate(45deg)';
+                line2.style.opacity = '0';
+                line3.style.transform = 'translateY(-8px) rotate(-45deg)';
+            } else {
+                mobileOverlay.classList.add('opacity-0', 'pointer-events-none');
+                line1.style.transform = 'none';
+                line2.style.opacity = '1';
+                line3.style.transform = 'none';
+            }
+        });
+
         const urlParams = new URLSearchParams(window.location.search);
         const obraId = urlParams.get('id');
-
-        if (!obraId) {
-            window.location.href = 'portfolio.html';
-        } else {
-            loadObraData();
-        }
+        if (!obraId) { window.location.href = 'portfolio.html'; } else { loadObraData(); }
 
         async function loadObraData() {
-            const docRef = doc(db, "trabalhos", obraId);
-            const snap = await getDoc(docRef);
-
+            const snap = await getDoc(doc(db, "trabalhos", obraId));
             if (snap.exists()) {
                 const data = snap.data();
-                document.title = `${data.titulo} | Fabio Benedetti`;
                 document.getElementById('obra-titulo').innerText = data.titulo;
                 document.getElementById('obra-data').innerText = data.data || '2025';
                 document.getElementById('obra-descricao').innerHTML = data.descricao ? data.descricao.replace(/\n/g, '<br>') : '';
-                
-                // Mídia
-                const mediaContainer = document.getElementById('media-container');
+                const media = document.getElementById('media-container');
                 if (data.videoUrl) {
-                    let videoId = '';
-                    if (data.videoUrl.includes('v=')) videoId = data.videoUrl.split('v=')[1].split('&')[0];
-                    else if (data.videoUrl.includes('youtu.be/')) videoId = data.videoUrl.split('youtu.be/')[1].split('?')[0];
-                    mediaContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?rel=0" allowfullscreen></iframe>`;
-                } else if (data.fotoUrl) {
-                    mediaContainer.innerHTML = `<img src="${data.fotoUrl}" class="w-full h-full object-cover">`;
+                    let vId = data.videoUrl.includes('v=') ? data.videoUrl.split('v=')[1].split('&')[0] : data.videoUrl.split('youtu.be/')[1].split('?')[0];
+                    media.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}?rel=0" allowfullscreen></iframe>`;
                 }
-
-                // WhatsApp Link
-                const waMessage = encodeURIComponent(`Olá Fabio! Vi sua obra "${data.titulo}" no seu site e gostaria de produzir um projeto com você.`);
+                const waMessage = encodeURIComponent(`Olá Fabio! Vi sua obra "${data.titulo}" e gostaria de produzir com você.`);
                 document.getElementById('whatsapp-link').href = `https://wa.me/5532991064759?text=${waMessage}`;
-
                 document.getElementById('obra-content').classList.remove('hidden');
-            } else {
-                alert('Obra não encontrada.');
-                window.location.href = 'portfolio.html';
             }
         }
-
-        window.copyObraLink = () => {
-            navigator.clipboard.writeText(window.location.href);
-            alert('Link da obra copiado!');
-        };
-
-        window.shareDirect = (platform) => {
-            const url = encodeURIComponent(window.location.href);
-            const title = encodeURIComponent(document.title);
-            if (platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${title}%20${url}`);
-            if (platform === 'facebook') window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`);
-        };
-
-        onSnapshot(doc(db, "site_content", "settings"), (snap) => {
-            if(snap.exists()) {
-                const d = snap.data();
-                if(d.footerAddress) document.getElementById('dyn-footer-address').innerHTML = d.footerAddress.replace(/\n/g, '<br>');
-            }
-        });
     </script>
 </body>
 </html>
