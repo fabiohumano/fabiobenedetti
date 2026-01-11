@@ -4,29 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obra | Fabio Benedetti</title>
+    <meta name="description" content="Detalhes técnicos da obra produzida por Fabio Benedetti.">
+
+    <meta id="og-type" property="og:type" content="article">
+    <meta id="og-url" property="og:url" content="https://fabiobenedetti.com.br/portfolio.html">
+    <meta id="og-title" property="og:title" content="Obra | Fabio Benedetti">
+    <meta id="og-desc" property="og:description" content="Confira os detalhes técnicos desta produção.">
+    <meta id="og-img" property="og:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
+
     <link rel="canonical" href="https://fabiobenedetti.com.br/portfolio.html">
-
-    <!-- SEO GOOGLE -->
-    <title>Obra | Fabio Benedetti – Produtor Musical</title>
-    <meta name="description" content="Detalhes técnicos da obra produzida por Fabio Benedetti: Produção musical, mixagem e masterização.">
-    <meta name="keywords" content="Obra Musical, Fabio Benedetti, Produção, Detalhes Técnicos, Projeto HUMANO">
-    
-    <!-- OPEN GRAPH / FACEBOOK / WHATSAPP -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://fabiobenedetti.com.br/portfolio.html">
-    <meta property="og:title" content="Obra | Fabio Benedetti – Produtor Musical">
-    <meta property="og:description" content="Confira os detalhes técnicos desta produção assinada por Fabio Benedetti. Produtor musical, compositor e criador do Projeto HUMANO.">
-    <meta property="og:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-
-    <!-- TWITTER -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://fabiobenedetti.com.br/portfolio.html">
-    <meta property="twitter:title" content="Obra | Fabio Benedetti – Produtor Musical">
-    <meta property="twitter:description" content="Confira os detalhes técnicos desta produção assinada por Fabio Benedetti. Produtor musical, compositor e criador do Projeto HUMANO.">
-    <meta property="twitter:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -36,12 +23,9 @@
         .nav-link:hover, .nav-link.active { color: white; }
         .cerebro-btn { border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; transition: all 0.4s; }
         .cerebro-btn:hover { background: white; color: black; border-color: white; transform: translateY(-2px); }
-        .obra-container { animation: fadeIn 1s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .feature-box { border-radius: 2rem; overflow: hidden; background: #080808; border: 1px solid rgba(255,255,255,0.1); }
         iframe { width: 100%; height: 100%; border: 0; }
         .btn-whatsapp { background: #25D366; color: white; padding: 1.2rem 3rem; border-radius: 100px; text-decoration: none; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; display: inline-flex; align-items: center; gap: 10px; transition: all 0.4s; }
-        .btn-whatsapp:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(37, 211, 102, 0.2); }
     </style>
 </head>
 <body class="selection:bg-white selection:text-black">
@@ -51,8 +35,6 @@
                 <span class="font-extrabold text-lg tracking-tighter uppercase italic leading-none">FABIO BENEDETTI</span>
                 <span class="text-[8px] tracking-[0.5em] font-bold text-neutral-500 uppercase mt-1">Produtor Musical</span>
             </a>
-
-            <!-- Desktop Nav -->
             <div class="hidden md:flex items-center gap-12">
                 <div class="flex gap-8">
                     <a href="index.html" class="nav-link">Início</a>
@@ -62,8 +44,6 @@
                 </div>
                 <a href="admin.html" class="cerebro-btn px-6 py-2.5 rounded-full">Cérebro</a>
             </div>
-
-            <!-- Mobile Toggle -->
             <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2 z-[160] relative">
                 <span id="line1" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
                 <span id="line2" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
@@ -71,8 +51,6 @@
             </button>
         </div>
     </nav>
-
-    <!-- Mobile Overlay -->
     <div id="mobile-overlay" class="fixed inset-0 bg-black z-[150] flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-all duration-500">
         <a href="index.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-neutral-500">Início</a>
         <a href="portfolio.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-neutral-500">Portfólio</a>
@@ -82,7 +60,7 @@
         <a href="admin.html" class="mobile-nav-link cerebro-btn px-12 py-4 rounded-full text-sm">Cérebro</a>
     </div>
 
-    <main id="obra-content" class="max-w-7xl mx-auto px-6 pt-56 pb-40 obra-container hidden">
+    <main id="obra-content" class="max-w-7xl mx-auto px-6 pt-56 pb-40 hidden">
         <header class="mb-20">
             <div id="obra-data" class="text-[9px] uppercase tracking-[0.5em] text-neutral-600 font-bold mb-4">Carregando...</div>
             <h1 id="obra-titulo" class="text-5xl md:text-8xl font-black tracking-tighter leading-none">Título da Obra</h1>
@@ -101,76 +79,32 @@
         </div>
     </main>
 
-    <footer class="py-24 text-center border-t border-white/10 bg-black">
-        <div id="dyn-footer-address" class="text-[10px] text-white font-bold uppercase tracking-[0.4em] opacity-80 leading-loose">
-            FABIO BENEDETTI | PRODUTOR MUSICAL<br>
-            SAPUCAIA, RJ
-        </div>
-    </footer>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ",
-          authDomain: "humano-studio.firebaseapp.com",
-          projectId: "humano-studio",
-          storageBucket: "humano-studio.firebasestorage.app",
-          messagingSenderId: "938534325822",
-          appId: "1:938534325822:web:abf5443336ce3224190b6f"
-        };
-
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        const firebaseConfig = { apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ", authDomain: "humano-studio.firebaseapp.com", projectId: "humano-studio", storageBucket: "humano-studio.firebasestorage.app", messagingSenderId: "938534325822", appId: "1:938534325822:web:abf5443336ce3224190b6f" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Header Control
-        const menuToggle = document.getElementById('menu-toggle');
-        const mobileOverlay = document.getElementById('mobile-overlay');
-        const line1 = document.getElementById('line1');
-        const line2 = document.getElementById('line2');
-        const line3 = document.getElementById('line3');
-        const mobileLinks = document.querySelectorAll('.mobile-nav-link');
-        let isMenuOpen = false;
-
-        function toggleMenu() {
-            isMenuOpen = !isMenuOpen;
-            if (isMenuOpen) {
-                mobileOverlay.classList.remove('opacity-0', 'pointer-events-none');
-                line1.style.transform = 'translateY(8px) rotate(45deg)';
-                line2.style.opacity = '0';
-                line3.style.transform = 'translateY(-8px) rotate(-45deg)';
-                document.body.style.overflow = 'hidden';
-            } else {
-                mobileOverlay.classList.add('opacity-0', 'pointer-events-none');
-                line1.style.transform = 'none';
-                line2.style.opacity = '1';
-                line3.style.transform = 'none';
-                document.body.style.overflow = '';
+        async function applyDynamicSEO() {
+            const snap = await getDoc(doc(db, "seo_metadata", 'obra.html'));
+            if(snap.exists()){
+                const d = snap.data();
+                if(d.imageUrl) document.getElementById('og-img').setAttribute('content', d.imageUrl);
             }
         }
-
-        menuToggle.addEventListener('click', toggleMenu);
-        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+        applyDynamicSEO();
 
         const urlParams = new URLSearchParams(window.location.search);
         const obraId = urlParams.get('id');
-        if (!obraId) { window.location.href = 'portfolio.html'; } else { loadObraData(); }
-
-        async function loadObraData() {
+        if (obraId) {
             const snap = await getDoc(doc(db, "trabalhos", obraId));
             if (snap.exists()) {
                 const data = snap.data();
                 document.getElementById('obra-titulo').innerText = data.titulo;
+                document.title = `${data.titulo} | Fabio Benedetti`;
                 document.getElementById('obra-data').innerText = data.data || '2025';
                 document.getElementById('obra-descricao').innerHTML = data.descricao ? data.descricao.replace(/\n/g, '<br>') : '';
-                const media = document.getElementById('media-container');
-                if (data.videoUrl) {
-                    let vId = data.videoUrl.includes('v=') ? data.videoUrl.split('v=')[1].split('&')[0] : data.videoUrl.split('youtu.be/')[1].split('?')[0];
-                    media.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}?rel=0" allowfullscreen></iframe>`;
-                }
-                const waMessage = encodeURIComponent(`Olá Fabio! Vi sua obra "${data.titulo}" e gostaria de produzir com você.`);
-                document.getElementById('whatsapp-link').href = `https://wa.me/5532991064759?text=${waMessage}`;
                 document.getElementById('obra-content').classList.remove('hidden');
             }
         }

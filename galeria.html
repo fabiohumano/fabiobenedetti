@@ -4,29 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria | Fabio Benedetti</title>
+    <meta name="description" content="Explore a galeria visual de Fabio Benedetti.">
+
+    <meta id="og-type" property="og:type" content="website">
+    <meta id="og-url" property="og:url" content="https://fabiobenedetti.com.br/galeria.html">
+    <meta id="og-title" property="og:title" content="Galeria | Fabio Benedetti">
+    <meta id="og-desc" property="og:description" content="A trajetória visual em estúdio e palcos.">
+    <meta id="og-img" property="og:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
+
     <link rel="canonical" href="https://fabiobenedetti.com.br/galeria.html">
-
-    <!-- SEO GOOGLE -->
-    <title>Galeria | Fabio Benedetti – Produtor Musical</title>
-    <meta name="description" content="Explore a galeria visual de Fabio Benedetti: Momentos de estúdio, palcos e a jornada do Projeto HUMANO.">
-    <meta name="keywords" content="Galeria, Fabio Benedetti, Estúdio, Fotos Música, Projeto HUMANO">
-    
-    <!-- OPEN GRAPH / FACEBOOK / WHATSAPP -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://fabiobenedetti.com.br/galeria.html">
-    <meta property="og:title" content="Galeria | Fabio Benedetti – Produtor Musical">
-    <meta property="og:description" content="A trajetória visual de Fabio Benedetti. Momentos de criação, produção e a essência do Projeto HUMANO em imagens.">
-    <meta property="og:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-
-    <!-- TWITTER -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://fabiobenedetti.com.br/galeria.html">
-    <meta property="twitter:title" content="Galeria | Fabio Benedetti – Produtor Musical">
-    <meta property="twitter:description" content="A trajetória visual de Fabio Benedetti. Momentos de criação, produção e a essência do Projeto HUMANO em imagens.">
-    <meta property="twitter:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -36,11 +23,9 @@
         .nav-link:hover, .nav-link.active { color: white; }
         .cerebro-btn { border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; transition: all 0.4s; }
         .cerebro-btn:hover { background: white; color: black; border-color: white; transform: translateY(-2px); }
-        
         .masonry { column-count: 1; column-gap: 1.5rem; }
         @media (min-width: 640px) { .masonry { column-count: 2; } }
         @media (min-width: 1024px) { .masonry { column-count: 3; } }
-        
         .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; animation: fadeIn 0.6s ease-out forwards; opacity: 0; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .gallery-img { cursor: zoom-in; transition: transform 0.4s, filter 0.4s; border-radius: 1rem; }
@@ -57,8 +42,6 @@
                 <span class="font-extrabold text-lg tracking-tighter uppercase italic leading-none">FABIO BENEDETTI</span>
                 <span class="text-[8px] tracking-[0.5em] font-bold text-neutral-500 uppercase mt-1">Produtor Musical</span>
             </a>
-
-            <!-- Desktop Nav -->
             <div class="hidden md:flex items-center gap-12">
                 <div class="flex gap-8">
                     <a href="index.html" class="nav-link">Início</a>
@@ -68,8 +51,6 @@
                 </div>
                 <a href="admin.html" class="cerebro-btn px-6 py-2.5 rounded-full">Cérebro</a>
             </div>
-
-            <!-- Mobile Toggle -->
             <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2 z-[160] relative">
                 <span id="line1" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
                 <span id="line2" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
@@ -77,8 +58,6 @@
             </button>
         </div>
     </nav>
-
-    <!-- Mobile Overlay -->
     <div id="mobile-overlay" class="fixed inset-0 bg-black z-[150] flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-all duration-500">
         <a href="index.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-neutral-500">Início</a>
         <a href="portfolio.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-neutral-500">Portfólio</a>
@@ -98,37 +77,24 @@
         <div id="gallery-grid" class="masonry"></div>
     </main>
 
-    <!-- LIGHTBOX -->
-    <div id="lightbox" class="fixed inset-0 flex items-center justify-center p-4">
-        <button onclick="closeLightbox()" class="absolute top-8 right-8 text-white p-4 hover:opacity-50"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-        <button onclick="prevImage()" class="absolute left-4 top-1/2 -translate-y-1/2 text-white p-4"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
-        <button onclick="nextImage()" class="absolute right-4 top-1/2 -translate-y-1/2 text-white p-4"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
-        <div class="max-w-5xl w-full text-center">
-            <img id="lightbox-img" src="" class="mx-auto shadow-2xl max-h-[80vh] object-contain">
-            <div id="lightbox-info" class="mt-8">
-                <h3 id="lightbox-title" class="text-xl font-bold"></h3>
-                <p id="lightbox-year" class="text-[10px] uppercase tracking-widest text-neutral-500 mt-2"></p>
-            </div>
-        </div>
-    </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ",
-          authDomain: "humano-studio.firebaseapp.com",
-          projectId: "humano-studio",
-          storageBucket: "humano-studio.firebasestorage.app",
-          messagingSenderId: "938534325822",
-          appId: "1:938534325822:web:abf5443336ce3224190b6f"
-        };
-
+        import { getFirestore, collection, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        const firebaseConfig = { apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ", authDomain: "humano-studio.firebaseapp.com", projectId: "humano-studio", storageBucket: "humano-studio.firebasestorage.app", messagingSenderId: "938534325822", appId: "1:938534325822:web:abf5443336ce3224190b6f" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Header Control
+        async function applyDynamicSEO() {
+            const snap = await getDoc(doc(db, "seo_metadata", 'galeria.html'));
+            if(snap.exists()){
+                const d = snap.data();
+                if(d.title) { document.title = d.title; document.getElementById('og-title').setAttribute('content', d.title); }
+                if(d.description) { document.querySelector('meta[name="description"]').setAttribute('content', d.description); document.getElementById('og-desc').setAttribute('content', d.description); }
+                if(d.imageUrl) document.getElementById('og-img').setAttribute('content', d.imageUrl);
+            }
+        }
+        applyDynamicSEO();
+
         const menuToggle = document.getElementById('menu-toggle');
         const mobileOverlay = document.getElementById('mobile-overlay');
         const line1 = document.getElementById('line1');
@@ -136,69 +102,34 @@
         const line3 = document.getElementById('line3');
         const mobileLinks = document.querySelectorAll('.mobile-nav-link');
         let isMenuOpen = false;
-
         function toggleMenu() {
             isMenuOpen = !isMenuOpen;
-            if (isMenuOpen) {
-                mobileOverlay.classList.remove('opacity-0', 'pointer-events-none');
-                line1.style.transform = 'translateY(8px) rotate(45deg)';
-                line2.style.opacity = '0';
-                line3.style.transform = 'translateY(-8px) rotate(-45deg)';
-                document.body.style.overflow = 'hidden';
-            } else {
-                mobileOverlay.classList.add('opacity-0', 'pointer-events-none');
-                line1.style.transform = 'none';
-                line2.style.opacity = '1';
-                line3.style.transform = 'none';
-                document.body.style.overflow = '';
-            }
+            if (isMenuOpen) { mobileOverlay.classList.remove('opacity-0', 'pointer-events-none'); line1.style.transform = 'translateY(8px) rotate(45deg)'; line2.style.opacity = '0'; line3.style.transform = 'translateY(-8px) rotate(-45deg)'; document.body.style.overflow = 'hidden'; } else { mobileOverlay.classList.add('opacity-0', 'pointer-events-none'); line1.style.transform = 'none'; line2.style.opacity = '1'; line3.style.transform = 'none'; document.body.style.overflow = ''; }
         }
-
         menuToggle.addEventListener('click', toggleMenu);
         mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
-
-        let allImages = [];
-        let currentImageIndex = 0;
-        let filteredImages = [];
 
         onSnapshot(collection(db, "galeria_categorias"), (snap) => {
             const container = document.getElementById('category-filters');
             container.innerHTML = `<button class="filter-btn active" onclick="filterGallery('all', this)">Todas</button>`;
-            let cats = [];
-            snap.forEach(d => cats.push({id: d.id, ...d.data()}));
-            cats.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
-            cats.forEach(cat => {
-                container.innerHTML += `<button class="filter-btn" onclick="filterGallery('${cat.slug}', this)">${cat.nome}</button>`;
+            snap.forEach(d => {
+                const c = d.data();
+                container.innerHTML += `<button class="filter-btn" onclick="filterGallery('${c.slug}', this)">${c.nome}</button>`;
             });
         });
-
+        
         onSnapshot(collection(db, "galeria_fotos"), (snap) => {
-            allImages = [];
-            snap.forEach(d => allImages.push({id: d.id, ...d.data()}));
-            allImages.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
-            renderGallery('all');
+            let photos = [];
+            snap.forEach(d => photos.push(d.data()));
+            renderGallery('all', photos);
         });
 
-        window.filterGallery = (slug, btn) => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderGallery(slug);
-        };
-
-        function renderGallery(slug) {
+        function renderGallery(slug, allPhotos) {
             const grid = document.getElementById('gallery-grid');
             grid.innerHTML = '';
-            filteredImages = slug === 'all' ? allImages : allImages.filter(img => img.categoria === slug);
-            filteredImages.forEach((img, index) => {
-                grid.innerHTML += `<div class="masonry-item"><img src="${img.thumbWebp}" class="gallery-img w-full shadow-lg" onclick="openLightbox(${index})" loading="lazy"></div>`;
-            });
+            const filtered = slug === 'all' ? allPhotos : allPhotos.filter(img => img.categoria === slug);
+            filtered.forEach(img => { grid.innerHTML += `<div class="masonry-item"><img src="${img.thumbWebp}" class="gallery-img w-full shadow-lg" loading="lazy"></div>`; });
         }
-
-        window.openLightbox = (index) => { currentImageIndex = index; updateLightbox(); document.getElementById('lightbox').style.display = 'flex'; document.body.style.overflow = 'hidden'; };
-        window.closeLightbox = () => { document.getElementById('lightbox').style.display = 'none'; document.body.style.overflow = 'auto'; };
-        window.nextImage = () => { currentImageIndex = (currentImageIndex + 1) % filteredImages.length; updateLightbox(); };
-        window.prevImage = () => { currentImageIndex = (currentImageIndex - 1 + filteredImages.length) % filteredImages.length; updateLightbox(); };
-        function updateLightbox() { const img = filteredImages[currentImageIndex]; document.getElementById('lightbox-img').src = img.fullWebp; document.getElementById('lightbox-title').innerText = img.titulo; document.getElementById('lightbox-year').innerText = img.ano || ''; }
     </script>
 </body>
 </html>

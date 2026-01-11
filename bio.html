@@ -4,29 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="canonical" href="https://fabiobenedetti.com.br/bio.html">
-
-    <!-- SEO GOOGLE -->
     <title>Bio | Fabio Benedetti – Produtor Musical</title>
-    <meta name="description" content="Saiba mais sobre a trajetória de Fabio Benedetti: Produtor musical, compositor e criador do Projeto HUMANO.">
-    <meta name="keywords" content="Bio, Fabio Benedetti, Produtor Musical, Projeto HUMANO, Biografia Musical">
-    
-    <!-- OPEN GRAPH / FACEBOOK / WHATSAPP -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://fabiobenedetti.com.br/bio.html">
-    <meta property="og:title" content="Bio | Fabio Benedetti – Produtor Musical">
-    <meta property="og:description" content="A jornada de Fabio Benedetti no som. Produtor musical, compositor e criador do Projeto HUMANO. Especialista em capturar a essência da alma artística.">
-    <meta property="og:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
+    <meta name="description" content="Saiba mais sobre a trajetória de Fabio Benedetti.">
 
-    <!-- TWITTER -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://fabiobenedetti.com.br/bio.html">
-    <meta property="twitter:title" content="Bio | Fabio Benedetti – Produtor Musical">
-    <meta property="twitter:description" content="A jornada de Fabio Benedetti no som. Produtor musical, compositor e criador do Projeto HUMANO. Especialista em capturar a essência da alma artística.">
-    <meta property="twitter:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
+    <meta id="og-type" property="og:type" content="website">
+    <meta id="og-url" property="og:url" content="https://fabiobenedetti.com.br/bio.html">
+    <meta id="og-title" property="og:title" content="Bio | Fabio Benedetti">
+    <meta id="og-desc" property="og:description" content="A jornada de Fabio Benedetti no som.">
+    <meta id="og-img" property="og:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
 
+    <link rel="canonical" href="https://fabiobenedetti.com.br/bio.html">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -46,8 +33,6 @@
                 <span class="font-extrabold text-lg tracking-tighter uppercase italic leading-none">FABIO BENEDETTI</span>
                 <span class="text-[8px] tracking-[0.5em] font-bold text-neutral-500 uppercase mt-1">Produtor Musical</span>
             </a>
-
-            <!-- Desktop Nav -->
             <div class="hidden md:flex items-center gap-12">
                 <div class="flex gap-8">
                     <a href="index.html" class="nav-link">Início</a>
@@ -57,8 +42,6 @@
                 </div>
                 <a href="admin.html" class="cerebro-btn px-6 py-2.5 rounded-full">Cérebro</a>
             </div>
-
-            <!-- Mobile Toggle -->
             <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2 z-[160] relative">
                 <span id="line1" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
                 <span id="line2" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
@@ -66,8 +49,6 @@
             </button>
         </div>
     </nav>
-
-    <!-- Mobile Overlay -->
     <div id="mobile-overlay" class="fixed inset-0 bg-black z-[150] flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-all duration-500">
         <a href="index.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-neutral-500">Início</a>
         <a href="portfolio.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-neutral-500">Portfólio</a>
@@ -83,29 +64,28 @@
     </main>
 
     <footer class="py-24 text-center border-t border-white/10 bg-black">
-        <div id="dyn-footer-address" class="text-[10px] text-white font-bold uppercase tracking-[0.4em] opacity-80 leading-loose">
-            FABIO BENEDETTI | PRODUTOR MUSICAL<br>
-            SAPUCAIA, RJ
-        </div>
+        <div id="dyn-footer-address" class="text-[10px] text-white font-bold uppercase tracking-[0.4em] opacity-80 leading-loose">FABIO BENEDETTI | PRODUTOR MUSICAL<br>SAPUCAIA, RJ</div>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ",
-          authDomain: "humano-studio.firebaseapp.com",
-          projectId: "humano-studio",
-          storageBucket: "humano-studio.firebasestorage.app",
-          messagingSenderId: "938534325822",
-          appId: "1:938534325822:web:abf5443336ce3224190b6f"
-        };
-
+        import { getFirestore, doc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        const firebaseConfig = { apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ", authDomain: "humano-studio.firebaseapp.com", projectId: "humano-studio", storageBucket: "humano-studio.firebasestorage.app", messagingSenderId: "938534325822", appId: "1:938534325822:web:abf5443336ce3224190b6f" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Header Control
+        async function applyDynamicSEO() {
+            const pageId = 'bio.html';
+            const snap = await getDoc(doc(db, "seo_metadata", pageId));
+            if(snap.exists()){
+                const d = snap.data();
+                if(d.title) { document.title = d.title; document.getElementById('og-title').setAttribute('content', d.title); }
+                if(d.description) { document.querySelector('meta[name="description"]').setAttribute('content', d.description); document.getElementById('og-desc').setAttribute('content', d.description); }
+                if(d.imageUrl) document.getElementById('og-img').setAttribute('content', d.imageUrl);
+            }
+        }
+        applyDynamicSEO();
+
         const menuToggle = document.getElementById('menu-toggle');
         const mobileOverlay = document.getElementById('mobile-overlay');
         const line1 = document.getElementById('line1');
@@ -113,37 +93,14 @@
         const line3 = document.getElementById('line3');
         const mobileLinks = document.querySelectorAll('.mobile-nav-link');
         let isMenuOpen = false;
-
         function toggleMenu() {
             isMenuOpen = !isMenuOpen;
-            if (isMenuOpen) {
-                mobileOverlay.classList.remove('opacity-0', 'pointer-events-none');
-                line1.style.transform = 'translateY(8px) rotate(45deg)';
-                line2.style.opacity = '0';
-                line3.style.transform = 'translateY(-8px) rotate(-45deg)';
-                document.body.style.overflow = 'hidden';
-            } else {
-                mobileOverlay.classList.add('opacity-0', 'pointer-events-none');
-                line1.style.transform = 'none';
-                line2.style.opacity = '1';
-                line3.style.transform = 'none';
-                document.body.style.overflow = '';
-            }
+            if (isMenuOpen) { mobileOverlay.classList.remove('opacity-0', 'pointer-events-none'); line1.style.transform = 'translateY(8px) rotate(45deg)'; line2.style.opacity = '0'; line3.style.transform = 'translateY(-8px) rotate(-45deg)'; document.body.style.overflow = 'hidden'; } else { mobileOverlay.classList.add('opacity-0', 'pointer-events-none'); line1.style.transform = 'none'; line2.style.opacity = '1'; line3.style.transform = 'none'; document.body.style.overflow = ''; }
         }
-
         menuToggle.addEventListener('click', toggleMenu);
         mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
-
-        onSnapshot(doc(db, "site_content", "bio_page"), (snap) => {
-            if (snap.exists()) document.getElementById('bio-content').innerText = snap.data().bioText;
-        });
-
-        onSnapshot(doc(db, "site_content", "settings"), (snap) => {
-            if(snap.exists()) {
-                const d = snap.data();
-                if(d.footerAddress) document.getElementById('dyn-footer-address').innerHTML = d.footerAddress.replace(/\n/g, '<br>');
-            }
-        });
+        onSnapshot(doc(db, "site_content", "bio_page"), (snap) => { if (snap.exists()) document.getElementById('bio-content').innerText = snap.data().bioText; });
+        onSnapshot(doc(db, "site_content", "settings"), (snap) => { if(snap.exists()) { const d = snap.data(); if(d.footerAddress) document.getElementById('dyn-footer-address').innerHTML = d.footerAddress.replace(/\n/g, '<br>'); } });
     </script>
 </body>
 </html>

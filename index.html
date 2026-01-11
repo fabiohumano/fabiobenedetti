@@ -4,29 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="canonical" href="https://fabiobenedetti.com.br">
-
-    <!-- SEO GOOGLE -->
-    <title>Fabio Benedetti – Produtor Musical</title>
-    <meta name="description" content="Fabio Benedetti: Produtor musical, compositor e criador do Projeto HUMANO. Produção, Mixagem e Masterização de excelência em Sapucaia, RJ.">
-    <meta name="keywords" content="Produtor Musical, Sapucaia RJ, Fabio Benedetti, Mixagem, Masterização, Estúdio de Gravação, Rio de Janeiro, Projeto HUMANO">
     
-    <!-- OPEN GRAPH / FACEBOOK / WHATSAPP -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://fabiobenedetti.com.br/">
-    <meta property="og:title" content="Fabio Benedetti – Produtor Musical">
-    <meta property="og:description" content="Fabio Benedetti: Produtor musical, compositor e criador do Projeto HUMANO. Especialista em capturar a essência da alma artística através de produção, mixagem e masterização de excelência.">
-    <meta property="og:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
+    <!-- FALLBACK SEO -->
+    <title>Fabio Benedetti – Produtor Musical</title>
+    <meta name="description" content="Fabio Benedetti: Produtor musical, compositor e criador do Projeto HUMANO. Especialista em capturar a essência da alma artística.">
+    
+    <!-- OPEN GRAPH DINÂMICO -->
+    <meta id="og-type" property="og:type" content="website">
+    <meta id="og-url" property="og:url" content="https://fabiobenedetti.com.br/">
+    <meta id="og-title" property="og:title" content="Fabio Benedetti – Produtor Musical">
+    <meta id="og-desc" property="og:description" content="Produtor musical, compositor e criador do Projeto HUMANO.">
+    <meta id="og-img" property="og:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
 
-    <!-- TWITTER -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://fabiobenedetti.com.br/">
-    <meta property="twitter:title" content="Fabio Benedetti – Produtor Musical">
-    <meta property="twitter:description" content="Fabio Benedetti: Produtor musical, compositor e criador do Projeto HUMANO. Especialista em capturar a essência da alma artística através de produção, mixagem e masterização de excelência.">
-    <meta property="twitter:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
-
+    <link rel="canonical" href="https://fabiobenedetti.com.br">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -36,56 +28,36 @@
         :root { --bg: #000000; --accent: #ffffff; --text-muted: #aaaaaa; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #ffffff; overflow-x: hidden; }
-        
-        /* Navigation Glass Style */
         #main-nav { background: rgba(0,0,0,0.8); backdrop-filter: blur(25px); transition: all 0.4s ease; }
-        
         .nav-link { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.25em; transition: all 0.3s; color: #888; }
         .nav-link:hover, .nav-link.active { color: white; }
-        
-        .cerebro-btn { 
-            border: 1px solid rgba(255,255,255,0.15); 
-            background: rgba(255,255,255,0.05); 
-            font-size: 10px; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            letter-spacing: 0.2em; 
-            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-        }
+        .cerebro-btn { border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
         .cerebro-btn:hover { background: white; color: black; border-color: white; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255,255,255,0.1); }
-
         .hero-section { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: #000; }
         .hero-bg-layer { position: absolute; inset: 0; background-image: url('./fabiobenedetti.jpg'); background-size: cover; background-position: center; filter: brightness(0.35); z-index: 0; }
         .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 10%, rgba(0,0,0,0.8) 100%), linear-gradient(to bottom, transparent 60%, #000 100%); z-index: 1; }
         .hero-content { position: relative; z-index: 10; text-align: center; padding: 0 1.5rem; width: 100%; }
         .text-gradient { background: linear-gradient(to bottom, #ffffff 60%, #eeeeee 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
         .social-grid { display: flex; justify-content: center; align-items: center; gap: 2rem; margin: 4rem 0; flex-wrap: wrap; }
         .social-grid svg { width: 22px; height: 22px; stroke: rgba(255,255,255,0.5); stroke-width: 1.5; fill: none; transition: all 0.4s; }
         .social-grid a:hover svg { stroke: white; transform: translateY(-4px); filter: drop-shadow(0 0 8px rgba(255,255,255,0.3)); }
-
         .btn-cta { display: inline-block; padding: 1.2rem 4rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 60px; color: white; text-decoration: none; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5em; transition: all 0.5s; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
         .btn-cta:hover { background: white; color: black; transform: scale(1.05); }
-
         .card-art { background: #080808; border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 2rem; transition: all 0.4s; }
         .card-art:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-5px); }
         .aspect-video { aspect-ratio: 16 / 9; border-radius: 1.5rem; overflow: hidden; margin-bottom: 1.5rem; background: #000; }
-        
         footer { border-top: 1px solid rgba(255,255,255,0.1); padding: 8rem 2rem; text-align: center; background: #000; }
         .address-footer { color: #ffffff; font-size: 9px; margin-top: 4rem; line-height: 2.5; text-transform: uppercase; letter-spacing: 0.4em; font-weight: 600; opacity: 0.7; }
     </style>
 <link rel="stylesheet" href="/index.css">
 </head>
 <body>
-    <!-- HEADER PADRONIZADO -->
     <nav id="main-nav" class="fixed top-0 left-0 w-full z-[100] h-24 border-b border-white/5 flex items-center">
         <div class="max-w-7xl mx-auto w-full px-6 flex justify-between items-center">
             <a href="index.html" class="flex flex-col">
                 <span class="font-extrabold text-lg tracking-tighter uppercase italic leading-none">FABIO BENEDETTI</span>
                 <span class="text-[8px] tracking-[0.5em] font-bold text-neutral-500 uppercase mt-1">Produtor Musical</span>
             </a>
-
-            <!-- Desktop Nav -->
             <div class="hidden md:flex items-center gap-12">
                 <div class="flex gap-8">
                     <a href="index.html" class="nav-link active">Início</a>
@@ -95,8 +67,6 @@
                 </div>
                 <a href="admin.html" class="cerebro-btn px-6 py-2.5 rounded-full">Cérebro</a>
             </div>
-
-            <!-- Mobile Toggle -->
             <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2 z-[160] relative">
                 <span id="line1" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
                 <span id="line2" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
@@ -104,8 +74,6 @@
             </button>
         </div>
     </nav>
-
-    <!-- Mobile Overlay -->
     <div id="mobile-overlay" class="fixed inset-0 bg-black z-[150] flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-all duration-500">
         <a href="index.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-white">Início</a>
         <a href="portfolio.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-neutral-500">Portfólio</a>
@@ -121,14 +89,12 @@
         <div class="hero-content">
             <h1 id="dyn-slogan" class="text-gradient font-black tracking-tighter mb-8" style="font-size: clamp(3.5rem, 10vw, 8.5rem); line-height: 0.85;">A Arte de ser <br>HUMANO.</h1>
             <p id="dyn-seo-desc" class="text-sm md:text-base text-neutral-400 font-light max-w-xl mx-auto leading-relaxed tracking-widest uppercase">A união entre a alma do artista e a precisão da tecnologia digital.</p>
-            
             <div class="social-grid">
                 <a href="https://open.spotify.com/intl-pt/artist/2BIEgnchM2L1arz2Liw1aY" target="_blank" title="Spotify"><svg viewBox="0 0 24 24"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/><path d="M7 12C9.5 11 14.5 11 17 12"/><path d="M8 14.5C10 13.7 14 13.7 16 14.5"/><path d="M9 9.5C11 8.7 13 8.7 15 9.5"/></svg></a>
                 <a href="https://www.youtube.com/@FabioBenedettiProdutor" target="_blank" title="YouTube"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9L15 12L10 15V9Z"/></svg></a>
                 <a href="https://www.instagram.com/fabio.humano/" target="_blank" title="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="18" cy="6" r="1"/></svg></a>
                 <a href="https://wa.me/5532991064759" target="_blank" title="WhatsApp"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-7.6 8.38 8.38 0 0 1 3.8.9L21 7.5z"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></a>
             </div>
-
             <a href="portfolio.html" class="btn-cta">Abrir Portfólio</a>
         </div>
     </section>
@@ -136,40 +102,43 @@
     <section class="py-32 px-6">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-3xl md:text-5xl font-bold mb-16 tracking-tighter italic">Obras <span class="text-neutral-500">Recentes</span></h2>
-            <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12">
-                <!-- Dinâmico via Firebase -->
-            </div>
+            <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12"></div>
         </div>
     </section>
 
     <footer>
         <h2 class="text-3xl md:text-5xl font-bold tracking-tighter italic mb-8">VAMOS DAR VIDA AO SEU SOM?</h2>
-        <a href="https://wa.me/5532991064759" target="_blank" class="inline-flex items-center gap-4 bg-white text-black px-10 py-5 rounded-full font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform">
-            Falar no WhatsApp
-        </a>
-        <div id="dyn-footer-address" class="address-footer">
-            FABIO BENEDETTI | PRODUTOR MUSICAL<br>
-            SAPUCAIA, RJ
-        </div>
+        <a href="https://wa.me/5532991064759" target="_blank" class="inline-flex items-center gap-4 bg-white text-black px-10 py-5 rounded-full font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform">Falar no WhatsApp</a>
+        <div id="dyn-footer-address" class="address-footer">FABIO BENEDETTI | PRODUTOR MUSICAL<br>SAPUCAIA, RJ</div>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-          apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ",
-          authDomain: "humano-studio.firebaseapp.com",
-          projectId: "humano-studio",
-          storageBucket: "humano-studio.firebasestorage.app",
-          messagingSenderId: "938534325822",
-          appId: "1:938534325822:web:abf5443336ce3224190b6f"
-        };
-
+        const firebaseConfig = { apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ", authDomain: "humano-studio.firebaseapp.com", projectId: "humano-studio", storageBucket: "humano-studio.firebasestorage.app", messagingSenderId: "938534325822", appId: "1:938534325822:web:abf5443336ce3224190b6f" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Header Control
+        // DINAMISMO SEO
+        async function applyDynamicSEO() {
+            const pageId = window.location.pathname.split('/').pop() || 'index.html';
+            const snap = await getDoc(doc(db, "seo_metadata", pageId));
+            if(snap.exists()){
+                const d = snap.data();
+                if(d.title) {
+                    document.title = d.title;
+                    document.getElementById('og-title').setAttribute('content', d.title);
+                }
+                if(d.description) {
+                    document.querySelector('meta[name="description"]').setAttribute('content', d.description);
+                    document.getElementById('og-desc').setAttribute('content', d.description);
+                }
+                if(d.imageUrl) document.getElementById('og-img').setAttribute('content', d.imageUrl);
+            }
+        }
+        applyDynamicSEO();
+
         const menuToggle = document.getElementById('menu-toggle');
         const mobileOverlay = document.getElementById('mobile-overlay');
         const line1 = document.getElementById('line1');
@@ -194,16 +163,14 @@
                 document.body.style.overflow = '';
             }
         }
-
         menuToggle.addEventListener('click', toggleMenu);
         mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
 
-        // Content
         onSnapshot(doc(db, "site_content", "settings"), (snap) => {
             if(snap.exists()){
                 const d = snap.data();
                 if(d.slogan) document.getElementById('dyn-slogan').innerHTML = d.slogan.replace(/\n/g, '<br>');
-                if(d.seoDesc) document.getElementById('dyn-seo-desc').innerText = d.seoDesc;
+                if(d.seoDesc && !document.title.includes('Custom')) document.getElementById('dyn-seo-desc').innerText = d.seoDesc;
                 if(d.footerAddress) document.getElementById('dyn-footer-address').innerHTML = d.footerAddress.replace(/\n/g, '<br>');
             }
         });
@@ -219,16 +186,8 @@
                 const url = video.url;
                 if (url && url.includes('v=')) videoId = url.split('v=')[1].split('&')[0];
                 else if (url && url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
-                
                 if(videoId) {
-                    container.innerHTML += `
-                        <div class="card-art">
-                            <div class="aspect-video">
-                                <iframe src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0" allowfullscreen loading="lazy"></iframe>
-                            </div>
-                            <h4 class="text-[10px] font-extrabold uppercase tracking-[0.3em] opacity-80">${video.titulo}</h4>
-                        </div>
-                    `;
+                    container.innerHTML += `<div class="card-art"><div class="aspect-video"><iframe src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0" allowfullscreen loading="lazy"></iframe></div><h4 class="text-[10px] font-extrabold uppercase tracking-[0.3em] opacity-80">${video.titulo}</h4></div>`;
                 }
             });
         });

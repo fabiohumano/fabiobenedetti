@@ -16,9 +16,9 @@
         .tab-btn { color: #444; transition: all 0.3s; padding: 12px 0; font-size: 10px; font-weight: bold; letter-spacing: 0.25em; border-bottom: 2px solid transparent; text-transform: uppercase; }
         .tab-btn.active { color: white; border-color: white; }
         .hidden { display: none; }
-        .live-reference { background: rgba(255,255,255,0.02); border-left: 2px solid #333; padding: 12px 16px; margin-bottom: 12px; font-size: 11px; color: #666; border-radius: 4px; white-space: pre-wrap; }
         .progress-bar { height: 4px; background: #222; border-radius: 2px; overflow: hidden; margin-top: 10px; }
         .progress-inner { height: 100%; background: white; width: 0%; transition: width 0.3s; }
+        .og-preview { aspect-ratio: 1.91 / 1; background: #111; border: 1px solid #333; border-radius: 12px; overflow: hidden; position: relative; }
     </style>
 </head>
 <body class="p-6 md:p-12">
@@ -42,8 +42,68 @@
             <button onclick="switchTab('home-vids')" id="tab-home-vids" class="tab-btn active whitespace-nowrap">Obras da Home</button>
             <button onclick="switchTab('trabalhos')" id="tab-trabalhos" class="tab-btn whitespace-nowrap">Portfólio</button>
             <button onclick="switchTab('galeria')" id="tab-galeria" class="tab-btn whitespace-nowrap">Galeria de Fotos</button>
-            <button onclick="switchTab('identidade')" id="tab-identidade" class="tab-btn whitespace-nowrap">Identidade & SEO</button>
+            <button onclick="switchTab('seo')" id="tab-seo" class="tab-btn whitespace-nowrap">Marketing & Social</button>
+            <button onclick="switchTab('identidade')" id="tab-identidade" class="tab-btn whitespace-nowrap">Configurações</button>
             <button onclick="switchTab('bio')" id="tab-bio" class="tab-btn whitespace-nowrap">Biografia</button>
+        </div>
+
+        <!-- ABA SEO & COMPARTILHAMENTO -->
+        <div id="section-seo" class="hidden max-w-4xl mx-auto">
+            <div class="bg-neutral-950 p-12 rounded-[3rem] border border-white/5 space-y-12">
+                <header>
+                    <h2 class="text-lg font-bold italic mb-2">Imagens de Compartilhamento</h2>
+                    <p class="text-xs text-neutral-500 uppercase tracking-widest">Controle o visual do seu site no WhatsApp, Instagram e Facebook.</p>
+                </header>
+
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="space-y-6">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Página para Configurar</label>
+                            <select id="seo-page-selector" class="input-dark text-xs">
+                                <option value="index.html">Início (Home)</option>
+                                <option value="bio.html">Bio</option>
+                                <option value="portfolio.html">Portfólio</option>
+                                <option value="galeria.html">Galeria</option>
+                                <option value="obra.html">Páginas de Obra (Global)</option>
+                                <option value="humano">Projeto HUMANO</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Título de Compartilhamento</label>
+                            <input type="text" id="seo-title" placeholder="Ex: Fabio Benedetti – Produtor Musical" class="input-dark text-xs">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Descrição Curta</label>
+                            <textarea id="seo-desc" rows="3" placeholder="Uma breve descrição que aparece abaixo do link..." class="input-dark text-xs"></textarea>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Imagem (JPG/PNG)</label>
+                            <input type="file" id="seo-image-file" class="text-[10px] w-full text-neutral-500" accept="image/*">
+                            <p class="text-[8px] text-neutral-600 italic">O sistema irá redimensionar automaticamente para 1200x630px.</p>
+                        </div>
+
+                        <button id="save-seo-btn" class="w-full btn-primary">Atualizar Cartão de Visita</button>
+                        
+                        <div id="seo-upload-status" class="hidden">
+                            <div class="progress-bar"><div id="seo-progress-inner" class="progress-inner"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Preview do Card</label>
+                        <div class="og-preview shadow-2xl">
+                            <img id="seo-preview-img" src="" class="w-full h-full object-cover">
+                            <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black to-transparent">
+                                <h3 id="preview-title" class="text-sm font-bold truncate">Título do Card</h3>
+                                <p id="preview-desc" class="text-[9px] text-neutral-400 line-clamp-2">A descrição aparecerá aqui quando você compartilhar o link...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- ABA GALERIA -->
@@ -55,11 +115,8 @@
                         <input type="text" id="cat-name" placeholder="Nome da Categoria" class="input-dark text-xs" required>
                         <button type="submit" class="w-full btn-primary py-3">Criar Categoria</button>
                     </form>
-                    <div id="admin-cats-list" class="space-y-2">
-                        <!-- Categorias dinâmicas -->
-                    </div>
+                    <div id="admin-cats-list" class="space-y-2"></div>
                 </section>
-
                 <section class="bg-neutral-950 p-8 rounded-[2rem] border border-white/5 sticky top-10">
                     <h2 class="text-sm font-bold mb-8 uppercase tracking-widest text-neutral-500">Subir Foto</h2>
                     <form id="gallery-form" class="space-y-4">
@@ -69,57 +126,44 @@
                             <option value="">Selecione a Categoria</option>
                         </select>
                         <textarea id="gal-desc" placeholder="Descrição (SEO)" class="input-dark text-xs" rows="2"></textarea>
-                        
-                        <div class="space-y-2">
-                            <label class="text-[8px] text-neutral-600 uppercase font-bold tracking-widest">Arquivo Original (JPG/PNG)</label>
-                            <input type="file" id="gal-file" class="text-[10px] w-full text-neutral-500" accept="image/*" required>
-                        </div>
-
+                        <input type="file" id="gal-file" class="text-[10px] w-full text-neutral-500" accept="image/*" required>
                         <div id="upload-status" class="hidden">
-                            <p id="status-text" class="text-[9px] uppercase font-bold text-blue-400">Processando WebP...</p>
                             <div class="progress-bar"><div id="progress-val" class="progress-inner"></div></div>
                         </div>
-
                         <button type="submit" id="gal-submit-btn" class="w-full btn-primary">Adicionar à Galeria</button>
                     </form>
                 </section>
             </div>
-            <div class="lg:col-span-8">
-                <div id="admin-gallery-list" class="space-y-3">
-                    <!-- Lista de fotos -->
-                </div>
-            </div>
+            <div class="lg:col-span-8"><div id="admin-gallery-list" class="space-y-3"></div></div>
         </div>
 
-        <!-- OUTRAS ABAS (Mantidas conforme original) -->
+        <!-- ABA HOME VIDS -->
         <div id="section-home-vids" class="grid lg:grid-cols-12 gap-16">
             <div class="lg:col-span-4">
                 <section class="bg-neutral-950 p-8 rounded-[2rem] border border-white/5 sticky top-10">
                     <h2 class="text-sm font-bold mb-8 uppercase tracking-widest text-neutral-500">Destaque na Inicial</h2>
                     <form id="home-vid-form" class="space-y-4">
-                        <input type="hidden" id="home-vid-id">
                         <input type="text" id="home-vid-title" placeholder="Título da Obra" class="input-dark text-xs" required>
                         <input type="url" id="home-vid-url" placeholder="Link YouTube" class="input-dark text-xs" required>
-                        <button type="submit" id="home-vid-submit-btn" class="w-full btn-primary">Salvar na Home</button>
-                        <button type="button" id="cancel-home-edit-btn" onclick="resetHomeVidEditor()" class="hidden w-full bg-neutral-800 p-4 rounded-xl text-[10px] font-bold uppercase tracking-widest mt-2">Cancelar Edição</button>
+                        <button type="submit" class="w-full btn-primary">Salvar na Home</button>
                     </form>
                 </section>
             </div>
             <div class="lg:col-span-8"><div id="admin-home-vids-list" class="space-y-3"></div></div>
         </div>
 
+        <!-- ABA TRABALHOS -->
         <div id="section-trabalhos" class="hidden grid lg:grid-cols-12 gap-16">
             <div class="lg:col-span-4">
                 <section class="bg-neutral-950 p-8 rounded-[2rem] border border-white/5 sticky top-10">
-                    <h2 id="editor-title" class="text-sm font-bold mb-8 uppercase tracking-widest text-neutral-500">Novo Projeto</h2>
+                    <h2 class="text-sm font-bold mb-8 uppercase tracking-widest text-neutral-500">Novo Projeto</h2>
                     <form id="work-form" class="space-y-4">
-                        <input type="hidden" id="work-id">
                         <input type="text" id="work-title" placeholder="Título" class="input-dark text-xs" required>
                         <input type="text" id="work-date" placeholder="Ano" class="input-dark text-xs">
                         <input type="url" id="work-video-url" placeholder="Link YouTube" class="input-dark text-xs">
                         <textarea id="work-desc" rows="4" placeholder="Descrição técnica..." class="input-dark text-xs"></textarea>
                         <input type="file" id="work-file" class="text-[10px] w-full text-neutral-500">
-                        <button type="submit" id="work-submit-btn" class="w-full btn-primary">Publicar</button>
+                        <button type="submit" class="w-full btn-primary">Publicar</button>
                     </form>
                 </section>
             </div>
@@ -128,10 +172,10 @@
 
         <div id="section-identidade" class="hidden max-w-2xl mx-auto">
             <div class="bg-neutral-950 p-12 rounded-[3rem] border border-white/5">
-                <h2 class="text-lg font-bold mb-10 italic">Marca & Google</h2>
+                <h2 class="text-lg font-bold mb-10 italic">Marca & Configurações</h2>
                 <form id="settings-form" class="space-y-6">
                     <textarea id="set-slogan" rows="3" class="input-dark text-sm" placeholder="Slogan..."></textarea>
-                    <textarea id="set-seo-desc" rows="3" class="input-dark text-sm" placeholder="SEO..."></textarea>
+                    <textarea id="set-seo-desc" rows="3" class="input-dark text-sm" placeholder="SEO Padrão..."></textarea>
                     <textarea id="set-footer" rows="5" class="input-dark text-sm" placeholder="Rodapé..."></textarea>
                     <button type="submit" class="w-full btn-primary">Sincronizar</button>
                 </form>
@@ -152,8 +196,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp, getDoc, updateDoc, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, getDoc, setDoc, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ",
@@ -188,7 +232,7 @@
         document.getElementById('logout-btn').onclick = () => signOut(auth);
 
         window.switchTab = (tab) => {
-            ['trabalhos', 'identidade', 'bio', 'home-vids', 'galeria'].forEach(t => {
+            ['trabalhos', 'identidade', 'bio', 'home-vids', 'galeria', 'seo'].forEach(t => {
                 const section = document.getElementById('section-' + t);
                 const tabBtn = document.getElementById('tab-' + t);
                 if(section) section.classList.add('hidden');
@@ -198,176 +242,108 @@
             document.getElementById('tab-' + tab).classList.add('active');
         };
 
-        function init() {
-            loadHomeVids();
-            loadWorks();
-            loadSettings();
-            loadBio();
-            loadGalleryCategories();
-            loadGalleryPhotos();
-            initSortable();
+        // --- SEO & MARKETING LOGIC ---
+        const seoPageSelector = document.getElementById('seo-page-selector');
+        const seoTitle = document.getElementById('seo-title');
+        const seoDesc = document.getElementById('seo-desc');
+        const seoPreviewImg = document.getElementById('seo-preview-img');
+        const previewTitle = document.getElementById('preview-title');
+        const previewDesc = document.getElementById('preview-desc');
+        const saveSeoBtn = document.getElementById('save-seo-btn');
+
+        seoPageSelector.onchange = () => loadSeoData(seoPageSelector.value);
+        seoTitle.oninput = () => previewTitle.innerText = seoTitle.value;
+        seoDesc.oninput = () => previewDesc.innerText = seoDesc.value;
+
+        async function loadSeoData(pageId) {
+            const snap = await getDoc(doc(db, "seo_metadata", pageId));
+            if(snap.exists()){
+                const d = snap.data();
+                seoTitle.value = d.title || '';
+                seoDesc.value = d.description || '';
+                seoPreviewImg.src = d.imageUrl || '';
+                previewTitle.innerText = d.title || 'Título do Card';
+                previewDesc.innerText = d.description || 'Descrição...';
+            } else {
+                seoTitle.value = '';
+                seoDesc.value = '';
+                seoPreviewImg.src = '';
+            }
         }
 
-        // --- GALERIA: CATEGORIAS ---
-        function loadGalleryCategories() {
-            onSnapshot(collection(db, "galeria_categorias"), (snap) => {
-                const list = document.getElementById('admin-cats-list');
-                const select = document.getElementById('gal-cat');
-                list.innerHTML = '';
-                select.innerHTML = '<option value="">Selecione a Categoria</option>';
-                
-                let cats = [];
-                snap.forEach(d => cats.push({id: d.id, ...d.data()}));
-                cats.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
-                
-                cats.forEach(cat => {
-                    list.innerHTML += `
-                        <div class="flex justify-between items-center bg-neutral-900 p-3 rounded-xl border border-white/5">
-                            <span class="text-[10px] font-bold uppercase tracking-widest">${cat.nome}</span>
-                            <button onclick="deleteCategory('${cat.id}')" class="text-[9px] text-neutral-600 hover:text-red-500 uppercase font-bold">Excluir</button>
-                        </div>
-                    `;
-                    select.innerHTML += `<option value="${cat.slug}">${cat.nome}</option>`;
-                });
-            });
-        }
-
-        document.getElementById('cat-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const nome = document.getElementById('cat-name').value;
-            const slug = nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-            await addDoc(collection(db, "galeria_categorias"), { nome, slug, ordem: Date.now() });
-            e.target.reset();
-        };
-
-        window.deleteCategory = (id) => confirm('Excluir esta categoria?') && deleteDoc(doc(db, "galeria_categorias", id));
-
-        // --- GALERIA: FOTOS & CONVERSÃO WEB P ---
-        async function processImageToWebP(file, maxWidth, quality = 0.8) {
+        async function resizeToOG(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
-                reader.onload = (event) => {
+                reader.onload = (e) => {
                     const img = new Image();
-                    img.src = event.target.result;
+                    img.src = e.target.result;
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-
-                        if (width > maxWidth) {
-                            height = (maxWidth / width) * height;
-                            width = maxWidth;
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
+                        canvas.width = 1200;
+                        canvas.height = 630;
                         const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        canvas.toBlob((blob) => resolve(blob), 'image/webp', quality);
+                        
+                        // Cover algorithm
+                        const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+                        const x = (canvas.width / 2) - (img.width / 2) * scale;
+                        const y = (canvas.height / 2) - (img.height / 2) * scale;
+                        
+                        ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+                        canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.85);
                     };
                 };
             });
         }
 
-        document.getElementById('gallery-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('gal-submit-btn');
-            const statusBox = document.getElementById('upload-status');
-            const progressVal = document.getElementById('progress-val');
-            const statusText = document.getElementById('status-text');
-            const file = document.getElementById('gal-file').files[0];
+        saveSeoBtn.onclick = async () => {
+            const pageId = seoPageSelector.value;
+            const file = document.getElementById('seo-image-file').files[0];
+            const status = document.getElementById('seo-upload-status');
+            const progress = document.getElementById('seo-progress-inner');
             
-            if (!file) return;
+            saveSeoBtn.disabled = true;
+            status.classList.remove('hidden');
+            progress.style.width = '20%';
 
-            btn.disabled = true;
-            statusBox.classList.remove('hidden');
-            progressVal.style.width = '10%';
-            
             try {
-                // Conversão Client-side (Substitui o sharp/Node.js em ambiente estático)
-                statusText.innerText = "Gerando WebP Full (1920px)...";
-                const fullBlob = await processImageToWebP(file, 1920, 0.82);
-                progressVal.style.width = '30%';
+                let imageUrl = seoPreviewImg.src;
 
-                statusText.innerText = "Gerando WebP Médio (1024px)...";
-                const medBlob = await processImageToWebP(file, 1024, 0.80);
-                progressVal.style.width = '50%';
+                if(file) {
+                    const ogBlob = await resizeToOG(file);
+                    progress.style.width = '50%';
+                    const imgRef = ref(storage, `seo/og_${pageId}.jpg`);
+                    await uploadBytes(imgRef, ogBlob);
+                    imageUrl = await getDownloadURL(imgRef);
+                }
 
-                statusText.innerText = "Gerando Thumbnail (400px)...";
-                const thumbBlob = await processImageToWebP(file, 400, 0.75);
-                progressVal.style.width = '70%';
+                await setDoc(doc(db, "seo_metadata", pageId), {
+                    title: seoTitle.value,
+                    description: seoDesc.value,
+                    imageUrl: imageUrl,
+                    updatedAt: serverTimestamp()
+                }, {merge: true});
 
-                // Upload
-                statusText.innerText = "Enviando arquivos...";
-                const timestamp = Date.now();
-                
-                const upload = async (blob, name) => {
-                    const r = ref(storage, `galeria/${timestamp}_${name}.webp`);
-                    await uploadBytes(r, blob);
-                    return await getDownloadURL(r);
-                };
-
-                const [fullUrl, medUrl, thumbUrl] = await Promise.all([
-                    upload(fullBlob, 'full'),
-                    upload(medBlob, 'medium'),
-                    upload(thumbBlob, 'thumb')
-                ]);
-
-                await addDoc(collection(db, "galeria_fotos"), {
-                    titulo: document.getElementById('gal-title').value,
-                    ano: document.getElementById('gal-year').value,
-                    categoria: document.getElementById('gal-cat').value,
-                    descricao: document.getElementById('gal-desc').value,
-                    fullWebp: fullUrl,
-                    mediumWebp: medUrl,
-                    thumbWebp: thumbUrl,
-                    ordem: Date.now(),
-                    createdAt: serverTimestamp()
-                });
-
-                progressVal.style.width = '100%';
-                statusText.innerText = "Concluído!";
+                progress.style.width = '100%';
                 setTimeout(() => {
-                    statusBox.classList.add('hidden');
-                    e.target.reset();
-                    btn.disabled = false;
-                }, 2000);
+                    status.classList.add('hidden');
+                    saveSeoBtn.disabled = false;
+                    alert('Cartão de compartilhamento atualizado com sucesso!');
+                }, 1000);
 
-            } catch (err) {
+            } catch(err) {
                 console.error(err);
-                alert("Erro no processamento.");
-                btn.disabled = false;
+                alert('Erro ao salvar SEO.');
+                saveSeoBtn.disabled = false;
             }
         };
 
-        function loadGalleryPhotos() {
-            onSnapshot(collection(db, "galeria_fotos"), (snap) => {
-                const list = document.getElementById('admin-gallery-list');
-                let photos = [];
-                snap.forEach(d => photos.push({id: d.id, ...d.data()}));
-                photos.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
-                list.innerHTML = '';
-                
-                photos.forEach(p => {
-                    list.innerHTML += `
-                        <div data-id="${p.id}" class="bg-neutral-900/40 p-4 rounded-2xl border border-white/5 flex items-center gap-4 group">
-                            <div class="drag-handle-gal cursor-grab opacity-20 font-mono">:::</div>
-                            <img src="${p.thumbWebp}" class="w-16 h-16 object-cover rounded-lg grayscale group-hover:grayscale-0">
-                            <div class="flex-1">
-                                <h4 class="text-[10px] font-bold uppercase tracking-widest">${p.titulo}</h4>
-                                <p class="text-[8px] text-neutral-600 uppercase font-bold">${p.categoria} | ${p.ano || '---'}</p>
-                            </div>
-                            <button onclick="deletePhoto('${p.id}')" class="text-[9px] text-neutral-700 hover:text-red-500 font-bold uppercase">Excluir</button>
-                        </div>
-                    `;
-                });
-            });
+        // --- OUTRAS FUNÇÕES ---
+        function init() {
+            loadHomeVids(); loadWorks(); loadSettings(); loadBio(); loadGalleryCategories(); loadGalleryPhotos(); initSortable();
+            loadSeoData('index.html');
         }
 
-        window.deletePhoto = (id) => confirm('Remover esta foto da galeria?') && deleteDoc(doc(db, "galeria_fotos", id));
-
-        // --- FUNÇÕES DE CARREGAMENTO ORIGINAIS (Preservadas) ---
         function loadHomeVids(){
             onSnapshot(collection(db, "videos"), (snap) => {
                 const list = document.getElementById('admin-home-vids-list');
@@ -376,11 +352,7 @@
                 vids.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
                 list.innerHTML = '';
                 vids.forEach(v => {
-                    list.innerHTML += `<div data-id="${v.id}" class="bg-neutral-900/40 p-5 rounded-2xl border border-white/5 flex items-center gap-6">
-                        <div class="drag-handle cursor-grab opacity-10 font-mono">:::</div>
-                        <div class="flex-1"><h4 class="text-[10px] font-bold uppercase text-white">${v.titulo}</h4></div>
-                        <button onclick="deleteHomeVid('${v.id}')" class="text-[9px] text-neutral-700 hover:text-red-500 font-bold">Remover</button>
-                    </div>`;
+                    list.innerHTML += `<div data-id="${v.id}" class="bg-neutral-900/40 p-5 rounded-2xl border border-white/5 flex items-center gap-6"><div class="drag-handle cursor-grab opacity-10 font-mono">:::</div><div class="flex-1"><h4 class="text-[10px] font-bold uppercase text-white">${v.titulo}</h4></div><button onclick="deleteHomeVid('${v.id}')" class="text-[9px] text-neutral-700 hover:text-red-500 font-bold">Remover</button></div>`;
                 });
             });
         }
@@ -394,11 +366,7 @@
                 works.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
                 list.innerHTML = '';
                 works.forEach(w => {
-                    list.innerHTML += `<div data-id="${w.id}" class="bg-neutral-900/40 p-5 rounded-2xl border border-white/5 flex items-center gap-6">
-                        <div class="drag-handle-works cursor-grab opacity-10 font-mono">:::</div>
-                        <div class="flex-1"><h4 class="text-[10px] font-bold uppercase">${w.titulo}</h4></div>
-                        <button onclick="deleteWork('${w.id}')" class="text-[9px] text-neutral-700 hover:text-red-500 font-bold">Remover</button>
-                    </div>`;
+                    list.innerHTML += `<div data-id="${w.id}" class="bg-neutral-900/40 p-5 rounded-2xl border border-white/5 flex items-center gap-6"><div class="drag-handle-works cursor-grab opacity-10 font-mono">:::</div><div class="flex-1"><h4 class="text-[10px] font-bold uppercase">${w.titulo}</h4></div><button onclick="deleteWork('${w.id}')" class="text-[9px] text-neutral-700 hover:text-red-500 font-bold">Remover</button></div>`;
                 });
             });
         }
@@ -416,18 +384,12 @@
         }
         document.getElementById('settings-form').onsubmit = async (e) => {
             e.preventDefault();
-            await setDoc(doc(db, "site_content", "settings"), {
-                slogan: document.getElementById('set-slogan').value,
-                seoDesc: document.getElementById('set-seo-desc').value,
-                footerAddress: document.getElementById('set-footer').value
-            }, {merge: true});
+            await setDoc(doc(db, "site_content", "settings"), { slogan: document.getElementById('set-slogan').value, seoDesc: document.getElementById('set-seo-desc').value, footerAddress: document.getElementById('set-footer').value }, {merge: true});
             alert('Configurações salvas!');
         };
 
         function loadBio(){
-            onSnapshot(doc(db, "site_content", "bio_page"), (snap) => {
-                if(snap.exists()) document.getElementById('admin-bio-text').value = snap.data().bioText || '';
-            });
+            onSnapshot(doc(db, "site_content", "bio_page"), (snap) => { if(snap.exists()) document.getElementById('admin-bio-text').value = snap.data().bioText || ''; });
         }
         document.getElementById('bio-form').onsubmit = async (e) => {
             e.preventDefault();
@@ -435,31 +397,42 @@
             alert('Bio salva!');
         };
 
+        function loadGalleryCategories() {
+            onSnapshot(collection(db, "galeria_categorias"), (snap) => {
+                const list = document.getElementById('admin-cats-list');
+                const select = document.getElementById('gal-cat');
+                list.innerHTML = '';
+                select.innerHTML = '<option value="">Selecione a Categoria</option>';
+                snap.forEach(d => {
+                    const c = d.data();
+                    list.innerHTML += `<div class="flex justify-between items-center bg-neutral-900 p-3 rounded-xl border border-white/5"><span class="text-[10px] font-bold uppercase tracking-widest">${c.nome}</span><button onclick="deleteCategory('${d.id}')" class="text-[9px] text-neutral-600 hover:text-red-500 font-bold">Excluir</button></div>`;
+                    select.innerHTML += `<option value="${c.slug}">${c.nome}</option>`;
+                });
+            });
+        }
+        document.getElementById('cat-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const n = document.getElementById('cat-name').value;
+            const s = n.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+            await addDoc(collection(db, "galeria_categorias"), { nome: n, slug: s, ordem: Date.now() });
+            e.target.reset();
+        };
+
+        function loadGalleryPhotos() {
+            onSnapshot(collection(db, "galeria_fotos"), (snap) => {
+                const list = document.getElementById('admin-gallery-list');
+                list.innerHTML = '';
+                snap.forEach(d => {
+                    const p = d.data();
+                    list.innerHTML += `<div data-id="${d.id}" class="bg-neutral-900/40 p-4 rounded-2xl border border-white/5 flex items-center gap-4 group"><div class="drag-handle-gal cursor-grab opacity-20 font-mono">:::</div><img src="${p.thumbWebp}" class="w-16 h-16 object-cover rounded-lg grayscale"><div class="flex-1"><h4 class="text-[10px] font-bold uppercase tracking-widest">${p.titulo}</h4></div><button onclick="deletePhoto('${d.id}')" class="text-[9px] text-neutral-700 hover:text-red-500 font-bold uppercase">Excluir</button></div>`;
+                });
+            });
+        }
+
         function initSortable() {
-            Sortable.create(document.getElementById('admin-home-vids-list'), {
-                animation: 150, handle: '.drag-handle',
-                onEnd: async () => {
-                    const batch = writeBatch(db);
-                    document.querySelectorAll('#admin-home-vids-list > div').forEach((el, i) => batch.update(doc(db, "videos", el.dataset.id), { ordem: i }));
-                    await batch.commit();
-                }
-            });
-            Sortable.create(document.getElementById('admin-works-list'), {
-                animation: 150, handle: '.drag-handle-works',
-                onEnd: async () => {
-                    const batch = writeBatch(db);
-                    document.querySelectorAll('#admin-works-list > div').forEach((el, i) => batch.update(doc(db, "trabalhos", el.dataset.id), { ordem: i }));
-                    await batch.commit();
-                }
-            });
-            Sortable.create(document.getElementById('admin-gallery-list'), {
-                animation: 150, handle: '.drag-handle-gal',
-                onEnd: async () => {
-                    const batch = writeBatch(db);
-                    document.querySelectorAll('#admin-gallery-list > div').forEach((el, i) => batch.update(doc(db, "galeria_fotos", el.dataset.id), { ordem: i }));
-                    await batch.commit();
-                }
-            });
+            Sortable.create(document.getElementById('admin-home-vids-list'), { animation: 150, handle: '.drag-handle', onEnd: async () => { const batch = writeBatch(db); document.querySelectorAll('#admin-home-vids-list > div').forEach((el, i) => batch.update(doc(db, "videos", el.dataset.id), { ordem: i })); await batch.commit(); } });
+            Sortable.create(document.getElementById('admin-works-list'), { animation: 150, handle: '.drag-handle-works', onEnd: async () => { const batch = writeBatch(db); document.querySelectorAll('#admin-works-list > div').forEach((el, i) => batch.update(doc(db, "trabalhos", el.dataset.id), { ordem: i })); await batch.commit(); } });
+            Sortable.create(document.getElementById('admin-gallery-list'), { animation: 150, handle: '.drag-handle-gal', onEnd: async () => { const batch = writeBatch(db); document.querySelectorAll('#admin-gallery-list > div').forEach((el, i) => batch.update(doc(db, "galeria_fotos", el.dataset.id), { ordem: i })); await batch.commit(); } });
         }
     </script>
 </body>
