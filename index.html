@@ -1,29 +1,15 @@
 
 <!DOCTYPE html>
-<html lang="pt-BR" prefix="og: http://ogp.me/ns#">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- FALLBACK SEO -->
-    <title>Fabio Benedetti – Produtor Musical</title>
-    <meta name="description" content="Fabio Benedetti: Produtor musical, compositor e criador do Projeto HUMANO. Especialista em capturar a essência da alma artística.">
-    
-    <!-- OPEN GRAPH DINÂMICO -->
-    <meta id="og-type" property="og:type" content="website">
-    <meta id="og-url" property="og:url" content="https://fabiobenedetti.com.br/">
-    <meta id="og-title" property="og:title" content="Fabio Benedetti – Produtor Musical">
-    <meta id="og-desc" property="og:description" content="Produtor musical, compositor e criador do Projeto HUMANO.">
-    <meta id="og-img" property="og:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-
-    <link rel="canonical" href="https://fabiobenedetti.com.br">
+    <title>Fabio Benedetti | Produtor Musical</title>
+    <meta name="description" content="Produtor musical, compositor e criador do Projeto HUMANO. Música, arte e consciência.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <style>
         :root { --bg: #000000; --accent: #ffffff; --text-muted: #aaaaaa; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,21 +20,45 @@
         .cerebro-btn { border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
         .cerebro-btn:hover { background: white; color: black; border-color: white; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255,255,255,0.1); }
         .hero-section { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: #000; }
-        .hero-bg-layer { position: absolute; inset: 0; background-image: url('./fabiobenedetti.jpg'); background-size: cover; background-position: center; filter: brightness(0.35); z-index: 0; transition: background-image 1.2s ease-in-out; }
+        .hero-bg-layer { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(0.65); z-index: 0; transition: background-image 1.2s ease-in-out; }
+        
+        /* AJUSTE MOBILE - ALINHAMENTO AO TOPO SOLICITADO */
+        @media (max-width: 768px) {
+            .hero-bg-layer {
+                background-position: center 0% !important; 
+            }
+            .hero-content {
+                padding-top: 15vh; 
+            }
+            #dyn-slogan {
+                font-size: clamp(2.5rem, 11vw, 4rem) !important;
+            }
+        }
+
         .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 10%, rgba(0,0,0,0.8) 100%), linear-gradient(to bottom, transparent 60%, #000 100%); z-index: 1; }
         .hero-content { position: relative; z-index: 10; text-align: center; padding: 0 1.5rem; width: 100%; }
         .text-gradient { background: linear-gradient(to bottom, #ffffff 60%, #eeeeee 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .social-grid { display: flex; justify-content: center; align-items: center; gap: 2rem; margin: 4rem 0; flex-wrap: wrap; }
-        .social-grid svg { width: 22px; height: 22px; stroke: rgba(255,255,255,0.5); stroke-width: 1.5; fill: none; transition: all 0.4s; }
-        .social-grid a:hover svg { stroke: white; transform: translateY(-4px); filter: drop-shadow(0 0 8px rgba(255,255,255,0.3)); }
-        .btn-cta { display: inline-block; padding: 1.2rem 4rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 60px; color: white; text-decoration: none; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5em; transition: all 0.5s; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
-        .btn-cta:hover { background: white; color: black; transform: scale(1.05); }
+        .social-grid { display: flex; justify-content: center; align-items: center; gap: 2.5rem; margin: 4rem 0; flex-wrap: wrap; }
+        .social-grid svg { width: 30px; height: 30px; stroke: rgba(255,255,255,0.6); stroke-width: 1.5; fill: none; transition: all 0.4s; }
+        .social-grid a:hover svg { stroke: white; transform: translateY(-4px); filter: drop-shadow(0 0 12px rgba(255,255,255,0.5)); }
+        .btn-cta { display: inline-block; padding: 1.2rem 4rem; border: none; border-radius: 60px; color: black; text-decoration: none; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5em; transition: all 0.5s; background: white; box-shadow: 0 15px 40px rgba(255,255,255,0.15); }
+        .btn-cta:hover { background: #f0f0f0; transform: scale(1.05) translateY(-5px); box-shadow: 0 25px 50px rgba(255,255,255,0.25); }
         .card-art { background: #080808; border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 2rem; transition: all 0.4s; }
         .card-art:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-5px); }
         .aspect-video { aspect-ratio: 16 / 9; border-radius: 1.5rem; overflow: hidden; margin-bottom: 1.5rem; background: #000; }
+        .aspect-video iframe { width: 100%; height: 100%; border: none; }
         footer { border-top: 1px solid rgba(255,255,255,0.1); padding: 8rem 2rem; text-align: center; background: #000; }
         .address-footer { color: #ffffff; font-size: 9px; margin-top: 4rem; line-height: 2.5; text-transform: uppercase; letter-spacing: 0.4em; font-weight: 600; opacity: 0.7; }
     </style>
+<script type="importmap">
+{
+  "imports": {
+    "path": "https://esm.sh/path@^0.12.7",
+    "url": "https://esm.sh/url@^0.11.4",
+    "vite": "https://esm.sh/vite@^7.3.1"
+  }
+}
+</script>
 <link rel="stylesheet" href="/index.css">
 </head>
 <body>
@@ -84,11 +94,11 @@
     </div>
 
     <section class="hero-section">
-        <div id="dynamic-bg-layer" class="hero-bg-layer"></div>
+        <div id="hero-bg" class="hero-bg-layer"></div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1 id="dyn-slogan" class="text-gradient font-black tracking-tighter mb-8" style="font-size: clamp(3.5rem, 10vw, 8.5rem); line-height: 0.85;">A Arte de ser <br>HUMANO.</h1>
-            <p id="dyn-seo-desc" class="text-sm md:text-base text-neutral-400 font-light max-w-xl mx-auto leading-relaxed tracking-widest uppercase">A união entre a alma do artista e a precisão da tecnologia digital.</p>
+            <p id="dyn-desc" class="text-sm md:text-base text-neutral-400 font-light max-w-xl mx-auto leading-relaxed tracking-widest uppercase">A união entre a alma do artista e a precisão da tecnologia digital.</p>
             <div class="social-grid">
                 <a href="https://open.spotify.com/intl-pt/artist/2BIEgnchM2L1arz2Liw1aY" target="_blank" title="Spotify"><svg viewBox="0 0 24 24"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/><path d="M7 12C9.5 11 14.5 11 17 12"/><path d="M8 14.5C10 13.7 14 13.7 16 14.5"/><path d="M9 9.5C11 8.7 13 8.7 15 9.5"/></svg></a>
                 <a href="https://www.youtube.com/@FabioBenedettiProdutor" target="_blank" title="YouTube"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9L15 12L10 15V9Z"/></svg></a>
@@ -102,85 +112,95 @@
     <section class="py-32 px-6">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-3xl md:text-5xl font-bold mb-16 tracking-tighter italic">Obras <span class="text-neutral-500">Recentes</span></h2>
-            <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12"></div>
+            <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12"></div>
         </div>
     </section>
 
     <footer>
-        <h2 class="text-3xl md:text-5xl font-bold tracking-tighter italic mb-8">VAMOS DAR VIDA AO SEU SOM?</h2>
+        <h2 class="text-3xl md:text-5xl font-bold tracking-tighter italic mb-8 uppercase">VAMOS DAR VIDA AO SEU SOM?</h2>
         <a href="https://wa.me/5532991064759" target="_blank" class="inline-flex items-center gap-4 bg-white text-black px-10 py-5 rounded-full font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform">Falar no WhatsApp</a>
         <div id="dyn-footer-address" class="address-footer">FABIO BENEDETTI | PRODUTOR MUSICAL<br>SAPUCAIA, RJ</div>
     </footer>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ", authDomain: "humano-studio.firebaseapp.com", projectId: "humano-studio", storageBucket: "humano-studio.firebasestorage.app", messagingSenderId: "938534325822", appId: "1:938534325822:web:abf5443336ce3224190b6f" };
-        const app = initializeApp(firebaseConfig);
+        const firebaseConfig = { 
+            apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ", 
+            authDomain: "humano-studio.firebaseapp.com", 
+            projectId: "humano-studio", 
+            storageBucket: "humano-studio.firebasestorage.app", 
+            messagingSenderId: "938534325822", 
+            appId: "1:938534325822:web:abf5443336ce3224190b6f" 
+        };
+
+        const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
         const db = getFirestore(app);
-
-        // DINAMISMO SEO & BACKGROUND
-        async function applyPageDynamics() {
-            const pageId = window.location.pathname.split('/').pop() || 'index.html';
-            
-            // SEO
-            const seoSnap = await getDoc(doc(db, "seo_metadata", pageId));
-            if(seoSnap.exists()){
-                const d = seoSnap.data();
-                if(d.title) { document.title = d.title; document.getElementById('og-title').setAttribute('content', d.title); }
-                if(d.description) { document.querySelector('meta[name="description"]').setAttribute('content', d.description); document.getElementById('og-desc').setAttribute('content', d.description); }
-                if(d.imageUrl) document.getElementById('og-img').setAttribute('content', d.imageUrl);
-            }
-
-            // BACKGROUND
-            onSnapshot(doc(db, "site_content", "backgrounds"), (snap) => {
-                if(snap.exists()) {
-                    const bgs = snap.data();
-                    const bgUrl = bgs['home'] || ''; // Na Home sempre usa o 'home'
-                    if(bgUrl) document.getElementById('dynamic-bg-layer').style.backgroundImage = `url('${bgUrl}')`;
-                }
-            });
-        }
-        applyPageDynamics();
 
         const menuToggle = document.getElementById('menu-toggle');
         const mobileOverlay = document.getElementById('mobile-overlay');
-        const line1 = document.getElementById('line1');
-        const line2 = document.getElementById('line2');
-        const line3 = document.getElementById('line3');
-        const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+        const lines = [document.getElementById('line1'), document.getElementById('line2'), document.getElementById('line3')];
         let isMenuOpen = false;
-
-        function toggleMenu() {
+        menuToggle.onclick = () => {
             isMenuOpen = !isMenuOpen;
-            if (isMenuOpen) { mobileOverlay.classList.remove('opacity-0', 'pointer-events-none'); line1.style.transform = 'translateY(8px) rotate(45deg)'; line2.style.opacity = '0'; line3.style.transform = 'translateY(-8px) rotate(-45deg)'; document.body.style.overflow = 'hidden'; } else { mobileOverlay.classList.add('opacity-0', 'pointer-events-none'); line1.style.transform = 'none'; line2.style.opacity = '1'; line3.style.transform = 'none'; document.body.style.overflow = ''; }
-        }
-        menuToggle.addEventListener('click', toggleMenu);
-        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+            if(isMenuOpen) {
+                mobileOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                lines[0].style.transform = 'translateY(8px) rotate(45deg)';
+                lines[1].style.opacity = '0';
+                lines[2].style.transform = 'translateY(-8px) rotate(-45deg)';
+                document.body.style.overflow = 'hidden';
+            } else {
+                mobileOverlay.classList.add('opacity-0', 'pointer-events-none');
+                lines[0].style.transform = 'none'; lines[1].style.opacity = '1'; lines[2].style.transform = 'none';
+                document.body.style.overflow = '';
+            }
+        };
 
         onSnapshot(doc(db, "site_content", "settings"), (snap) => {
-            if(snap.exists()){
+            if(snap.exists()) {
                 const d = snap.data();
-                if(d.slogan) document.getElementById('dyn-slogan').innerHTML = d.slogan.replace(/\n/g, '<br>');
-                if(d.seoDesc) document.getElementById('dyn-seo-desc').innerText = d.seoDesc;
-                if(d.footerAddress) document.getElementById('dyn-footer-address').innerHTML = d.footerAddress.replace(/\n/g, '<br>');
+                const sloganEl = document.getElementById('dyn-slogan');
+                if (sloganEl) sloganEl.innerHTML = (d.slogan !== undefined) ? d.slogan.replace(/\n/g, '<br>') : 'A Arte de ser <br>HUMANO.';
+                if(d.seoDesc !== undefined) document.getElementById('dyn-desc').innerText = d.seoDesc;
+                if(d.footerAddress !== undefined) document.getElementById('dyn-footer-address').innerHTML = d.footerAddress.replace(/\n/g, '<br>');
             }
         });
 
-        onSnapshot(collection(db, "videos"), (snapshot) => {
-            const container = document.getElementById('videos-container');
-            let videos = []; snapshot.forEach(doc => videos.push({id: doc.id, ...doc.data()}));
-            videos.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
+        onSnapshot(doc(db, "site_content", "backgrounds"), (snap) => {
+            if(snap.exists()) {
+                const url = snap.data()['home'];
+                if(url) document.getElementById('hero-bg').style.backgroundImage = `url('${url}')`;
+            }
+        });
+
+        onSnapshot(collection(db, "trabalhos"), (snap) => {
+            const container = document.getElementById('videos-grid');
+            if(!container) return;
+            let allWorks = []; snap.forEach(d => allWorks.push({id: d.id, ...d.data()}));
+            let displayList = allWorks.filter(w => w.isHome).sort((a,b) => (a.ordem || 0) - (b.ordem || 0));
+            if (displayList.length === 0) displayList = allWorks.sort((a,b) => (b.id > a.id ? 1 : -1)).slice(0, 4);
+            else displayList = displayList.slice(0, 4);
+
             container.innerHTML = '';
-            videos.slice(0, 4).forEach((video) => {
-                let videoId = '';
-                const url = video.url;
-                if (url && url.includes('v=')) videoId = url.split('v=')[1].split('&')[0];
-                else if (url && url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
-                if(videoId) {
-                    container.innerHTML += `<div class="card-art"><div class="aspect-video"><iframe src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0" allowfullscreen loading="lazy"></iframe></div><h4 class="text-[10px] font-extrabold uppercase tracking-[0.3em] opacity-80">${video.titulo}</h4></div>`;
+            displayList.forEach(v => {
+                let youtubeId = "";
+                if (v.videoUrl) {
+                    if (v.videoUrl.includes('v=')) youtubeId = v.videoUrl.split('v=')[1].split('&')[0];
+                    else if (v.videoUrl.includes('youtu.be/')) youtubeId = v.videoUrl.split('youtu.be/')[1].split('?')[0];
                 }
+                const mediaHtml = youtubeId 
+                    ? `<iframe src="https://www.youtube.com/embed/${youtubeId}?modestbranding=1&rel=0&controls=0" allowfullscreen></iframe>`
+                    : `<div class="w-full h-full bg-cover bg-center" style="background-image: url('${v.capaUrl || ''}')"></div>`;
+                container.innerHTML += `
+                    <div class="card-art group cursor-pointer" onclick="location.href='obra.html?id=${v.id}'">
+                        <div class="aspect-video relative overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">${mediaHtml}</div>
+                        <div class="mt-6 flex justify-between items-start">
+                           <h4 class="text-[10px] font-extrabold uppercase tracking-[0.3em] text-neutral-400 group-hover:text-white transition-colors">${v.titulo}</h4>
+                           <span class="text-[8px] font-bold text-neutral-600 uppercase tracking-widest">${v.data || ''}</span>
+                        </div>
+                    </div>
+                `;
             });
         });
     </script>

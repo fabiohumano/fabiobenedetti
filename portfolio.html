@@ -1,143 +1,81 @@
-
 <!DOCTYPE html>
-<html lang="pt-BR" prefix="og: http://ogp.me/ns#">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfólio | Fabio Benedetti</title>
-    <meta name="description" content="Confira o portfólio técnico de Fabio Benedetti.">
-
-    <meta id="og-type" property="og:type" content="website">
-    <meta id="og-url" property="og:url" content="https://fabiobenedetti.com.br/portfolio.html">
-    <meta id="og-title" property="og:title" content="Portfólio | Fabio Benedetti">
-    <meta id="og-desc" property="og:description" content="Obras assinadas por Fabio Benedetti.">
-    <meta id="og-img" property="og:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
-
-    <link rel="canonical" href="https://fabiobenedetti.com.br/portfolio.html">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #000000; color: #ffffff; }
-        .page-bg-layer { position: fixed; inset: 0; background-size: cover; background-position: center; filter: brightness(0.25); z-index: -1; transition: background-image 1s ease; }
-        .page-overlay { position: fixed; inset: 0; background: linear-gradient(to bottom, transparent 40%, #000 100%); z-index: -1; }
-        #main-nav { background: rgba(0,0,0,0.8); backdrop-filter: blur(25px); transition: all 0.4s ease; }
-        .nav-link { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.25em; transition: all 0.3s; color: #888; }
-        .nav-link:hover, .nav-link.active { color: white; }
-        .cerebro-btn { border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; transition: all 0.4s; }
-        .cerebro-btn:hover { background: white; color: black; border-color: white; transform: translateY(-2px); }
-        .work-card { border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8rem; margin-bottom: 8rem; }
-        .feature-box { border-radius: 2rem; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 40px 80px -20px rgba(0,0,0,1); cursor: pointer; }
-        iframe { width: 100%; height: 100%; border: 0; background: #111; pointer-events: none; }
-        .share-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; color: #666; }
-        .share-btn:hover { border-color: white; color: white; background: rgba(255,255,255,0.05); }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; }
+        .nav-glass { background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .work-item { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 4rem 0; transition: all 0.5s ease; cursor: pointer; }
+        .work-item:hover { background: rgba(255,255,255,0.02); padding-left: 2rem; border-color: rgba(255,255,255,0.1); }
+        .bg-layer { position: fixed; inset: 0; background-size: cover; background-position: center; filter: brightness(0.15); z-index: -1; }
     </style>
 </head>
-<body class="selection:bg-white selection:text-black">
-    <div id="dynamic-bg-layer" class="page-bg-layer"></div>
-    <div class="page-overlay"></div>
-
-    <nav id="main-nav" class="fixed top-0 left-0 w-full z-[100] h-24 border-b border-white/5 flex items-center">
-        <div class="max-w-7xl mx-auto w-full px-6 flex justify-between items-center">
-            <a href="index.html" class="flex flex-col">
-                <span class="font-extrabold text-lg tracking-tighter uppercase italic leading-none">FABIO BENEDETTI</span>
-                <span class="text-[8px] tracking-[0.5em] font-bold text-neutral-500 uppercase mt-1">Produtor Musical</span>
-            </a>
-            <div class="hidden md:flex items-center gap-12">
-                <div class="flex gap-8">
-                    <a href="index.html" class="nav-link">Início</a>
-                    <a href="portfolio.html" class="nav-link active">Portfólio</a>
-                    <a href="bio.html" class="nav-link">Bio</a>
-                    <a href="galeria.html" class="nav-link">Galeria</a>
-                </div>
-                <a href="admin.html" class="cerebro-btn px-6 py-2.5 rounded-full">Cérebro</a>
+<body>
+    <div id="bg-layer" class="bg-layer"></div>
+    
+    <nav class="fixed top-0 w-full z-[100] h-20 nav-glass flex items-center px-12">
+        <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
+            <a href="index.html" class="font-black italic text-xl tracking-tighter uppercase">FABIO BENEDETTI</a>
+            <div class="hidden md:flex gap-10">
+                <a href="index.html" class="text-[10px] font-bold uppercase tracking-widest text-neutral-500 hover:text-white transition-colors">Início</a>
+                <a href="portfolio.html" class="text-[10px] font-bold uppercase tracking-widest text-white">Portfólio</a>
+                <a href="galeria.html" class="text-[10px] font-bold uppercase tracking-widest text-neutral-500 hover:text-white transition-colors">Galeria</a>
+                <a href="bio.html" class="text-[10px] font-bold uppercase tracking-widest text-neutral-500 hover:text-white transition-colors">Bio</a>
             </div>
-            <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2 z-[160] relative">
-                <span id="line1" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
-                <span id="line2" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
-                <span id="line3" class="w-6 h-0.5 bg-white transition-all duration-300"></span>
-            </button>
         </div>
     </nav>
-    <div id="mobile-overlay" class="fixed inset-0 bg-black z-[150] flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-all duration-500">
-        <a href="index.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-neutral-500">Início</a>
-        <a href="portfolio.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-white">Portfólio</a>
-        <a href="bio.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-neutral-500">Bio</a>
-        <a href="galeria.html" class="mobile-nav-link text-3xl font-bold uppercase tracking-widest text-neutral-500">Galeria</a>
-        <div class="w-12 h-px bg-white/10 my-4"></div>
-        <a href="admin.html" class="mobile-nav-link cerebro-btn px-12 py-4 rounded-full text-sm">Cérebro</a>
-    </div>
 
-    <main class="max-w-7xl mx-auto px-6 pt-56 pb-20">
-        <header class="mb-32 md:mb-48">
-            <h1 class="text-6xl md:text-9xl font-black tracking-tighter mb-10 leading-[0.85]">Obras <br><span class="italic text-neutral-400">Assinadas.</span></h1>
-            <p class="text-neutral-300 max-w-xl text-lg md:text-xl font-light leading-relaxed">Curadoria técnica dos projetos produzidos por Fabio Benedetti.</p>
-        </header>
-        <div id="portfolio-feed" class="space-y-40"></div>
+    <main class="max-w-7xl mx-auto px-6 pt-48 pb-20">
+        <h1 class="text-7xl md:text-9xl font-black italic tracking-tighter mb-24 uppercase">Obras <br><span class="text-neutral-800 not-italic">Assinadas.</span></h1>
+        <div id="portfolio-list" class="space-y-4">
+            <!-- Listagem dinámica -->
+            <div class="animate-pulse h-20 bg-neutral-900 rounded-lg"></div>
+            <div class="animate-pulse h-20 bg-neutral-900 rounded-lg"></div>
+        </div>
     </main>
-
-    <footer class="py-24 text-center border-t border-white/10 bg-black">
-        <div id="dyn-footer-address" class="text-[10px] text-white font-bold uppercase tracking-[0.4em] opacity-80 leading-loose">FABIO BENEDETTI | PRODUTOR MUSICAL<br>SAPUCAIA, RJ</div>
-    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
         const firebaseConfig = { apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ", authDomain: "humano-studio.firebaseapp.com", projectId: "humano-studio", storageBucket: "humano-studio.firebasestorage.app", messagingSenderId: "938534325822", appId: "1:938534325822:web:abf5443336ce3224190b6f" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        async function applyPageDynamics() {
-            const pageId = 'portfolio.html';
-            const seoSnap = await getDoc(doc(db, "seo_metadata", pageId));
-            if(seoSnap.exists()){
-                const d = seoSnap.data();
-                if(d.title) { document.title = d.title; document.getElementById('og-title').setAttribute('content', d.title); }
-                if(d.description) { document.querySelector('meta[name="description"]').setAttribute('content', d.description); document.getElementById('og-desc').setAttribute('content', d.description); }
-                if(d.imageUrl) document.getElementById('og-img').setAttribute('content', d.imageUrl);
-            }
+        onSnapshot(doc(db, "site_content", "backgrounds"), (snap) => {
+            const url = snap.data()?.portfolio || snap.data()?.home;
+            if(url) document.getElementById('bg-layer').style.backgroundImage = `url('${url}')`;
+        });
 
-            onSnapshot(doc(db, "site_content", "backgrounds"), (snap) => {
-                if(snap.exists()) {
-                    const bgs = snap.data();
-                    const bgUrl = bgs['portfolio'] || bgs['home'] || '';
-                    if(bgUrl) document.getElementById('dynamic-bg-layer').style.backgroundImage = `url('${bgUrl}')`;
-                }
-            });
-        }
-        applyPageDynamics();
-
-        const menuToggle = document.getElementById('menu-toggle');
-        const mobileOverlay = document.getElementById('mobile-overlay');
-        const line1 = document.getElementById('line1');
-        const line2 = document.getElementById('line2');
-        const line3 = document.getElementById('line3');
-        const mobileLinks = document.querySelectorAll('.mobile-nav-link');
-        let isMenuOpen = false;
-        function toggleMenu() {
-            isMenuOpen = !isMenuOpen;
-            if (isMenuOpen) { mobileOverlay.classList.remove('opacity-0', 'pointer-events-none'); line1.style.transform = 'translateY(8px) rotate(45deg)'; line2.style.opacity = '0'; line3.style.transform = 'translateY(-8px) rotate(-45deg)'; document.body.style.overflow = 'hidden'; } else { mobileOverlay.classList.add('opacity-0', 'pointer-events-none'); line1.style.transform = 'none'; line2.style.opacity = '1'; line3.style.transform = 'none'; document.body.style.overflow = ''; }
-        }
-        menuToggle.addEventListener('click', toggleMenu);
-        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
-
-        window.shareWork = async (id, title) => { const shareUrl = `${window.location.origin}/obra.html?id=${id}`; if (navigator.share) { try { await navigator.share({ title: `Obra: ${title} | Fabio Benedetti`, text: `Confira este projeto: ${title}`, url: shareUrl }); } catch (err) { console.error(err); } } else { navigator.clipboard.writeText(shareUrl); alert('Link copiado!'); } };
-        window.socialShare = (id, title, platform) => { const shareUrl = encodeURIComponent(`${window.location.origin}/obra.html?id=${id}`); const text = encodeURIComponent(`Confira este projeto: ${title}`); if (platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${text}%20${shareUrl}`, '_blank'); if (platform === 'facebook') window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`, '_blank'); };
-        
-        onSnapshot(collection(db, "trabalhos"), (snapshot) => {
-            const container = document.getElementById('portfolio-feed');
-            let works = []; snapshot.forEach(doc => works.push({id: doc.id, ...doc.data()}));
-            works.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
+        onSnapshot(collection(db, "trabalhos"), (snap) => {
+            const container = document.getElementById('portfolio-list');
+            if(!container) return;
             container.innerHTML = '';
-            works.forEach((item) => {
-                let videoId = '';
-                if (item.videoUrl) {
-                    if (item.videoUrl.includes('v=')) videoId = item.videoUrl.split('v=')[1].split('&')[0];
-                    else if (item.videoUrl.includes('youtu.be/')) videoId = item.videoUrl.split('youtu.be/')[1].split('?')[0];
-                }
-                container.innerHTML += `<article class="work-card"><h2 class="text-4xl md:text-7xl font-black mb-12 tracking-tighter leading-none hover:text-neutral-400 transition-colors cursor-pointer" onclick="window.location.href='obra.html?id=${item.id}'">${item.titulo}</h2><div class="grid lg:grid-cols-12 gap-12"><div class="lg:col-span-8"><div class="feature-box aspect-video mb-10" onclick="window.location.href='obra.html?id=${item.id}'">${videoId ? `<iframe src="https://www.youtube.com/embed/${videoId}?rel=0&controls=0&modestbranding=1" allowfullscreen></iframe>` : `<img src="${item.fotoUrl}" class="w-full h-full object-cover grayscale">`}</div><div class="text-lg md:text-xl text-neutral-400 font-light leading-relaxed max-w-2xl">${item.descricao ? item.descricao.substring(0, 180) + '...' : ''}</div><div class="mt-10 flex items-center gap-4"><button onclick="socialShare('${item.id}', '${item.titulo}', 'whatsapp')" class="share-btn text-green-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-2.203 0-4.391 1.203-4.391 4.391 0 1.25.484 2.375 1.297 3.234l-.547 2.031 2.094-.547c.797.438 1.688.672 2.625.672 3.141 0 5.688-2.547 5.688-5.688s-2.547-6.094-5.688-6.094zm3.953 8.359c-.156.438-.906.844-1.25.875-.328.031-.75.141-2.141-.422-1.688-.688-2.766-2.406-2.844-2.516-.078-.109-.656-.875-.656-1.672s.422-1.188.562-1.344c.141-.156.313-.188.422-.188h.297c.094 0 .234-.016.359.281.141.344.484 1.188.531 1.281.047.094.078.203.016.328-.063.125-.094.203-.188.313-.094.109-.203.25-.297.344-.109.109-.219.234-.094.453.125.219.562.922 1.203 1.484.828.719 1.531.938 1.75 1.047.219.109.344.094.469-.047.125-.141.547-.641.688-.859.141-.219.281-.188.469-.125.188.063 1.203.562 1.406.672.203.109.344.156.391.25.047.094.047.547-.109.984z"/></svg></button><button onclick="shareWork('${item.id}', '${item.titulo}')" class="share-btn"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg></button></div></div><div class="lg:col-span-4 flex flex-col justify-end pt-8 lg:pt-0"><span class="text-[9px] uppercase tracking-widest text-neutral-600 font-bold mb-3">Ano de Produção</span><span class="text-2xl font-black">${item.data || '2025'}</span><a href="obra.html?id=${item.id}" class="mt-8 text-[10px] font-bold uppercase tracking-[0.3em] hover:opacity-50 transition-all flex items-center gap-3">Ver Detalhes Técnicos <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/></svg></a></div></div></article>`;
+            let works = [];
+            snap.forEach(d => works.push({id: d.id, ...d.data()}));
+            works.sort((a,b) => (a.ordem || 0) - (b.ordem || 0));
+
+            works.forEach(w => {
+                container.innerHTML += `
+                    <div class="work-item" onclick="window.location.href='obra.html?id=${w.id}'">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div>
+                                <span class="text-[8px] uppercase tracking-[0.5em] text-neutral-600 mb-3 block">${w.data || 'PRODUÇÃO'}</span>
+                                <h2 class="text-4xl md:text-6xl font-black italic tracking-tighter uppercase leading-none">${w.titulo}</h2>
+                            </div>
+                            <div class="flex items-center gap-4 text-[9px] font-bold uppercase tracking-widest text-neutral-500 group">
+                                <span>Ver Detalhes</span>
+                                <span class="text-xl">→</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
             });
         });
-        onSnapshot(doc(db, "site_content", "settings"), (snap) => { if(snap.exists()) { const d = snap.data(); if(d.footerAddress) document.getElementById('dyn-footer-address').innerHTML = d.footerAddress.replace(/\n/g, '<br>'); } });
     </script>
 </body>
 </html>

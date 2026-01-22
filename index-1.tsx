@@ -1,0 +1,1 @@
+// Arquivo desativado em favor do index.html puro.

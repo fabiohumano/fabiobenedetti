@@ -1,21 +1,15 @@
 
 <!DOCTYPE html>
-<html lang="pt-BR" prefix="og: http://ogp.me/ns#">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galeria | Fabio Benedetti</title>
-    <meta name="description" content="Explore a galeria visual de Fabio Benedetti.">
-
-    <meta id="og-type" property="og:type" content="website">
-    <meta id="og-url" property="og:url" content="https://fabiobenedetti.com.br/galeria.html">
-    <meta id="og-title" property="og:title" content="Galeria | Fabio Benedetti">
-    <meta id="og-desc" property="og:description" content="A trajetória visual em estúdio e palcos.">
-    <meta id="og-img" property="og:image" content="https://fabiobenedetti.com.br/assets/img/fabio-benedetti-produtor.jpg">
-
-    <link rel="canonical" href="https://fabiobenedetti.com.br/galeria.html">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Fabio Benedetti | Galeria de Fotos</title>
+    <meta name="description" content="Ensaios, registros históricos, processos criativos e momentos da trajetória musical.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #000000; color: #ffffff; }
         .page-bg-layer { position: fixed; inset: 0; background-size: cover; background-position: center; filter: brightness(0.25); z-index: -1; transition: background-image 1s ease; }
@@ -34,7 +28,6 @@
         .gallery-img:hover { transform: scale(1.02); filter: brightness(1.1); }
         .filter-btn { font-size: 9px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; color: #666; transition: all 0.3s; border-bottom: 1px solid transparent; }
         .filter-btn.active { color: white; border-color: white; }
-        #lightbox { z-index: 9999; display: none; background: rgba(0,0,0,0.98); }
     </style>
 </head>
 <body class="selection:bg-white selection:text-black">
@@ -76,73 +69,74 @@
         <header class="mb-24">
             <h1 class="text-6xl md:text-8xl font-black tracking-tighter leading-none mb-12">Trajetória <br><span class="italic text-neutral-400">Visual.</span></h1>
             <div id="category-filters" class="flex flex-wrap gap-8">
-                <button class="filter-btn active" data-slug="all" onclick="filterGallery('all', this)">Todas</button>
+                <button class="filter-btn active" data-slug="all">Todas</button>
             </div>
         </header>
         <div id="gallery-grid" class="masonry"></div>
     </main>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
         const firebaseConfig = { apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ", authDomain: "humano-studio.firebaseapp.com", projectId: "humano-studio", storageBucket: "humano-studio.firebasestorage.app", messagingSenderId: "938534325822", appId: "1:938534325822:web:abf5443336ce3224190b6f" };
-        const app = initializeApp(firebaseConfig);
+        const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
         const db = getFirestore(app);
 
-        async function applyPageDynamics() {
-            const pageId = 'galeria.html';
-            const seoSnap = await getDoc(doc(db, "seo_metadata", pageId));
-            if(seoSnap.exists()){
-                const d = seoSnap.data();
-                if(d.title) { document.title = d.title; document.getElementById('og-title').setAttribute('content', d.title); }
-                if(d.description) { document.querySelector('meta[name="description"]').setAttribute('content', d.description); document.getElementById('og-desc').setAttribute('content', d.description); }
-                if(d.imageUrl) document.getElementById('og-img').setAttribute('content', d.imageUrl);
-            }
-
-            onSnapshot(doc(db, "site_content", "backgrounds"), (snap) => {
-                if(snap.exists()) {
-                    const bgs = snap.data();
-                    const bgUrl = bgs['galeria'] || bgs['home'] || '';
-                    if(bgUrl) document.getElementById('dynamic-bg-layer').style.backgroundImage = `url('${bgUrl}')`;
-                }
-            });
-        }
-        applyPageDynamics();
-
+        // Menu Toggle
         const menuToggle = document.getElementById('menu-toggle');
         const mobileOverlay = document.getElementById('mobile-overlay');
-        const line1 = document.getElementById('line1');
-        const line2 = document.getElementById('line2');
-        const line3 = document.getElementById('line3');
-        const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+        const lines = [document.getElementById('line1'), document.getElementById('line2'), document.getElementById('line3')];
         let isMenuOpen = false;
-        function toggleMenu() {
+        menuToggle.onclick = () => {
             isMenuOpen = !isMenuOpen;
-            if (isMenuOpen) { mobileOverlay.classList.remove('opacity-0', 'pointer-events-none'); line1.style.transform = 'translateY(8px) rotate(45deg)'; line2.style.opacity = '0'; line3.style.transform = 'translateY(-8px) rotate(-45deg)'; document.body.style.overflow = 'hidden'; } else { mobileOverlay.classList.add('opacity-0', 'pointer-events-none'); line1.style.transform = 'none'; line2.style.opacity = '1'; line3.style.transform = 'none'; document.body.style.overflow = ''; }
+            if(isMenuOpen) { mobileOverlay.classList.remove('opacity-0', 'pointer-events-none'); lines[0].style.transform = 'translateY(8px) rotate(45deg)'; lines[1].style.opacity = '0'; lines[2].style.transform = 'translateY(-8px) rotate(-45deg)'; document.body.style.overflow = 'hidden'; } 
+            else { mobileOverlay.classList.add('opacity-0', 'pointer-events-none'); lines[0].style.transform = 'none'; lines[1].style.opacity = '1'; lines[2].style.transform = 'none'; document.body.style.overflow = ''; }
+        };
+
+        let allPhotos = [];
+        let activeSlug = 'all';
+
+        function renderGallery() {
+            const grid = document.getElementById('gallery-grid');
+            if(!grid) return;
+            grid.innerHTML = '';
+            const filtered = activeSlug === 'all' ? allPhotos : allPhotos.filter(img => img.categoria === activeSlug);
+            filtered.forEach(img => { 
+                grid.innerHTML += `<div class="masonry-item"><img src="${img.thumbWebp}" class="gallery-img w-full shadow-lg" loading="lazy"></div>`; 
+            });
         }
-        menuToggle.addEventListener('click', toggleMenu);
-        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
 
         onSnapshot(collection(db, "galeria_categorias"), (snap) => {
             const container = document.getElementById('category-filters');
-            container.innerHTML = `<button class="filter-btn active" onclick="filterGallery('all', this)">Todas</button>`;
+            if(!container) return;
+            container.innerHTML = `<button class="filter-btn ${activeSlug === 'all' ? 'active' : ''}" data-slug="all">Todas</button>`;
             snap.forEach(d => {
                 const c = d.data();
-                container.innerHTML += `<button class="filter-btn" onclick="filterGallery('${c.slug}', this)">${c.nome}</button>`;
+                container.innerHTML += `<button class="filter-btn ${activeSlug === c.slug ? 'active' : ''}" data-slug="${c.slug}">${c.nome}</button>`;
+            });
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.onclick = () => {
+                    activeSlug = btn.getAttribute('data-slug');
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderGallery();
+                };
             });
         });
         
         onSnapshot(collection(db, "galeria_fotos"), (snap) => {
-            let photos = []; snap.forEach(d => photos.push(d.data()));
-            renderGallery('all', photos);
+            allPhotos = []; snap.forEach(d => allPhotos.push(d.data()));
+            allPhotos.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
+            renderGallery();
         });
 
-        function renderGallery(slug, allPhotos) {
-            const grid = document.getElementById('gallery-grid');
-            grid.innerHTML = '';
-            const filtered = slug === 'all' ? allPhotos : allPhotos.filter(img => img.categoria === slug);
-            filtered.forEach(img => { grid.innerHTML += `<div class="masonry-item"><img src="${img.thumbWebp}" class="gallery-img w-full shadow-lg" loading="lazy"></div>`; });
-        }
+        onSnapshot(doc(db, "site_content", "backgrounds"), (snap) => {
+            if(snap.exists()) {
+                const url = snap.data()['galeria'] || snap.data()['home'];
+                if(url) document.getElementById('dynamic-bg-layer').style.backgroundImage = `url('${url}')`;
+            }
+        });
     </script>
 </body>
 </html>
