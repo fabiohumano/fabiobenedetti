@@ -14,14 +14,24 @@
         .btn-primary { background: #2563eb; color: white; font-weight: 800; padding: 14px; border-radius: 10px; transition: all 0.2s; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; border: none; width: 100%; text-align: center; }
         .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); }
         .btn-primary:disabled { background: #94a3b8; cursor: not-allowed; }
+        .btn-secondary { background: #e2e8f0; color: #475569; font-weight: 800; padding: 10px; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; font-size: 10px; border: none; }
+        .btn-secondary:hover { background: #cbd5e1; }
         .btn-danger { background: #fee2e2; color: #dc2626; font-weight: 800; padding: 8px 12px; border-radius: 8px; font-size: 10px; text-transform: uppercase; }
+        .btn-edit { background: #dbeafe; color: #2563eb; font-weight: 800; padding: 8px 12px; border-radius: 8px; font-size: 10px; text-transform: uppercase; margin-right: 5px; }
         .card-admin { background: #ffffff; border-radius: 1.25rem; border: 1px solid #e2e8f0; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         .tab-btn { color: #64748b; transition: all 0.2s; padding: 14px 0; font-size: 11px; font-weight: 800; letter-spacing: 0.12em; border-bottom: 3px solid transparent; text-transform: uppercase; white-space: nowrap; }
         .tab-btn.active { color: #2563eb; border-color: #2563eb; }
         .label-admin { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 6px; display: block; }
-        .list-item-admin { background: #ffffff; border: 1px solid #e2e8f0; padding: 1rem; border-radius: 0.75rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+        .list-item-admin { background: #ffffff; border: 1px solid #e2e8f0; padding: 1rem; border-radius: 0.75rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; transition: transform 0.2s; }
+        .list-item-admin.dragging { opacity: 0.5; border: 2px dashed #2563eb; }
+        .drag-handle { cursor: grab; color: #cbd5e1; font-size: 20px; padding: 0 10px; }
         .hidden { display: none !important; }
         .bg-preview { width: 100%; aspect-ratio: 16/9; background: #f1f5f9; border-radius: 12px; object-fit: cover; border: 1px solid #e2e8f0; margin-bottom: 1rem; }
+        .photo-thumb { position: relative; width: 100%; aspect-ratio: 1; border-radius: 8px; overflow: hidden; border: 2px solid transparent; }
+        .photo-thumb.is-cover { border-color: #22c55e; box-shadow: 0 0 0 2px #22c55e; }
+        .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .thumb-actions { position: absolute; inset: 0; background: rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+        .photo-thumb:hover .thumb-actions { opacity: 1; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -79,23 +89,66 @@
             </div>
 
             <!-- ABA PORTFOLIO -->
-            <div id="section-portfolio" class="hidden space-y-8">
-                <div class="grid lg:grid-cols-2 gap-8">
-                    <div class="card-admin">
-                        <h3 class="font-black italic mb-6">Novo Projeto</h3>
-                        <form id="work-form" class="space-y-4">
-                            <input type="text" id="work-title" placeholder="Título" class="input-admin" required>
-                            <input type="text" id="work-date" placeholder="Ano (Ex: 2024)" class="input-admin">
-                            <input type="url" id="work-video-url" placeholder="URL YouTube" class="input-admin">
-                            <textarea id="work-desc" placeholder="Descrição da Obra" class="input-admin" rows="3"></textarea>
-                            <button type="submit" class="btn-primary">Publicar Projeto</button>
-                        </form>
-                    </div>
-                    <div>
-                        <h3 class="font-black italic mb-6">Gerenciar Obras</h3>
-                        <p class="text-[10px] text-slate-500 mb-4 uppercase font-bold tracking-widest">Selecione até 4 obras para a Home</p>
-                        <div id="admin-portfolio-list" class="space-y-2"></div>
-                    </div>
+            <div id="section-portfolio" class="hidden space-y-12">
+                <!-- FORMULÁRIO DE EDIÇÃO/CRIAÇÃO -->
+                <div class="card-admin border-l-4 border-l-blue-600">
+                    <h3 id="form-title" class="font-black italic text-xl mb-6">Cadastrar Nova Obra</h3>
+                    <form id="work-form" class="space-y-6">
+                        <input type="hidden" id="work-id"> <!-- ID oculto para edição -->
+                        
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="md:col-span-2">
+                                <label class="label-admin">Título da Obra</label>
+                                <input type="text" id="work-title" placeholder="Ex: Álbum Renascer" class="input-admin" required>
+                            </div>
+                            <div>
+                                <label class="label-admin">Ano (Obrigatório)</label>
+                                <input type="number" id="work-date" placeholder="2024" class="input-admin" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="label-admin">Descrição</label>
+                            <textarea id="work-desc" placeholder="Detalhes técnicos, ficha técnica, história..." class="input-admin" rows="3"></textarea>
+                        </div>
+
+                        <!-- SEÇÃO DE LINKS -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-4">
+                                <label class="label-admin mb-0">Links da Obra (YouTube, Spotify, etc)</label>
+                                <button type="button" onclick="addLinkField()" class="btn-secondary text-[9px]">+ Adicionar Link</button>
+                            </div>
+                            <div id="links-container" class="space-y-3"></div>
+                            <p class="text-[10px] text-slate-400 mt-2">Dica: Se adicionar um link do YouTube, a capa será automática.</p>
+                        </div>
+
+                        <!-- SEÇÃO DE FOTOS -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <label class="label-admin mb-4">Fotos da Obra</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-4" id="photos-container"></div>
+                            
+                            <div class="flex items-center gap-3">
+                                <input type="file" id="work-file-input" multiple accept="image/*" class="hidden">
+                                <button type="button" onclick="document.getElementById('work-file-input').click()" class="btn-secondary w-full">Subir Fotos</button>
+                                <span id="upload-status" class="text-[10px] text-slate-500 font-bold"></span>
+                            </div>
+                            <p class="text-[10px] text-slate-400 mt-2">Se não houver vídeo, selecione uma foto acima para ser a <strong>CAPA</strong>.</p>
+                        </div>
+
+                        <div class="flex gap-3 pt-4 border-t border-slate-100">
+                            <button type="submit" class="btn-primary flex-1">Salvar Obra</button>
+                            <button type="button" onclick="resetWorkForm()" id="cancel-edit-btn" class="hidden btn-secondary bg-red-50 text-red-500 hover:bg-red-100">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- LISTAGEM DE OBRAS -->
+                <div>
+                    <h3 class="font-black italic mb-6 flex justify-between items-end">
+                        <span>Gerenciar Obras</span>
+                        <span class="text-[10px] font-normal text-slate-400 uppercase tracking-widest">Arraste para ordenar</span>
+                    </h3>
+                    <div id="admin-portfolio-list" class="space-y-2"></div>
                 </div>
             </div>
 
@@ -167,9 +220,9 @@
 
     <script type="module">
         import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, updateDoc, addDoc, writeBatch, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = { 
             apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ", 
@@ -231,11 +284,8 @@
             onSnapshot(doc(db, "site_content", "settings"), snap => {
                 if (snap.exists()) {
                     const d = snap.data();
-                    // Preenche campos da aba Home
                     document.getElementById('home-main-name').value = d.mainName || "Fabio Benedetti";
                     document.getElementById('home-slogan').value = d.slogan || "";
-                    
-                    // Preenche rodapé na aba Config
                     document.getElementById('set-footer').value = d.footerAddress || "";
                 }
             });
@@ -251,9 +301,7 @@
 
             document.getElementById('settings-form').onsubmit = async e => {
                 e.preventDefault();
-                await setDoc(doc(db, "site_content", "settings"), {
-                    footerAddress: document.getElementById('set-footer').value
-                }, { merge: true });
+                await setDoc(doc(db, "site_content", "settings"), { footerAddress: document.getElementById('set-footer').value }, { merge: true });
                 alert("Rodapé salvo!");
             };
 
@@ -336,56 +384,303 @@
             };
             window.deletePhoto = async id => { if(confirm("Apagar?")) await deleteDoc(doc(db, "galeria_fotos", id)); };
 
-            // --- ABA PORTFÓLIO (Lógica de Trabalhos) ---
+
+            // ==========================================
+            // NOVA LÓGICA PORTFÓLIO (Formulário Completo)
+            // ==========================================
+            let tempLinks = [];
+            let tempPhotos = [];
             let allWorksCache = [];
+
+            // Adicionar campo de link
+            window.addLinkField = (type = 'youtube', url = '') => {
+                tempLinks.push({ type, url });
+                renderTempLinks();
+            };
+            window.removeLink = (index) => {
+                tempLinks.splice(index, 1);
+                renderTempLinks();
+            };
+            window.updateLink = (index, field, value) => {
+                tempLinks[index][field] = value;
+                // Se alterar link do YouTube, verificar capa
+                if(tempLinks[index].type === 'youtube') updateCoverLogic();
+            };
+
+            function renderTempLinks() {
+                const container = document.getElementById('links-container');
+                container.innerHTML = '';
+                tempLinks.forEach((link, i) => {
+                    container.innerHTML += `
+                        <div class="flex gap-2 items-center">
+                            <select onchange="updateLink(${i}, 'type', this.value)" class="input-admin w-32 py-2">
+                                <option value="youtube" ${link.type === 'youtube' ? 'selected' : ''}>YouTube</option>
+                                <option value="external" ${link.type === 'external' ? 'selected' : ''}>Link Externo</option>
+                            </select>
+                            <input type="text" value="${link.url}" oninput="updateLink(${i}, 'url', this.value)" placeholder="URL" class="input-admin py-2 flex-1">
+                            <button type="button" onclick="removeLink(${i})" class="btn-danger">X</button>
+                        </div>
+                    `;
+                });
+                updateCoverLogic();
+            }
+
+            // Fotos e Upload
+            document.getElementById('work-file-input').onchange = async (e) => {
+                const files = e.target.files;
+                if(!files.length) return;
+                
+                const status = document.getElementById('upload-status');
+                status.innerText = `Enviando ${files.length} fotos...`;
+
+                for (let file of files) {
+                    const sRef = ref(storage, `trabalhos/${Date.now()}_${file.name}`);
+                    const snap = await uploadBytesResumable(sRef, file);
+                    const url = await getDownloadURL(snap.ref);
+                    tempPhotos.push({ url, path: snap.ref.fullPath, isCover: false });
+                }
+                
+                status.innerText = "";
+                // Se for a primeira foto e não tiver vídeo, marca como capa
+                if(tempPhotos.length > 0 && !hasYoutubeLink() && !tempPhotos.some(p => p.isCover)) {
+                    tempPhotos[0].isCover = true;
+                }
+                renderTempPhotos();
+            };
+
+            window.removeTempPhoto = (index) => {
+                // Opcional: deletar do storage imediatamente ou esperar?
+                // Vamos manter simples: remove da lista. O arquivo fica lá (garbage collection manual futuramente se precisar)
+                tempPhotos.splice(index, 1);
+                renderTempPhotos();
+            };
+
+            window.setCover = (index) => {
+                if(hasYoutubeLink()) return alert("A capa é automática pois existe um vídeo do YouTube.");
+                tempPhotos.forEach(p => p.isCover = false);
+                tempPhotos[index].isCover = true;
+                renderTempPhotos();
+            };
+
+            function hasYoutubeLink() {
+                return tempLinks.some(l => l.type === 'youtube' && l.url.length > 5);
+            }
+
+            function updateCoverLogic() {
+                renderTempPhotos(); // Re-renderiza para atualizar bordas ou avisos
+            }
+
+            function renderTempPhotos() {
+                const container = document.getElementById('photos-container');
+                container.innerHTML = '';
+                const hasVideo = hasYoutubeLink();
+
+                tempPhotos.forEach((photo, i) => {
+                    const isCover = photo.isCover && !hasVideo;
+                    container.innerHTML += `
+                        <div class="photo-thumb ${isCover ? 'is-cover' : ''}">
+                            <img src="${photo.url}">
+                            <div class="thumb-actions">
+                                ${!hasVideo ? `<button type="button" onclick="setCover(${i})" class="btn-secondary text-[8px] px-2 py-1 bg-white text-black">USAR CAPA</button>` : ''}
+                                <button type="button" onclick="removeTempPhoto(${i})" class="btn-danger px-2 py-1">REMOVER</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Resetar formulário
+            window.resetWorkForm = () => {
+                document.getElementById('work-form').reset();
+                document.getElementById('work-id').value = '';
+                document.getElementById('form-title').innerText = "Cadastrar Nova Obra";
+                document.getElementById('cancel-edit-btn').classList.add('hidden');
+                tempLinks = [];
+                tempPhotos = [];
+                renderTempLinks();
+                renderTempPhotos();
+            };
+
+            // Salvar Obra
+            document.getElementById('work-form').onsubmit = async e => {
+                e.preventDefault();
+                const id = document.getElementById('work-id').value;
+                const title = document.getElementById('work-title').value;
+                const date = document.getElementById('work-date').value;
+                const desc = document.getElementById('work-desc').value;
+                
+                // Determinar Capa
+                let capaUrl = "";
+                const youtubeLink = tempLinks.find(l => l.type === 'youtube' && l.url);
+                if (youtubeLink) {
+                    let vId = "";
+                    if (youtubeLink.url.includes('v=')) vId = youtubeLink.url.split('v=')[1].split('&')[0];
+                    else if (youtubeLink.url.includes('youtu.be/')) vId = youtubeLink.url.split('youtu.be/')[1].split('?')[0];
+                    capaUrl = `https://img.youtube.com/vi/${vId}/maxresdefault.jpg`;
+                } else {
+                    const coverPhoto = tempPhotos.find(p => p.isCover);
+                    if (coverPhoto) capaUrl = coverPhoto.url;
+                    else if (tempPhotos.length > 0) capaUrl = tempPhotos[0].url;
+                }
+
+                // Para compatibilidade com Home antiga, salvamos videoUrl (o primeiro youtube se houver)
+                const legacyVideoUrl = youtubeLink ? youtubeLink.url : "";
+
+                const data = {
+                    titulo: title,
+                    data: date,
+                    descricao: desc,
+                    links: tempLinks,
+                    fotos: tempPhotos,
+                    capaUrl: capaUrl,
+                    videoUrl: legacyVideoUrl, // Legado para Home
+                    updatedAt: Date.now()
+                };
+
+                if (id) {
+                    await updateDoc(doc(db, "trabalhos", id), data);
+                    alert("Obra atualizada!");
+                } else {
+                    data.isHome = false;
+                    data.ordem = Date.now(); // Ordem inicial
+                    await addDoc(collection(db, "trabalhos"), data);
+                    alert("Obra criada!");
+                }
+                resetWorkForm();
+            };
+
+            // Editar Obra
+            window.editWork = async (id) => {
+                const work = allWorksCache.find(w => w.id === id);
+                if(!work) return;
+
+                document.getElementById('work-id').value = id;
+                document.getElementById('work-title').value = work.titulo;
+                document.getElementById('work-date').value = work.data;
+                document.getElementById('work-desc').value = work.descricao || "";
+                
+                tempLinks = work.links || [];
+                // Compatibilidade com dados antigos que só tinham videoUrl
+                if(tempLinks.length === 0 && work.videoUrl) {
+                    tempLinks.push({ type: 'youtube', url: work.videoUrl });
+                }
+
+                tempPhotos = work.fotos || [];
+                
+                renderTempLinks();
+                renderTempPhotos();
+
+                document.getElementById('form-title').innerText = "Editando: " + work.titulo;
+                document.getElementById('cancel-edit-btn').classList.remove('hidden');
+                
+                // Scroll para o form
+                document.getElementById('section-portfolio').scrollIntoView({ behavior: 'smooth' });
+            };
+
+            // Listagem e Drag & Drop
             onSnapshot(collection(db, "trabalhos"), snap => {
                 const listPort = document.getElementById('admin-portfolio-list');
                 listPort.innerHTML = '';
-                allWorksCache = []; // Cache local para verificação de limites
+                allWorksCache = [];
                 snap.forEach(d => allWorksCache.push({id: d.id, ...d.data()}));
                 
-                // Ordenação para lista
-                const sorted = [...allWorksCache].sort((a,b) => (b.id > a.id ? 1 : -1));
+                // Ordenação por campo 'ordem' (decrescente ou customizado)
+                allWorksCache.sort((a,b) => (b.ordem || 0) - (a.ordem || 0));
 
-                sorted.forEach(i => {
+                allWorksCache.forEach((i, idx) => {
                     listPort.innerHTML += `
-                        <div class="list-item-admin">
-                            <span class="flex-1 font-bold text-sm truncate">${i.titulo}</span>
-                            <div class="flex gap-4">
-                                <button onclick="toggleHome('${i.id}', ${!i.isHome})" class="text-[9px] font-bold transition-colors ${i.isHome ? 'text-blue-600' : 'text-slate-400 hover:text-blue-400'}">
-                                    ${i.isHome ? '★ NA HOME' : '☆ MARCAR HOME'}
+                        <div class="list-item-admin" draggable="true" data-id="${i.id}" data-idx="${idx}">
+                            <div class="drag-handle" title="Segure para arrastar">⋮⋮</div>
+                            <div class="w-12 h-12 rounded bg-slate-200 overflow-hidden flex-shrink-0">
+                                <img src="${i.capaUrl || i.fotoUrl || ''}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-bold text-sm truncate">${i.titulo}</div>
+                                <div class="text-[10px] text-slate-500">${i.data}</div>
+                            </div>
+                            <div class="flex gap-2 items-center">
+                                <button onclick="editWork('${i.id}')" class="btn-edit">Editar</button>
+                                <button onclick="toggleHome('${i.id}', ${!i.isHome})" class="text-[9px] font-bold transition-colors ${i.isHome ? 'text-blue-600 border border-blue-200 bg-blue-50 px-2 py-1 rounded' : 'text-slate-400 hover:text-blue-400 px-2 py-1'}">
+                                    ${i.isHome ? '★ NA HOME' : '☆ Home'}
                                 </button>
-                                <button onclick="deleteWork('${i.id}')" class="btn-danger">X</button>
+                                <button onclick="deleteWork('${i.id}')" class="btn-danger px-2">X</button>
                             </div>
                         </div>`;
                 });
+                
+                setupDragAndDrop();
             });
 
-            // Função toggleHome com trava de segurança (Max 4)
+            // Lógica Drag and Drop
+            function setupDragAndDrop() {
+                const draggables = document.querySelectorAll('.list-item-admin');
+                const container = document.getElementById('admin-portfolio-list');
+
+                draggables.forEach(draggable => {
+                    draggable.addEventListener('dragstart', () => {
+                        draggable.classList.add('dragging');
+                    });
+                    draggable.addEventListener('dragend', () => {
+                        draggable.classList.remove('dragging');
+                        saveNewOrder();
+                    });
+                });
+
+                container.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    const afterElement = getDragAfterElement(container, e.clientY);
+                    const draggable = document.querySelector('.dragging');
+                    if (afterElement == null) {
+                        container.appendChild(draggable);
+                    } else {
+                        container.insertBefore(draggable, afterElement);
+                    }
+                });
+            }
+
+            function getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll('.list-item-admin:not(.dragging)')];
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+
+            async function saveNewOrder() {
+                const items = document.querySelectorAll('.list-item-admin');
+                const batch = writeBatch(db);
+                // Inverter index para ordem decrescente (o primeiro da lista tem o maior numero)
+                const total = items.length;
+                
+                items.forEach((item, index) => {
+                    const id = item.getAttribute('data-id');
+                    const newOrder = (total - index) * 1000; // Multiplicador para dar espaço se precisar
+                    const ref = doc(db, "trabalhos", id);
+                    batch.update(ref, { ordem: newOrder });
+                });
+
+                await batch.commit();
+                // O onSnapshot vai atualizar a lista, não precisa fazer nada visual aqui
+            }
+
+            // Funções antigas mantidas
             window.toggleHome = async (id, val) => {
                 if (val === true) {
                     const currentHomeCount = allWorksCache.filter(w => w.isHome).length;
                     if (currentHomeCount >= 4) {
-                        alert("LIMITE ATINGIDO! \nJá existem 4 obras marcadas para a Home. \n\nPor favor, desmarque uma obra existente antes de adicionar uma nova.");
+                        alert("Você já selecionou 4 obras para a Home. Desmarque uma para selecionar outra.");
                         return;
                     }
                 }
                 await updateDoc(doc(db, "trabalhos", id), { isHome: val });
             };
 
-            window.deleteWork = async id => { if(confirm("Apagar?")) await deleteDoc(doc(db, "trabalhos", id)); };
-            document.getElementById('work-form').onsubmit = async e => {
-                e.preventDefault();
-                await addDoc(collection(db, "trabalhos"), {
-                    titulo: document.getElementById('work-title').value,
-                    data: document.getElementById('work-date').value,
-                    videoUrl: document.getElementById('work-video-url').value,
-                    descricao: document.getElementById('work-desc').value,
-                    isHome: false, // Default é falso
-                    ordem: Date.now()
-                });
-                e.target.reset();
-            };
+            window.deleteWork = async id => { if(confirm("Apagar esta obra?")) await deleteDoc(doc(db, "trabalhos", id)); };
         }
     </script>
 </body>
