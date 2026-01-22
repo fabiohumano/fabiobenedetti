@@ -51,7 +51,7 @@
 
         <main class="max-w-6xl mx-auto px-6 py-10">
             <nav class="flex space-x-8 mb-10 border-b border-slate-200 overflow-x-auto no-scrollbar">
-                <button onclick="switchTab('home')" id="tab-home" class="tab-btn active">Home</button>
+                <button onclick="switchTab('home')" id="tab-home" class="tab-btn active">Home (Identidade)</button>
                 <button onclick="switchTab('portfolio')" id="tab-portfolio" class="tab-btn">Portfólio</button>
                 <button onclick="switchTab('galeria')" id="tab-galeria" class="tab-btn">Galeria</button>
                 <button onclick="switchTab('config')" id="tab-config" class="tab-btn">Configurações/Fundos</button>
@@ -60,16 +60,21 @@
 
             <!-- ABA HOME -->
             <div id="section-home" class="space-y-8">
-                <div class="grid lg:grid-cols-2 gap-8">
-                    <div class="card-admin">
-                        <h3 class="font-black italic mb-6">Destaques da Home</h3>
-                        <form id="home-vid-form" class="space-y-4">
-                            <input type="text" id="home-vid-title" placeholder="Título da Obra" class="input-admin" required>
-                            <input type="url" id="home-vid-url" placeholder="URL do YouTube" class="input-admin" required>
-                            <button type="submit" class="btn-primary">Adicionar Destaque</button>
-                        </form>
-                    </div>
-                    <div id="admin-home-vids-list" class="space-y-2"></div>
+                <div class="card-admin max-w-2xl">
+                    <h3 class="font-black italic mb-6">Identidade Visual da Home</h3>
+                    <p class="text-xs text-slate-500 mb-6">Edite aqui o nome principal e o slogan que aparecem na capa do site.</p>
+                    <form id="home-identity-form" class="space-y-6">
+                        <div>
+                            <label class="label-admin">Nome Principal</label>
+                            <input type="text" id="home-main-name" placeholder="Ex: Fabio Benedetti" class="input-admin" required>
+                        </div>
+                        <div>
+                            <label class="label-admin">Slogan (Acima do nome)</label>
+                            <input type="text" id="home-slogan" placeholder="Ex: A Arte de ser Humano" class="input-admin">
+                            <p class="text-[10px] text-slate-400 mt-1">Deixe em branco para ocultar.</p>
+                        </div>
+                        <button type="submit" class="btn-primary">Atualizar Identidade</button>
+                    </form>
                 </div>
             </div>
 
@@ -86,7 +91,11 @@
                             <button type="submit" class="btn-primary">Publicar Projeto</button>
                         </form>
                     </div>
-                    <div id="admin-portfolio-list" class="space-y-2"></div>
+                    <div>
+                        <h3 class="font-black italic mb-6">Gerenciar Obras</h3>
+                        <p class="text-[10px] text-slate-500 mb-4 uppercase font-bold tracking-widest">Selecione até 4 obras para a Home</p>
+                        <div id="admin-portfolio-list" class="space-y-2"></div>
+                    </div>
                 </div>
             </div>
 
@@ -118,10 +127,8 @@
             <div id="section-config" class="hidden space-y-8">
                 <div class="grid lg:grid-cols-2 gap-8">
                     <div class="card-admin">
-                        <h3 class="font-black italic mb-6">Textos Globais</h3>
+                        <h3 class="font-black italic mb-6">Textos do Rodapé</h3>
                         <form id="settings-form" class="space-y-4">
-                            <label class="label-admin">Slogan Inicial</label>
-                            <textarea id="set-slogan" rows="3" class="input-admin"></textarea>
                             <label class="label-admin">Texto do Rodapé</label>
                             <textarea id="set-footer" rows="2" class="input-admin"></textarea>
                             <button type="submit" class="btn-primary">Salvar Alterações</button>
@@ -220,21 +227,34 @@
         };
 
         function startListeners() {
-            // Textos
+            // --- ABA HOME (Identidade Visual) ---
             onSnapshot(doc(db, "site_content", "settings"), snap => {
                 if (snap.exists()) {
                     const d = snap.data();
-                    document.getElementById('set-slogan').value = d.slogan || "";
+                    // Preenche campos da aba Home
+                    document.getElementById('home-main-name').value = d.mainName || "Fabio Benedetti";
+                    document.getElementById('home-slogan').value = d.slogan || "";
+                    
+                    // Preenche rodapé na aba Config
                     document.getElementById('set-footer').value = d.footerAddress || "";
                 }
             });
+
+            document.getElementById('home-identity-form').onsubmit = async e => {
+                e.preventDefault();
+                await setDoc(doc(db, "site_content", "settings"), {
+                    mainName: document.getElementById('home-main-name').value,
+                    slogan: document.getElementById('home-slogan').value
+                }, { merge: true });
+                alert("Identidade visual atualizada com sucesso!");
+            };
+
             document.getElementById('settings-form').onsubmit = async e => {
                 e.preventDefault();
                 await setDoc(doc(db, "site_content", "settings"), {
-                    slogan: document.getElementById('set-slogan').value,
                     footerAddress: document.getElementById('set-footer').value
                 }, { merge: true });
-                alert("Salvo!");
+                alert("Rodapé salvo!");
             };
 
             // Bio
@@ -293,9 +313,7 @@
                 list.innerHTML = '';
                 let photos = [];
                 snap.forEach(d => photos.push({id: d.id, ...d.data()}));
-                // Ordenar decrescente para o Admin ver a foto nova na hora
                 photos.sort((a,b) => (b.ordem || 0) - (a.ordem || 0));
-                
                 photos.forEach(f => {
                     list.innerHTML += `<div class="relative group"><img src="${f.thumbWebp}" class="w-full aspect-square object-cover rounded-lg"><button onclick="deletePhoto('${f.id}')" class="absolute inset-0 bg-red-600/80 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center font-bold text-[8px] rounded-lg">APAGAR</button></div>`;
                 });
@@ -306,56 +324,55 @@
                 const btn = e.target.querySelector('button');
                 const file = document.getElementById('photo-file').files[0];
                 const cat = document.getElementById('photo-cat').value;
-                
                 if(!file || !cat) return alert("Selecione foto e categoria.");
-
-                btn.disabled = true;
-                btn.innerText = "Enviando...";
-
-                // Nome seguro com timestamp para garantir unicidade e extensão
+                btn.disabled = true; btn.innerText = "Enviando...";
                 const sRef = ref(storage, `galeria/${Date.now()}_${file.name}`);
                 const task = uploadBytesResumable(sRef, file);
-                
-                task.on('state_changed', 
-                    null, 
-                    (error) => {
-                        console.error(error);
-                        alert("Erro no upload: " + error.message);
-                        btn.disabled = false;
-                        btn.innerText = "Fazer Upload";
-                    }, 
-                    async () => {
-                        try {
-                            const url = await getDownloadURL(task.snapshot.ref);
-                            await addDoc(collection(db, "galeria_fotos"), { thumbWebp: url, categoria: cat, ordem: Date.now() });
-                            alert("Foto Enviada com Sucesso!");
-                            e.target.reset();
-                        } catch (err) {
-                            alert("Erro ao salvar no banco: " + err.message);
-                        } finally {
-                            btn.disabled = false;
-                            btn.innerText = "Fazer Upload";
-                        }
-                    }
-                );
+                task.on('state_changed', null, (error) => { alert("Erro: " + error.message); btn.disabled = false; }, async () => {
+                    const url = await getDownloadURL(task.snapshot.ref);
+                    await addDoc(collection(db, "galeria_fotos"), { thumbWebp: url, categoria: cat, ordem: Date.now() });
+                    alert("Foto Enviada!"); e.target.reset(); btn.disabled = false; btn.innerText = "Fazer Upload";
+                });
             };
             window.deletePhoto = async id => { if(confirm("Apagar?")) await deleteDoc(doc(db, "galeria_fotos", id)); };
 
-            // Trabalhos
+            // --- ABA PORTFÓLIO (Lógica de Trabalhos) ---
+            let allWorksCache = [];
             onSnapshot(collection(db, "trabalhos"), snap => {
-                const listHome = document.getElementById('admin-home-vids-list');
                 const listPort = document.getElementById('admin-portfolio-list');
-                listHome.innerHTML = ''; listPort.innerHTML = '';
-                let items = []; snap.forEach(d => items.push({id: d.id, ...d.data()}));
+                listPort.innerHTML = '';
+                allWorksCache = []; // Cache local para verificação de limites
+                snap.forEach(d => allWorksCache.push({id: d.id, ...d.data()}));
                 
-                items.filter(i => i.isHome).forEach(i => {
-                    listHome.innerHTML += `<div class="list-item-admin"><span class="flex-1 font-bold text-sm">${i.titulo}</span><button onclick="toggleHome('${i.id}', false)" class="text-red-500 font-bold text-[9px]">REMOVER</button></div>`;
-                });
-                items.sort((a,b) => (b.id > a.id ? 1 : -1)).forEach(i => {
-                    listPort.innerHTML += `<div class="list-item-admin"><span class="flex-1 font-bold text-sm">${i.titulo}</span><div class="flex gap-4"><button onclick="toggleHome('${i.id}', ${!i.isHome})" class="text-[9px] font-bold ${i.isHome ? 'text-blue-600' : 'text-slate-400'}">${i.isHome ? 'NA HOME' : '+ HOME'}</button><button onclick="deleteWork('${i.id}')" class="btn-danger">X</button></div></div>`;
+                // Ordenação para lista
+                const sorted = [...allWorksCache].sort((a,b) => (b.id > a.id ? 1 : -1));
+
+                sorted.forEach(i => {
+                    listPort.innerHTML += `
+                        <div class="list-item-admin">
+                            <span class="flex-1 font-bold text-sm truncate">${i.titulo}</span>
+                            <div class="flex gap-4">
+                                <button onclick="toggleHome('${i.id}', ${!i.isHome})" class="text-[9px] font-bold transition-colors ${i.isHome ? 'text-blue-600' : 'text-slate-400 hover:text-blue-400'}">
+                                    ${i.isHome ? '★ NA HOME' : '☆ MARCAR HOME'}
+                                </button>
+                                <button onclick="deleteWork('${i.id}')" class="btn-danger">X</button>
+                            </div>
+                        </div>`;
                 });
             });
-            window.toggleHome = async (id, val) => await updateDoc(doc(db, "trabalhos", id), { isHome: val });
+
+            // Função toggleHome com trava de segurança (Max 4)
+            window.toggleHome = async (id, val) => {
+                if (val === true) {
+                    const currentHomeCount = allWorksCache.filter(w => w.isHome).length;
+                    if (currentHomeCount >= 4) {
+                        alert("LIMITE ATINGIDO! \nJá existem 4 obras marcadas para a Home. \n\nPor favor, desmarque uma obra existente antes de adicionar uma nova.");
+                        return;
+                    }
+                }
+                await updateDoc(doc(db, "trabalhos", id), { isHome: val });
+            };
+
             window.deleteWork = async id => { if(confirm("Apagar?")) await deleteDoc(doc(db, "trabalhos", id)); };
             document.getElementById('work-form').onsubmit = async e => {
                 e.preventDefault();
@@ -364,7 +381,7 @@
                     data: document.getElementById('work-date').value,
                     videoUrl: document.getElementById('work-video-url').value,
                     descricao: document.getElementById('work-desc').value,
-                    isHome: false,
+                    isHome: false, // Default é falso
                     ordem: Date.now()
                 });
                 e.target.reset();

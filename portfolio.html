@@ -19,7 +19,7 @@
     
     <nav class="fixed top-0 w-full z-[100] h-20 nav-glass flex items-center px-12">
         <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
-            <a href="index.html" class="font-black italic text-xl tracking-tighter uppercase">FABIO BENEDETTI</a>
+            <a href="index.html" id="dyn-main-name" class="font-black italic text-xl tracking-tighter uppercase">FABIO BENEDETTI</a>
             <div class="hidden md:flex gap-10">
                 <a href="index.html" class="text-[10px] font-bold uppercase tracking-widest text-neutral-500 hover:text-white transition-colors">Início</a>
                 <a href="portfolio.html" class="text-[10px] font-bold uppercase tracking-widest text-white">Portfólio</a>
@@ -45,6 +45,15 @@
         const firebaseConfig = { apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ", authDomain: "humano-studio.firebaseapp.com", projectId: "humano-studio", storageBucket: "humano-studio.firebasestorage.app", messagingSenderId: "938534325822", appId: "1:938534325822:web:abf5443336ce3224190b6f" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // Identidade
+        onSnapshot(doc(db, "site_content", "settings"), (snap) => {
+            if(snap.exists()) {
+                const d = snap.data();
+                const nameEl = document.getElementById('dyn-main-name');
+                if (nameEl && d.mainName) nameEl.innerText = d.mainName;
+            }
+        });
 
         onSnapshot(doc(db, "site_content", "backgrounds"), (snap) => {
             const url = snap.data()?.portfolio || snap.data()?.home;

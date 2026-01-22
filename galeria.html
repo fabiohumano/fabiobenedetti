@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -37,7 +36,7 @@
     <nav id="main-nav" class="fixed top-0 left-0 w-full z-[100] h-24 border-b border-white/5 flex items-center">
         <div class="max-w-7xl mx-auto w-full px-6 flex justify-between items-center">
             <a href="index.html" class="flex flex-col">
-                <span class="font-extrabold text-lg tracking-tighter uppercase italic leading-none">FABIO BENEDETTI</span>
+                <span id="dyn-main-name" class="font-extrabold text-lg tracking-tighter uppercase italic leading-none">FABIO BENEDETTI</span>
                 <span class="text-[8px] tracking-[0.5em] font-bold text-neutral-500 uppercase mt-1">Produtor Musical</span>
             </a>
             <div class="hidden md:flex items-center gap-12">
@@ -93,6 +92,15 @@
             if(isMenuOpen) { mobileOverlay.classList.remove('opacity-0', 'pointer-events-none'); lines[0].style.transform = 'translateY(8px) rotate(45deg)'; lines[1].style.opacity = '0'; lines[2].style.transform = 'translateY(-8px) rotate(-45deg)'; document.body.style.overflow = 'hidden'; } 
             else { mobileOverlay.classList.add('opacity-0', 'pointer-events-none'); lines[0].style.transform = 'none'; lines[1].style.opacity = '1'; lines[2].style.transform = 'none'; document.body.style.overflow = ''; }
         };
+
+        // Identidade
+        onSnapshot(doc(db, "site_content", "settings"), (snap) => {
+            if(snap.exists()) {
+                const d = snap.data();
+                const nameEl = document.getElementById('dyn-main-name');
+                if (nameEl && d.mainName) nameEl.innerText = d.mainName;
+            }
+        });
 
         let allPhotos = [];
         let activeSlug = 'all';

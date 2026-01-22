@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -65,7 +64,7 @@
     <nav id="main-nav" class="fixed top-0 left-0 w-full z-[100] h-24 border-b border-white/5 flex items-center">
         <div class="max-w-7xl mx-auto w-full px-6 flex justify-between items-center">
             <a href="index.html" class="flex flex-col">
-                <span class="font-extrabold text-lg tracking-tighter uppercase italic leading-none">FABIO BENEDETTI</span>
+                <span id="dyn-main-name" class="font-extrabold text-lg tracking-tighter uppercase italic leading-none">FABIO BENEDETTI</span>
                 <span class="text-[8px] tracking-[0.5em] font-bold text-neutral-500 uppercase mt-1">Produtor Musical</span>
             </a>
             <div class="hidden md:flex items-center gap-12">
@@ -97,6 +96,7 @@
         <div id="hero-bg" class="hero-bg-layer"></div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
+            <!-- Slogan agora é dinâmico -->
             <h1 id="dyn-slogan" class="text-gradient font-black tracking-tighter mb-8" style="font-size: clamp(3.5rem, 10vw, 8.5rem); line-height: 0.85;">A Arte de ser <br>HUMANO.</h1>
             <p id="dyn-desc" class="text-sm md:text-base text-neutral-400 font-light max-w-xl mx-auto leading-relaxed tracking-widest uppercase">A união entre a alma do artista e a precisão da tecnologia digital.</p>
             <div class="social-grid">
@@ -161,7 +161,23 @@
             if(snap.exists()) {
                 const d = snap.data();
                 const sloganEl = document.getElementById('dyn-slogan');
-                if (sloganEl) sloganEl.innerHTML = (d.slogan !== undefined) ? d.slogan.replace(/\n/g, '<br>') : 'A Arte de ser <br>HUMANO.';
+                const nameEl = document.getElementById('dyn-main-name');
+
+                // Atualiza Slogan
+                if (sloganEl) {
+                    // Se estiver vazio no banco, oculta. Se tiver texto, mostra.
+                    if (!d.slogan || d.slogan.trim() === "") {
+                        sloganEl.style.display = 'none';
+                    } else {
+                        sloganEl.style.display = 'block';
+                        sloganEl.innerHTML = d.slogan.replace(/\n/g, '<br>');
+                    }
+                }
+
+                // Atualiza Nome Principal no Menu
+                if (nameEl && d.mainName) nameEl.innerText = d.mainName;
+
+                // Outros campos
                 if(d.seoDesc !== undefined) document.getElementById('dyn-desc').innerText = d.seoDesc;
                 if(d.footerAddress !== undefined) document.getElementById('dyn-footer-address').innerHTML = d.footerAddress.replace(/\n/g, '<br>');
             }
@@ -174,13 +190,17 @@
             }
         });
 
+        // Carrega APENAS os trabalhos marcados como "isHome" na aba Portfólio do Admin
         onSnapshot(collection(db, "trabalhos"), (snap) => {
             const container = document.getElementById('videos-grid');
             if(!container) return;
             let allWorks = []; snap.forEach(d => allWorks.push({id: d.id, ...d.data()}));
+            
+            // Filtra os que tem isHome = true
             let displayList = allWorks.filter(w => w.isHome).sort((a,b) => (a.ordem || 0) - (b.ordem || 0));
-            if (displayList.length === 0) displayList = allWorks.sort((a,b) => (b.id > a.id ? 1 : -1)).slice(0, 4);
-            else displayList = displayList.slice(0, 4);
+            
+            // Trava de segurança (exibir no máx 4)
+            displayList = displayList.slice(0, 4);
 
             container.innerHTML = '';
             displayList.forEach(v => {
