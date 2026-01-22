@@ -124,10 +124,8 @@
                 }
                 if (!imageSrc) imageSrc = w.fotoUrl || 'https://via.placeholder.com/800x450/000000/FFFFFF?text=SEM+IMAGEM';
 
-                // Link para a página estática gerada pelo "gerador.html"
-                // Caso o usuário ainda não tenha gerado, isso vai dar 404 se não existir, 
-                // mas é o requisito para o SEO funcionar.
-                const linkUrl = `obras/${w.id}.html`; 
+                // CORREÇÃO: Link Dinâmico para evitar 404
+                const linkUrl = `obra.html?id=${w.id}`; 
 
                 container.innerHTML += `
                     <article class="work-card-vertical group cursor-pointer" onclick="window.location.href='${linkUrl}'">
@@ -149,11 +147,6 @@
             });
 
             console.log(`[CEREBRO ADMIN] Obras renderizadas na tela: ${renderCount}`);
-            if(works.length !== renderCount) {
-                console.warn("ALERTA: O número de obras renderizadas difere do total no banco!");
-            } else {
-                console.log("SUCESSO: Todas as obras estão visíveis.");
-            }
         });
     </script>
 </body>
