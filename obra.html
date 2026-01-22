@@ -6,23 +6,6 @@
     <title>Obra | Fabio Benedetti</title>
     <meta name="description" content="Detalhes técnicos da obra produzida por Fabio Benedetti.">
 
-    <!-- OPEN GRAPH / FACEBOOK / WHATSAPP (ESTÁTICO - FALLBACK PORTFOLIO) -->
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="https://fabiobenedetti.com.br/portfolio.html">
-    <meta property="og:title" content="Obra | Fabio Benedetti">
-    <meta property="og:description" content="Confira os detalhes técnicos desta produção.">
-    <meta property="og:image" content="https://fabiobenedetti.com.br/img/fabio-benedetti-portfolio.jpg">
-    <meta property="og:image:secure_url" content="https://fabiobenedetti.com.br/img/fabio-benedetti-portfolio.jpg">
-    <meta property="og:image:type" content="image/jpeg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-
-    <!-- TWITTER CARD (ESTÁTICO) -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Obra | Fabio Benedetti">
-    <meta name="twitter:description" content="Confira os detalhes técnicos desta produção.">
-    <meta name="twitter:image" content="https://fabiobenedetti.com.br/img/fabio-benedetti-portfolio.jpg">
-
     <link rel="canonical" href="https://fabiobenedetti.com.br/portfolio.html">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -37,7 +20,13 @@
         .cerebro-btn:hover { background: white; color: black; border-color: white; transform: translateY(-2px); }
         .feature-box { border-radius: 2rem; overflow: hidden; background: #080808; border: 1px solid rgba(255,255,255,0.1); }
         iframe { width: 100%; height: 100%; border: 0; }
-        .btn-whatsapp { background: #25D366; color: white; padding: 1.2rem 3rem; border-radius: 100px; text-decoration: none; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; display: inline-flex; align-items: center; gap: 10px; transition: all 0.4s; }
+        .btn-whatsapp { background: #25D366; color: white; padding: 1.2rem 3rem; border-radius: 100px; text-decoration: none; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; display: inline-flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.4s; }
+        .btn-whatsapp:hover { background: #20b858; transform: translateY(-2px); }
+        .btn-external { display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 12px; transition: all 0.2s; border: 1px solid transparent; }
+        .btn-external:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+        .gallery-item { border-radius: 1rem; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); cursor: zoom-in; }
+        .gallery-item img { transition: transform 0.5s; width: 100%; height: 100%; object-fit: cover; }
+        .gallery-item:hover img { transform: scale(1.05); }
     </style>
 </head>
 <body class="selection:bg-white selection:text-black">
@@ -82,13 +71,30 @@
         </header>
         <div class="grid lg:grid-cols-12 gap-16">
             <div class="lg:col-span-8">
+                <!-- Área de Mídia Principal (Vídeo ou Capa) -->
                 <div id="media-container" class="feature-box aspect-video mb-12"></div>
                 <div id="obra-descricao" class="text-xl text-neutral-300 font-light leading-relaxed max-w-3xl"></div>
+                
+                <!-- Galeria Adicional -->
+                <div id="obra-galeria" class="mt-24 hidden">
+                    <h3 class="text-2xl font-bold italic mb-8">Galeria do Projeto</h3>
+                    <div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                </div>
             </div>
+            
             <div class="lg:col-span-4">
-                <div class="sticky top-40 bg-neutral-950 p-10 rounded-[2.5rem] border border-white/5">
-                    <h3 class="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-8">Vamos produzir?</h3>
-                    <a id="whatsapp-link" href="#" target="_blank" class="btn-whatsapp w-full justify-center">Conversar Agora</a>
+                <div class="sticky top-40 space-y-8">
+                    <!-- Links Externos -->
+                    <div id="external-links-container" class="bg-neutral-900 p-8 rounded-[2rem] border border-white/5 hidden">
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-6">Links Disponíveis</h3>
+                        <div id="external-links-list" class="space-y-3"></div>
+                    </div>
+
+                    <!-- CTA -->
+                    <div class="bg-neutral-950 p-10 rounded-[2.5rem] border border-white/5">
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-8">Vamos produzir?</h3>
+                        <a id="whatsapp-link" href="#" target="_blank" class="btn-whatsapp w-full">Conversar Agora</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -123,21 +129,65 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const obraId = urlParams.get('id');
+        
         if (obraId) {
             const snap = await getDoc(doc(db, "trabalhos", obraId));
             if (snap.exists()) {
                 const data = snap.data();
+                
+                // 1. Dados Básicos
                 document.getElementById('obra-titulo').innerText = data.titulo;
                 document.title = `${data.titulo} | Fabio Benedetti`;
                 document.getElementById('obra-data').innerText = data.data || '2025';
                 document.getElementById('obra-descricao').innerHTML = data.descricao ? data.descricao.replace(/\n/g, '<br>') : '';
-                const media = document.getElementById('media-container');
-                if (data.videoUrl) {
-                    let vId = data.videoUrl.includes('v=') ? data.videoUrl.split('v=')[1].split('&')[0] : data.videoUrl.split('youtu.be/')[1].split('?')[0];
-                    media.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}?rel=0" allowfullscreen></iframe>`;
+                
+                // 2. Lógica de Mídia Principal (Prioridade: Link Youtube > Capa)
+                const mediaContainer = document.getElementById('media-container');
+                const links = data.links || [];
+                const youtubeLink = links.find(l => l.type === 'youtube') || (data.videoUrl ? { url: data.videoUrl } : null);
+                
+                if (youtubeLink && youtubeLink.url.length > 5) {
+                    let vId = "";
+                    if (youtubeLink.url.includes('v=')) vId = youtubeLink.url.split('v=')[1].split('&')[0];
+                    else if (youtubeLink.url.includes('youtu.be/')) vId = youtubeLink.url.split('youtu.be/')[1].split('?')[0];
+                    mediaContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}?rel=0" allowfullscreen></iframe>`;
+                } else if (data.capaUrl) {
+                    mediaContainer.innerHTML = `<img src="${data.capaUrl}" class="w-full h-full object-cover">`;
+                } else {
+                    mediaContainer.style.display = 'none'; // Se não tiver nada, esconde
                 }
+
+                // 3. Links Externos
+                const extLinks = links.filter(l => l.type === 'external');
+                if (extLinks.length > 0) {
+                    const list = document.getElementById('external-links-list');
+                    extLinks.forEach(link => {
+                        list.innerHTML += `
+                            <a href="${link.url}" target="_blank" class="btn-external">
+                                <span class="text-white font-bold text-sm">Abrir Link</span>
+                                <svg class="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                            </a>
+                        `;
+                    });
+                    document.getElementById('external-links-container').classList.remove('hidden');
+                }
+
+                // 4. Galeria de Fotos Extra
+                const photos = data.fotos || [];
+                // Se a capa estiver nas fotos, podemos optar por não mostrar repetida, mas vamos mostrar tudo por enquanto
+                if (photos.length > 0) {
+                    const grid = document.getElementById('gallery-grid');
+                    photos.forEach(p => {
+                        grid.innerHTML += `<div class="gallery-item aspect-square"><img src="${p.url}" loading="lazy"></div>`;
+                    });
+                    document.getElementById('obra-galeria').classList.remove('hidden');
+                }
+
+                // 5. WhatsApp
                 const waMessage = encodeURIComponent(`Olá Fabio! Vi sua obra "${data.titulo}" e gostaria de produzir com você.`);
                 document.getElementById('whatsapp-link').href = `https://wa.me/5532991064759?text=${waMessage}`;
+                
+                // Revelar Conteúdo
                 document.getElementById('obra-content').classList.remove('hidden');
             }
         }

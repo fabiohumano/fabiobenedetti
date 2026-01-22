@@ -9,15 +9,22 @@
     <style>
         body { background: #000; color: #fff; font-family: 'Inter', sans-serif; }
         .nav-glass { background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .work-item { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 4rem 0; transition: all 0.5s ease; cursor: pointer; }
-        .work-item:hover { background: rgba(255,255,255,0.02); padding-left: 2rem; border-color: rgba(255,255,255,0.1); }
         .bg-layer { position: fixed; inset: 0; background-size: cover; background-position: center; filter: brightness(0.15); z-index: -1; }
+        
+        /* Card Styles */
+        .work-card-img-container { position: relative; overflow: hidden; border-radius: 1rem; background: #111; aspect-ratio: 16/9; border: 1px solid rgba(255,255,255,0.1); }
+        .work-card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.2, 1, 0.2, 1); }
+        .work-card:hover .work-card-img { transform: scale(1.05); }
+        .work-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); opacity: 0; transition: opacity 0.3s; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        .work-card:hover .work-overlay { opacity: 1; }
+        .btn-details { background: white; color: black; font-weight: 800; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; padding: 12px 24px; border-radius: 50px; transform: translateY(20px); transition: transform 0.3s; }
+        .work-card:hover .btn-details { transform: translateY(0); }
     </style>
 </head>
 <body>
     <div id="bg-layer" class="bg-layer"></div>
     
-    <nav class="fixed top-0 w-full z-[100] h-20 nav-glass flex items-center px-12">
+    <nav class="fixed top-0 w-full z-[100] h-20 nav-glass flex items-center px-6 md:px-12">
         <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
             <a href="index.html" id="dyn-main-name" class="font-black italic text-xl tracking-tighter uppercase">FABIO BENEDETTI</a>
             <div class="hidden md:flex gap-10">
@@ -30,11 +37,14 @@
     </nav>
 
     <main class="max-w-7xl mx-auto px-6 pt-48 pb-20">
-        <h1 class="text-7xl md:text-9xl font-black italic tracking-tighter mb-24 uppercase">Obras <br><span class="text-neutral-800 not-italic">Assinadas.</span></h1>
-        <div id="portfolio-list" class="space-y-4">
-            <!-- Listagem dinámica -->
-            <div class="animate-pulse h-20 bg-neutral-900 rounded-lg"></div>
-            <div class="animate-pulse h-20 bg-neutral-900 rounded-lg"></div>
+        <h1 class="text-6xl md:text-9xl font-black italic tracking-tighter mb-24 uppercase leading-none">Obras <br><span class="text-neutral-800 not-italic">Assinadas.</span></h1>
+        
+        <!-- Grid de Cards -->
+        <div id="portfolio-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+            <!-- Loading State -->
+            <div class="animate-pulse bg-neutral-900 rounded-2xl aspect-video"></div>
+            <div class="animate-pulse bg-neutral-900 rounded-2xl aspect-video"></div>
+            <div class="animate-pulse bg-neutral-900 rounded-2xl aspect-video"></div>
         </div>
     </main>
 
@@ -66,20 +76,36 @@
             container.innerHTML = '';
             let works = [];
             snap.forEach(d => works.push({id: d.id, ...d.data()}));
-            works.sort((a,b) => (a.ordem || 0) - (b.ordem || 0));
+            
+            // Ordenar por ordem definida no admin (drag and drop) ou fallback para data
+            works.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
+            // Como a ordem no admin é crescente visualmente mas salva numericamente, 
+            // se estiver ao contrário, inverta aqui: works.reverse(); 
+            // O padrão do admin novo salva indices maiores para os primeiros da lista.
+            // Então maior ordem = aparece primeiro. Descrescente.
+            works.sort((a,b) => (b.ordem ?? 0) - (a.ordem ?? 0));
 
             works.forEach(w => {
+                // Fallback para capa: capaUrl > videoUrl (thumb) > fotoUrl (antigo)
+                let imageSrc = w.capaUrl;
+                if (!imageSrc && w.videoUrl) {
+                    // Tenta extrair thumb se não tiver capaUrl
+                    let vId = w.videoUrl.includes('v=') ? w.videoUrl.split('v=')[1].split('&')[0] : w.videoUrl.split('youtu.be/')[1].split('?')[0];
+                    if(vId) imageSrc = `https://img.youtube.com/vi/${vId}/maxresdefault.jpg`;
+                }
+                if (!imageSrc) imageSrc = w.fotoUrl || 'https://via.placeholder.com/800x450/000000/FFFFFF?text=SEM+IMAGEM';
+
                 container.innerHTML += `
-                    <div class="work-item" onclick="window.location.href='obra.html?id=${w.id}'">
-                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                            <div>
-                                <span class="text-[8px] uppercase tracking-[0.5em] text-neutral-600 mb-3 block">${w.data || 'PRODUÇÃO'}</span>
-                                <h2 class="text-4xl md:text-6xl font-black italic tracking-tighter uppercase leading-none">${w.titulo}</h2>
+                    <div class="work-card group cursor-pointer" onclick="window.location.href='obra.html?id=${w.id}'">
+                        <div class="work-card-img-container">
+                            <img src="${imageSrc}" class="work-card-img" loading="lazy" alt="${w.titulo}">
+                            <div class="work-overlay">
+                                <span class="btn-details">Ver Detalhes</span>
                             </div>
-                            <div class="flex items-center gap-4 text-[9px] font-bold uppercase tracking-widest text-neutral-500 group">
-                                <span>Ver Detalhes</span>
-                                <span class="text-xl">→</span>
-                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h2 class="text-2xl font-black italic uppercase tracking-tighter leading-none mb-2">${w.titulo}</h2>
+                            <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest block">${w.data || 'Produção'}</span>
                         </div>
                     </div>
                 `;
