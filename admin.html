@@ -13,6 +13,7 @@
         .input-admin:focus { border-color: #2563eb; ring: 3px rgba(37, 99, 235, 0.1); }
         .btn-primary { background: #2563eb; color: white; font-weight: 800; padding: 14px; border-radius: 10px; transition: all 0.2s; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; border: none; width: 100%; text-align: center; }
         .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); }
+        .btn-primary:disabled { background: #94a3b8; cursor: not-allowed; }
         .btn-danger { background: #fee2e2; color: #dc2626; font-weight: 800; padding: 8px 12px; border-radius: 8px; font-size: 10px; text-transform: uppercase; }
         .card-admin { background: #ffffff; border-radius: 1.25rem; border: 1px solid #e2e8f0; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         .tab-btn { color: #64748b; transition: all 0.2s; padding: 14px 0; font-size: 11px; font-weight: 800; letter-spacing: 0.12em; border-bottom: 3px solid transparent; text-transform: uppercase; white-space: nowrap; }
@@ -290,22 +291,53 @@
             onSnapshot(collection(db, "galeria_fotos"), snap => {
                 const list = document.getElementById('admin-photo-list');
                 list.innerHTML = '';
-                snap.forEach(d => {
-                    const f = d.data();
-                    list.innerHTML += `<div class="relative group"><img src="${f.thumbWebp}" class="w-full aspect-square object-cover rounded-lg"><button onclick="deletePhoto('${d.id}')" class="absolute inset-0 bg-red-600/80 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center font-bold text-[8px] rounded-lg">APAGAR</button></div>`;
+                let photos = [];
+                snap.forEach(d => photos.push({id: d.id, ...d.data()}));
+                // Ordenar decrescente para o Admin ver a foto nova na hora
+                photos.sort((a,b) => (b.ordem || 0) - (a.ordem || 0));
+                
+                photos.forEach(f => {
+                    list.innerHTML += `<div class="relative group"><img src="${f.thumbWebp}" class="w-full aspect-square object-cover rounded-lg"><button onclick="deletePhoto('${f.id}')" class="absolute inset-0 bg-red-600/80 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center font-bold text-[8px] rounded-lg">APAGAR</button></div>`;
                 });
             });
+
             document.getElementById('photo-form').onsubmit = async e => {
                 e.preventDefault();
+                const btn = e.target.querySelector('button');
                 const file = document.getElementById('photo-file').files[0];
                 const cat = document.getElementById('photo-cat').value;
-                const sRef = ref(storage, `galeria/${Date.now()}`);
+                
+                if(!file || !cat) return alert("Selecione foto e categoria.");
+
+                btn.disabled = true;
+                btn.innerText = "Enviando...";
+
+                // Nome seguro com timestamp para garantir unicidade e extensão
+                const sRef = ref(storage, `galeria/${Date.now()}_${file.name}`);
                 const task = uploadBytesResumable(sRef, file);
-                task.on('state_changed', null, null, async () => {
-                    const url = await getDownloadURL(task.snapshot.ref);
-                    await addDoc(collection(db, "galeria_fotos"), { thumbWebp: url, categoria: cat, ordem: Date.now() });
-                    alert("Foto Enviada!");
-                });
+                
+                task.on('state_changed', 
+                    null, 
+                    (error) => {
+                        console.error(error);
+                        alert("Erro no upload: " + error.message);
+                        btn.disabled = false;
+                        btn.innerText = "Fazer Upload";
+                    }, 
+                    async () => {
+                        try {
+                            const url = await getDownloadURL(task.snapshot.ref);
+                            await addDoc(collection(db, "galeria_fotos"), { thumbWebp: url, categoria: cat, ordem: Date.now() });
+                            alert("Foto Enviada com Sucesso!");
+                            e.target.reset();
+                        } catch (err) {
+                            alert("Erro ao salvar no banco: " + err.message);
+                        } finally {
+                            btn.disabled = false;
+                            btn.innerText = "Fazer Upload";
+                        }
+                    }
+                );
             };
             window.deletePhoto = async id => { if(confirm("Apagar?")) await deleteDoc(doc(db, "galeria_fotos", id)); };
 

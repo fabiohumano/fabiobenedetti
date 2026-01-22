@@ -127,7 +127,8 @@
         
         onSnapshot(collection(db, "galeria_fotos"), (snap) => {
             allPhotos = []; snap.forEach(d => allPhotos.push(d.data()));
-            allPhotos.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
+            // Correção: Ordenar decrescente (mais novo primeiro)
+            allPhotos.sort((a,b) => (b.ordem ?? 0) - (a.ordem ?? 0));
             renderGallery();
         });
 
