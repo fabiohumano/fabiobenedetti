@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cérebro | Gerador de SEO Estático</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- JSZip para criar o arquivo zipado -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        body { background: #0f172a; color: white; font-family: sans-serif; padding: 2rem; }
+        .card { background: #1e293b; border: 1px solid #334155; padding: 2rem; border-radius: 1rem; max-width: 600px; mx-auto; margin-bottom: 2rem; }
+        .btn { background: #2563eb; color: white; font-weight: bold; padding: 1rem 2rem; border-radius: 0.5rem; width: 100%; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background: #1d4ed8; }
+        .log { font-family: monospace; font-size: 0.8rem; color: #94a3b8; margin-top: 1rem; height: 200px; overflow-y: auto; background: #000; padding: 1rem; border-radius: 0.5rem; }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-2xl mx-auto text-center mb-10">
+        <h1 class="text-3xl font-black italic mb-2">GERADOR DE PÁGINAS ESTÁTICAS</h1>
+        <p class="text-slate-400">Esta ferramenta cria arquivos HTML reais para cada obra sua.<br>Isso garante que a Capa e o Título apareçam corretamente no WhatsApp e Facebook.</p>
+    </div>
+
+    <div class="card">
+        <h2 class="font-bold mb-4 text-xl">Instruções</h2>
+        <ol class="list-decimal pl-5 space-y-2 text-slate-300 mb-8 text-sm">
+            <li>Clique no botão abaixo para baixar todas as obras.</li>
+            <li>O sistema vai criar um arquivo <strong>obras.zip</strong>.</li>
+            <li>Baixe e extraia esse arquivo no seu computador.</li>
+            <li>Você verá uma pasta chamada <strong>obras</strong> com vários arquivos <em>.html</em> dentro.</li>
+            <li>Faça o upload dessa pasta <strong>obras</strong> para a Hostinger (na raiz do site, junto com index.html).</li>
+        </ol>
+        <button onclick="startGeneration()" id="btn-gen" class="btn">GERAR PÁGINAS ESTÁTICAS</button>
+        <div id="logger" class="log">Aguardando início...</div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ", authDomain: "humano-studio.firebaseapp.com", projectId: "humano-studio", storageBucket: "humano-studio.firebasestorage.app", messagingSenderId: "938534325822", appId: "1:938534325822:web:abf5443336ce3224190b6f" };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Template Base (Cópia simplificada de obra.html que injeta meta tags)
+        // OBS: Usamos caminhos relativos "../" para assets pois os arquivos ficarão na pasta /obras/
+        const getTemplate = (work) => {
+            // Define imagem de capa (mesma lógica do site)
+            let imageSrc = work.capaUrl;
+            if (!imageSrc && work.videoUrl) {
+                let vId = work.videoUrl.includes('v=') ? work.videoUrl.split('v=')[1].split('&')[0] : work.videoUrl.split('youtu.be/')[1].split('?')[0];
+                if(vId) imageSrc = `https://img.youtube.com/vi/${vId}/maxresdefault.jpg`;
+            }
+            if (!imageSrc) imageSrc = 'https://fabiobenedetti.com.br/img/default-share.jpg';
+
+            const description = work.descricao ? work.descricao.substring(0, 150).replace(/"/g, '&quot;') + '...' : 'Confira esta obra produzida por Fabio Benedetti.';
+            const title = `${work.titulo} | Fabio Benedetti`;
+            const url = `https://fabiobenedetti.com.br/obras/${work.id}.html`;
+
+            return `<!DOCTYPE html>
+<html lang="pt-BR" prefix="og: http://ogp.me/ns#">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO E META TAGS ESTÁTICAS (IMPORTANTE PARA WHATSAPP) -->
+    <title>${title}</title>
+    <meta name="description" content="${description}">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="${url}">
+    <meta property="og:title" content="${title}">
+    <meta property="og:description" content="${description}">
+    <meta property="og:image" content="${imageSrc}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${title}">
+    <meta name="twitter:description" content="${description}">
+    <meta name="twitter:image" content="${imageSrc}">
+
+    <!-- Reutiliza CSS e Scripts do site principal -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Importante: Ajustamos os caminhos dos links para voltarem um nível (../) -->
+    <style>
+        /* Copia estilos criticos ou importa de um arquivo css externo se houver */
+        body { font-family: 'Inter', sans-serif; background-color: #000000; color: #ffffff; overflow-x: hidden; }
+        .page-bg-layer { position: fixed; inset: 0; background-size: cover; background-position: center; filter: brightness(0.25); z-index: -1; transition: background-image 1s ease; }
+        .page-overlay { position: fixed; inset: 0; background: linear-gradient(to bottom, transparent 40%, #000 100%); z-index: -1; }
+        #main-nav { background: rgba(0,0,0,0.8); backdrop-filter: blur(25px); transition: all 0.4s ease; }
+        .nav-link { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.25em; transition: all 0.3s; color: #888; }
+        .nav-link:hover, .nav-link.active { color: white; }
+        .cerebro-btn { border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; transition: all 0.4s; }
+        .cerebro-btn:hover { background: white; color: black; border-color: white; transform: translateY(-2px); }
+        .feature-box { border-radius: 2rem; overflow: hidden; background: #080808; border: 1px solid rgba(255,255,255,0.1); }
+        iframe { width: 100%; height: 100%; border: 0; }
+        .btn-whatsapp { background: #25D366; color: white; padding: 1.2rem 3rem; border-radius: 100px; text-decoration: none; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; display: inline-flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.4s; }
+        .btn-whatsapp:hover { background: #20b858; transform: translateY(-2px); }
+        .btn-external { display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 12px; transition: all 0.2s; border: 1px solid transparent; }
+        .btn-external:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+        .gallery-item { border-radius: 1rem; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); cursor: zoom-in; }
+        .gallery-item img { transition: transform 0.5s; width: 100%; height: 100%; object-fit: cover; }
+        .gallery-item:hover img { transform: scale(1.05); }
+        .share-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2); transition: all 0.2s; color: #aaa; }
+        .share-btn:hover { background: white; color: black; border-color: white; transform: translateY(-2px); }
+    </style>
+    <!-- Injeta ID estática para o script saber o que carregar -->
+    <script>window.STATIC_WORK_ID = "${work.id}";<\/script>
+</head>
+<body class="selection:bg-white selection:text-black">
+    <!-- Reutiliza EXATAMENTE o corpo de obra.html via include ou copia (aqui copiamos a estrutura base) -->
+    <!-- O Javascript vai preencher o conteúdo dinâmico (galeria, etc) igualzinho à página dinâmica -->
+    
+    <div id="dynamic-bg-layer" class="page-bg-layer"></div>
+    <div class="page-overlay"></div>
+
+    <nav id="main-nav" class="fixed top-0 left-0 w-full z-[100] h-24 border-b border-white/5 flex items-center">
+        <div class="max-w-7xl mx-auto w-full px-6 flex justify-between items-center">
+            <a href="../index.html" class="flex flex-col">
+                <span id="dyn-main-name" class="font-extrabold text-lg tracking-tighter uppercase italic leading-none">FABIO BENEDETTI</span>
+                <span class="text-[8px] tracking-[0.5em] font-bold text-neutral-500 uppercase mt-1">Produtor Musical</span>
+            </a>
+            <div class="hidden md:flex items-center gap-12">
+                <div class="flex gap-8">
+                    <a href="../index.html" class="nav-link">Início</a>
+                    <a href="../portfolio.html" class="nav-link">Portfólio</a>
+                    <a href="../bio.html" class="nav-link">Bio</a>
+                    <a href="../galeria.html" class="nav-link">Galeria</a>
+                </div>
+                <a href="../admin.html" class="cerebro-btn px-6 py-2.5 rounded-full">Cérebro</a>
+            </div>
+             <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2 z-[160] relative">
+                <span class="w-6 h-0.5 bg-white"></span><span class="w-6 h-0.5 bg-white"></span><span class="w-6 h-0.5 bg-white"></span>
+            </button>
+        </nav>
+        
+        <!-- Menu Mobile Simplificado para versão estática -->
+        <div id="mobile-overlay" class="fixed inset-0 bg-black z-[150] flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-all duration-500">
+             <a href="../index.html" class="text-3xl font-bold uppercase tracking-widest text-neutral-500">Início</a>
+             <a href="../portfolio.html" class="text-3xl font-bold uppercase tracking-widest text-neutral-500">Portfólio</a>
+        </div>
+
+    <main id="obra-content" class="max-w-7xl mx-auto px-6 pt-56 pb-40">
+        <!-- O conteúdo abaixo é pré-renderizado para SEO básico, mas o JS vai aprimorar -->
+        <header class="mb-20">
+            <div id="obra-data" class="text-[9px] uppercase tracking-[0.5em] text-neutral-600 font-bold mb-4">${work.data || '2025'}</div>
+            <h1 id="obra-titulo" class="text-5xl md:text-8xl font-black tracking-tighter leading-none">${work.titulo}</h1>
+        </header>
+        <div class="grid lg:grid-cols-12 gap-16">
+            <div class="lg:col-span-8">
+                <!-- Imagem estática inicial (fallback) -->
+                <div id="media-container" class="feature-box aspect-video mb-8">
+                    <img src="${imageSrc}" class="w-full h-full object-cover">
+                </div>
+                 <!-- Barra de Compartilhamento (igual obra.html) -->
+                <div class="flex items-center gap-4 mb-12 py-4 border-y border-white/5">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Compartilhar:</span>
+                    <button onclick="shareSocial('whatsapp')" class="share-btn text-green-500"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-2.203 0-4.391 1.203-4.391 4.391 0 1.25.484 2.375 1.297 3.234l-.547 2.031 2.094-.547c.797.438 1.688.672 2.625.672 3.141 0 5.688-2.547 5.688-5.688s-2.547-6.094-5.688-6.094zm3.953 8.359c-.156.438-.906.844-1.25.875-.328.031-.75.141-2.141-.422-1.688-.688-2.766-2.406-2.844-2.516-.078-.109-.656-.875-.656-1.672s.422-1.188.562-1.344c.141-.156.313-.188.422-.188h.297c.094 0 .234-.016.359.281.141.344.484 1.188.531 1.281.047.094.078.203.016.328-.063.125-.094.203-.188.313-.094.109-.203.25-.297.344-.109.109-.219.234-.094.453.125.219.562.922 1.203 1.484.828.719 1.531.938 1.75 1.047.219.109.344.094.469-.047.125-.141.547-.641.688-.859.141-.219.281-.188.469-.125.188.063 1.203.562 1.406.672.203.109.344.156.391.25.047.094.047.547-.109.984z"/></svg></button>
+                    <button onclick="shareSocial('facebook')" class="share-btn text-blue-500"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg></button>
+                    <button onclick="shareSocial('copy')" class="share-btn"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg></button>
+                </div>
+                <div id="obra-descricao" class="text-xl text-neutral-300 font-light leading-relaxed max-w-3xl">${work.descricao || ''}</div>
+                <div id="obra-galeria" class="mt-24 hidden"><h3 class="text-2xl font-bold italic mb-8">Galeria do Projeto</h3><div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div></div>
+            </div>
+            <div class="lg:col-span-4">
+                <div class="sticky top-40 space-y-8">
+                     <div id="external-links-container" class="bg-neutral-900 p-8 rounded-[2rem] border border-white/5 hidden">
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-6">Links Disponíveis</h3>
+                        <div id="external-links-list" class="space-y-3"></div>
+                    </div>
+                    <div class="bg-neutral-950 p-10 rounded-[2.5rem] border border-white/5">
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-8">Vamos produzir?</h3>
+                        <a id="whatsapp-link" href="#" target="_blank" class="btn-whatsapp w-full">Conversar Agora</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Importante: Carregamos a lógica original de obra.html (mas ela vai detectar que já tem ID) -->
+    <!-- Para facilitar, incorporamos o script modificado de obra.html aqui para funcionar com ../ -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        const firebaseConfig = { apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ", authDomain: "humano-studio.firebaseapp.com", projectId: "humano-studio", storageBucket: "humano-studio.firebasestorage.app", messagingSenderId: "938534325822", appId: "1:938534325822:web:abf5443336ce3224190b6f" };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Copia da lógica de obra.html (simplificada)
+        async function load() {
+             // ... Lógica de load ...
+             // Como o HTML já vem preenchido pelo gerador, o JS serve para:
+             // 1. Carregar galeria extra (não queremos pesar o HTML estático com 50 fotos)
+             // 2. Resolver links de background dinâmico
+             
+             // Identidade
+            onSnapshot(doc(db, "site_content", "settings"), (snap) => {
+                if(snap.exists()) {
+                    const d = snap.data();
+                    const nameEl = document.getElementById('dyn-main-name');
+                    if (nameEl && d.mainName) nameEl.innerText = d.mainName;
+                }
+            });
+
+            const obraId = window.STATIC_WORK_ID;
+            if(obraId) {
+                const snap = await getDoc(doc(db, "trabalhos", obraId));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    // Atualiza link whatsapp
+                    const waMessage = encodeURIComponent(\`Olá Fabio! Vi sua obra "\${data.titulo}" e gostaria de produzir com você.\`);
+                    document.getElementById('whatsapp-link').href = \`https://wa.me/5532991064759?text=\${waMessage}\`;
+                    
+                    // Galeria e Links Extras
+                    const links = data.links || [];
+                    const extLinks = links.filter(l => l.type === 'external');
+                    if (extLinks.length > 0) {
+                        const list = document.getElementById('external-links-list');
+                        list.innerHTML = '';
+                        extLinks.forEach(link => {
+                            list.innerHTML += \`<a href="\${link.url}" target="_blank" class="btn-external"><span class="text-white font-bold text-sm">Abrir Link</span></a>\`;
+                        });
+                        document.getElementById('external-links-container').classList.remove('hidden');
+                    }
+                     const photos = data.fotos || [];
+                    if (photos.length > 0) {
+                        const grid = document.getElementById('gallery-grid');
+                        photos.forEach(p => {
+                            grid.innerHTML += \`<div class="gallery-item aspect-square"><img src="\${p.url}" loading="lazy"></div>\`;
+                        });
+                        document.getElementById('obra-galeria').classList.remove('hidden');
+                    }
+                    
+                    // Se tiver video Youtube, injeta o iframe no lugar da imagem estática
+                     const youtubeLink = links.find(l => l.type === 'youtube') || (data.videoUrl ? { url: data.videoUrl } : null);
+                    if (youtubeLink && youtubeLink.url.length > 5) {
+                        let vId = "";
+                        if (youtubeLink.url.includes('v=')) vId = youtubeLink.url.split('v=')[1].split('&')[0];
+                        else if (youtubeLink.url.includes('youtu.be/')) vId = youtubeLink.url.split('youtu.be/')[1].split('?')[0];
+                        document.getElementById('media-container').innerHTML = \`<iframe src="https://www.youtube.com/embed/\${vId}?rel=0" allowfullscreen></iframe>\`;
+                    }
+                }
+            }
+        }
+        load();
+        
+         window.shareSocial = async (platform) => {
+            const url = window.location.href;
+            if (platform === 'whatsapp') window.open(\`https://api.whatsapp.com/send?text=\${encodeURIComponent(url)}\`);
+            else if (platform === 'facebook') window.open(\`https://www.facebook.com/sharer/sharer.php?u=\${encodeURIComponent(url)}\`);
+            else if (platform === 'copy') { try { await navigator.clipboard.writeText(url); alert("Copiado!"); } catch(e) { alert("Erro ao copiar."); } }
+        };
+    <\/script>
+</body>
+</html>`;
+        };
+
+        const logger = document.getElementById('logger');
+        const log = (msg) => { logger.innerText += `> ${msg}\n`; logger.scrollTop = logger.scrollHeight; };
+
+        window.startGeneration = async () => {
+            const btn = document.getElementById('btn-gen');
+            btn.disabled = true;
+            btn.innerText = "GERANDO...";
+            log("Iniciando conexão com banco de dados...");
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "trabalhos"));
+                const total = querySnapshot.size;
+                log(`Encontradas ${total} obras.`);
+
+                const zip = new JSZip();
+                const folder = zip.folder("obras");
+
+                let count = 0;
+                querySnapshot.forEach((doc) => {
+                    const data = { id: doc.id, ...doc.data() };
+                    const htmlContent = getTemplate(data);
+                    folder.file(`${doc.id}.html`, htmlContent);
+                    count++;
+                    log(`Gerado: ${data.titulo} (${doc.id}.html)`);
+                });
+
+                log("Compactando arquivos...");
+                const content = await zip.generateAsync({type:"blob"});
+                
+                log("Download iniciado!");
+                saveAs(content, "obras.zip");
+                
+                log("SUCESSO! Baixe o arquivo 'obras.zip', extraia e envie a pasta 'obras' para o servidor.");
+                btn.innerText = "GERAR NOVAMENTE";
+                btn.disabled = false;
+
+            } catch (err) {
+                log("ERRO FATAL: " + err.message);
+                console.error(err);
+                btn.disabled = false;
+                btn.innerText = "TENTAR NOVAMENTE";
+            }
+        };
+    </script>
+</body>
+</html>

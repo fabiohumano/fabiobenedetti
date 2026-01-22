@@ -11,14 +11,45 @@
         .nav-glass { background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
         .bg-layer { position: fixed; inset: 0; background-size: cover; background-position: center; filter: brightness(0.15); z-index: -1; }
         
-        /* Card Styles */
-        .work-card-img-container { position: relative; overflow: hidden; border-radius: 1rem; background: #111; aspect-ratio: 16/9; border: 1px solid rgba(255,255,255,0.1); }
-        .work-card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.2, 1, 0.2, 1); }
-        .work-card:hover .work-card-img { transform: scale(1.05); }
-        .work-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); opacity: 0; transition: opacity 0.3s; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
-        .work-card:hover .work-overlay { opacity: 1; }
-        .btn-details { background: white; color: black; font-weight: 800; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; padding: 12px 24px; border-radius: 50px; transform: translateY(20px); transition: transform 0.3s; }
-        .work-card:hover .btn-details { transform: translateY(0); }
+        /* Card Vertical Styles */
+        .work-card-vertical { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 2rem; 
+            background: rgba(255,255,255,0.03); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 1.5rem; 
+            overflow: hidden; 
+            transition: all 0.4s ease;
+            margin-bottom: 4rem;
+        }
+        @media (min-width: 768px) {
+            .work-card-vertical { grid-template-columns: 1.2fr 1fr; gap: 3rem; }
+            .work-card-vertical:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); }
+        }
+
+        .work-img-box { position: relative; aspect-ratio: 16/9; overflow: hidden; }
+        .work-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease; }
+        .work-card-vertical:hover .work-img { transform: scale(1.05); }
+
+        .work-info { padding: 2rem; display: flex; flex-direction: column; justify-content: center; }
+        .btn-details { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 10px; 
+            margin-top: 2rem; 
+            background: white; 
+            color: black; 
+            font-weight: 900; 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.2em; 
+            padding: 16px 32px; 
+            border-radius: 50px; 
+            align-self: flex-start; 
+            transition: transform 0.2s;
+        }
+        .btn-details:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -36,15 +67,12 @@
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-6 pt-48 pb-20">
-        <h1 class="text-6xl md:text-9xl font-black italic tracking-tighter mb-24 uppercase leading-none">Obras <br><span class="text-neutral-800 not-italic">Assinadas.</span></h1>
+    <main class="max-w-6xl mx-auto px-6 pt-48 pb-20">
+        <h1 class="text-6xl md:text-9xl font-black italic tracking-tighter mb-24 uppercase leading-none">Obras <br><span class="text-neutral-800 not-italic">Completas.</span></h1>
         
-        <!-- Grid de Cards -->
-        <div id="portfolio-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-            <!-- Loading State -->
-            <div class="animate-pulse bg-neutral-900 rounded-2xl aspect-video"></div>
-            <div class="animate-pulse bg-neutral-900 rounded-2xl aspect-video"></div>
-            <div class="animate-pulse bg-neutral-900 rounded-2xl aspect-video"></div>
+        <!-- Lista Vertical -->
+        <div id="portfolio-list" class="flex flex-col">
+            <div class="text-neutral-500 animate-pulse text-sm font-bold tracking-widest">CARREGANDO OBRAS DO BANCO DE DADOS...</div>
         </div>
     </main>
 
@@ -73,43 +101,59 @@
         onSnapshot(collection(db, "trabalhos"), (snap) => {
             const container = document.getElementById('portfolio-list');
             if(!container) return;
-            container.innerHTML = '';
+            
             let works = [];
             snap.forEach(d => works.push({id: d.id, ...d.data()}));
             
-            // Ordenar por ordem definida no admin (drag and drop) ou fallback para data
-            works.sort((a,b) => (a.ordem ?? 0) - (b.ordem ?? 0));
-            // Como a ordem no admin é crescente visualmente mas salva numericamente, 
-            // se estiver ao contrário, inverta aqui: works.reverse(); 
-            // O padrão do admin novo salva indices maiores para os primeiros da lista.
-            // Então maior ordem = aparece primeiro. Descrescente.
+            // PROVA DE CONTAGEM NO CONSOLE
+            console.log(`[CEREBRO ADMIN] Obras encontradas no banco: ${works.length}`);
+            
+            // Ordenar por ordem definida no admin (decrescente: maior ordem primeiro)
             works.sort((a,b) => (b.ordem ?? 0) - (a.ordem ?? 0));
 
+            container.innerHTML = ''; // Limpa loading
+            
+            let renderCount = 0;
+
             works.forEach(w => {
-                // Fallback para capa: capaUrl > videoUrl (thumb) > fotoUrl (antigo)
+                // Definição da Capa (Fallback Inteligente)
                 let imageSrc = w.capaUrl;
                 if (!imageSrc && w.videoUrl) {
-                    // Tenta extrair thumb se não tiver capaUrl
                     let vId = w.videoUrl.includes('v=') ? w.videoUrl.split('v=')[1].split('&')[0] : w.videoUrl.split('youtu.be/')[1].split('?')[0];
                     if(vId) imageSrc = `https://img.youtube.com/vi/${vId}/maxresdefault.jpg`;
                 }
                 if (!imageSrc) imageSrc = w.fotoUrl || 'https://via.placeholder.com/800x450/000000/FFFFFF?text=SEM+IMAGEM';
 
+                // Link para a página estática gerada pelo "gerador.html"
+                // Caso o usuário ainda não tenha gerado, isso vai dar 404 se não existir, 
+                // mas é o requisito para o SEO funcionar.
+                const linkUrl = `obras/${w.id}.html`; 
+
                 container.innerHTML += `
-                    <div class="work-card group cursor-pointer" onclick="window.location.href='obra.html?id=${w.id}'">
-                        <div class="work-card-img-container">
-                            <img src="${imageSrc}" class="work-card-img" loading="lazy" alt="${w.titulo}">
-                            <div class="work-overlay">
-                                <span class="btn-details">Ver Detalhes</span>
-                            </div>
+                    <article class="work-card-vertical group cursor-pointer" onclick="window.location.href='${linkUrl}'">
+                        <div class="work-img-box">
+                            <img src="${imageSrc}" class="work-img" loading="lazy" alt="${w.titulo}">
                         </div>
-                        <div class="mt-6">
-                            <h2 class="text-2xl font-black italic uppercase tracking-tighter leading-none mb-2">${w.titulo}</h2>
-                            <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest block">${w.data || 'Produção'}</span>
+                        <div class="work-info">
+                            <span class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-2">${w.data || 'Produção'}</span>
+                            <h2 class="text-3xl md:text-5xl font-black italic uppercase tracking-tighter leading-none mb-4">${w.titulo}</h2>
+                            <p class="text-neutral-400 text-sm line-clamp-3 mb-4 font-light">${w.descricao || 'Sem descrição.'}</p>
+                            <span class="btn-details">
+                                Ver Detalhes
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </span>
                         </div>
-                    </div>
+                    </article>
                 `;
+                renderCount++;
             });
+
+            console.log(`[CEREBRO ADMIN] Obras renderizadas na tela: ${renderCount}`);
+            if(works.length !== renderCount) {
+                console.warn("ALERTA: O número de obras renderizadas difere do total no banco!");
+            } else {
+                console.log("SUCESSO: Todas as obras estão visíveis.");
+            }
         });
     </script>
 </body>
