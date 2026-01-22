@@ -75,7 +75,7 @@
         <div class="grid lg:grid-cols-12 gap-16">
             <div class="lg:col-span-8">
                 <!-- Área de Mídia Principal (Vídeo ou Capa) -->
-                <div id="media-container" class="feature-box aspect-video mb-8"></div>
+                <div id="media-container" class="feature-box aspect-video mb-8 bg-black flex items-center justify-center"></div>
                 
                 <!-- Barra de Compartilhamento -->
                 <div class="flex items-center gap-4 mb-12 py-4 border-y border-white/5">
@@ -120,6 +120,17 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Função segura para extrair ID do YouTube
+        function getYouTubeId(url) {
+            if (!url || typeof url !== 'string') return null;
+            try {
+                if (url.includes('v=')) return url.split('v=')[1].split('&')[0];
+                if (url.includes('youtu.be/')) return url.split('youtu.be/')[1].split('?')[0];
+                if (url.includes('/shorts/')) return url.split('/shorts/')[1].split('?')[0];
+            } catch(e) { return null; }
+            return null;
+        }
+
         async function applyPageDynamics() {
             // Identidade
             onSnapshot(doc(db, "site_content", "settings"), (snap) => {
@@ -144,12 +155,9 @@
         const urlParams = new URLSearchParams(window.location.search);
         let obraId = urlParams.get('id');
 
-        // Se estivermos em uma página estática (ex: obras/12345.html), a ID não vem pela URL
-        // O gerador irá injetar a ID no objeto window
         if (!obraId && window.STATIC_WORK_ID) {
             obraId = window.STATIC_WORK_ID;
         } else if (!obraId && window.location.pathname.includes('/obras/')) {
-            // Tenta pegar do nome do arquivo (fallback)
             const parts = window.location.pathname.split('/');
             const filename = parts[parts.length - 1];
             obraId = filename.replace('.html', '');
@@ -161,28 +169,33 @@
             const snap = await getDoc(doc(db, "trabalhos", obraId));
             if (snap.exists()) {
                 const data = snap.data();
-                currentWorkTitle = data.titulo;
+                currentWorkTitle = data.titulo || "Obra Sem Título";
                 
                 // 1. Dados Básicos
-                document.getElementById('obra-titulo').innerText = data.titulo;
+                document.getElementById('obra-titulo').innerText = data.titulo || "Sem Título";
                 document.title = `${data.titulo} | Fabio Benedetti`;
                 document.getElementById('obra-data').innerText = data.data || '2025';
-                document.getElementById('obra-descricao').innerHTML = data.descricao ? data.descricao.replace(/\n/g, '<br>') : '';
+                document.getElementById('obra-descricao').innerHTML = data.descricao ? data.descricao.replace(/\n/g, '<br>') : 'Sem descrição.';
                 
-                // 2. Lógica de Mídia Principal (Prioridade: Link Youtube > Capa)
+                // 2. Lógica de Mídia Principal (Blindada)
                 const mediaContainer = document.getElementById('media-container');
-                const links = data.links || [];
-                const youtubeLink = links.find(l => l.type === 'youtube') || (data.videoUrl ? { url: data.videoUrl } : null);
+                const links = Array.isArray(data.links) ? data.links : [];
                 
-                if (youtubeLink && youtubeLink.url.length > 5) {
-                    let vId = "";
-                    if (youtubeLink.url.includes('v=')) vId = youtubeLink.url.split('v=')[1].split('&')[0];
-                    else if (youtubeLink.url.includes('youtu.be/')) vId = youtubeLink.url.split('youtu.be/')[1].split('?')[0];
+                // Tenta encontrar link do YouTube na lista ou no campo legado videoUrl
+                let youtubeUrl = "";
+                const ytLinkObj = links.find(l => l.type === 'youtube');
+                if (ytLinkObj && ytLinkObj.url) youtubeUrl = ytLinkObj.url;
+                else if (data.videoUrl) youtubeUrl = data.videoUrl;
+
+                const vId = getYouTubeId(youtubeUrl);
+                
+                if (vId) {
                     mediaContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}?rel=0" allowfullscreen></iframe>`;
                 } else if (data.capaUrl) {
                     mediaContainer.innerHTML = `<img src="${data.capaUrl}" class="w-full h-full object-cover">`;
                 } else {
-                    mediaContainer.style.display = 'none'; // Se não tiver nada, esconde
+                    // Sem mídia
+                    mediaContainer.innerHTML = `<div class="text-neutral-600 text-xs font-bold tracking-widest uppercase">Sem mídia visual</div>`;
                 }
 
                 // 3. Links Externos
@@ -201,11 +214,13 @@
                 }
 
                 // 4. Galeria de Fotos Extra
-                const photos = data.fotos || [];
+                const photos = Array.isArray(data.fotos) ? data.fotos : [];
                 if (photos.length > 0) {
                     const grid = document.getElementById('gallery-grid');
                     photos.forEach(p => {
-                        grid.innerHTML += `<div class="gallery-item aspect-square"><img src="${p.url}" loading="lazy"></div>`;
+                        if(p.url) {
+                            grid.innerHTML += `<div class="gallery-item aspect-square"><img src="${p.url}" loading="lazy"></div>`;
+                        }
                     });
                     document.getElementById('obra-galeria').classList.remove('hidden');
                 }
@@ -217,10 +232,12 @@
                 // Revelar Conteúdo
                 document.getElementById('obra-content').classList.remove('hidden');
 
-                // Ativar share nativo se disponível
                 if (navigator.share) {
                     document.getElementById('native-share-btn').classList.remove('hidden');
                 }
+            } else {
+                 document.getElementById('obra-content').innerHTML = "<div class='text-center pt-20 text-neutral-500'>Obra não encontrada.</div>";
+                 document.getElementById('obra-content').classList.remove('hidden');
             }
         }
 

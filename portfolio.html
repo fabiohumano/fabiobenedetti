@@ -28,7 +28,7 @@
             .work-card-vertical:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); }
         }
 
-        .work-img-box { position: relative; aspect-ratio: 16/9; overflow: hidden; }
+        .work-img-box { position: relative; aspect-ratio: 16/9; overflow: hidden; background: #111; }
         .work-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease; }
         .work-card-vertical:hover .work-img { transform: scale(1.05); }
 
@@ -84,7 +84,20 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Identidade
+        // Função segura para extrair ID do YouTube
+        function getYouTubeId(url) {
+            if (!url || typeof url !== 'string') return null;
+            try {
+                if (url.includes('v=')) return url.split('v=')[1].split('&')[0];
+                if (url.includes('youtu.be/')) return url.split('youtu.be/')[1].split('?')[0];
+                if (url.includes('/shorts/')) return url.split('/shorts/')[1].split('?')[0];
+            } catch(e) { 
+                console.warn("Erro ao processar URL:", url);
+                return null; 
+            }
+            return null;
+        }
+
         onSnapshot(doc(db, "site_content", "settings"), (snap) => {
             if(snap.exists()) {
                 const d = snap.data();
@@ -105,36 +118,46 @@
             let works = [];
             snap.forEach(d => works.push({id: d.id, ...d.data()}));
             
-            // PROVA DE CONTAGEM NO CONSOLE
-            console.log(`[CEREBRO ADMIN] Obras encontradas no banco: ${works.length}`);
+            // LOG DE PROVA
+            console.log(`[CEREBRO ADMIN] Total carregado do banco: ${works.length}`);
             
             // Ordenar por ordem definida no admin (decrescente: maior ordem primeiro)
             works.sort((a,b) => (b.ordem ?? 0) - (a.ordem ?? 0));
 
-            container.innerHTML = ''; // Limpa loading
+            container.innerHTML = ''; 
             
             let renderCount = 0;
 
             works.forEach(w => {
-                // Definição da Capa (Fallback Inteligente)
+                // Definição da Capa (Blindada contra erros)
                 let imageSrc = w.capaUrl;
+                
+                // Se não tem capa manual, tenta extrair do YouTube
                 if (!imageSrc && w.videoUrl) {
-                    let vId = w.videoUrl.includes('v=') ? w.videoUrl.split('v=')[1].split('&')[0] : w.videoUrl.split('youtu.be/')[1].split('?')[0];
-                    if(vId) imageSrc = `https://img.youtube.com/vi/${vId}/maxresdefault.jpg`;
+                    const vId = getYouTubeId(w.videoUrl);
+                    if(vId) {
+                        imageSrc = `https://img.youtube.com/vi/${vId}/maxresdefault.jpg`;
+                    }
                 }
-                if (!imageSrc) imageSrc = w.fotoUrl || 'https://via.placeholder.com/800x450/000000/FFFFFF?text=SEM+IMAGEM';
+                
+                // Fallback final se nada funcionar
+                if (!imageSrc) imageSrc = w.fotoUrl || 'https://via.placeholder.com/800x450/000000/FFFFFF?text=SEM+MIDIA';
 
-                // CORREÇÃO: Link Dinâmico para evitar 404
                 const linkUrl = `obra.html?id=${w.id}`; 
 
+                // HTML seguro com onerror para fallback de thumbnail
                 container.innerHTML += `
                     <article class="work-card-vertical group cursor-pointer" onclick="window.location.href='${linkUrl}'">
                         <div class="work-img-box">
-                            <img src="${imageSrc}" class="work-img" loading="lazy" alt="${w.titulo}">
+                            <img src="${imageSrc}" 
+                                 class="work-img" 
+                                 loading="lazy" 
+                                 alt="${w.titulo || 'Obra'}"
+                                 onerror="if(this.src.includes('maxresdefault')) { this.src = this.src.replace('maxresdefault','hqdefault'); } else { this.style.display='none'; }">
                         </div>
                         <div class="work-info">
                             <span class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-2">${w.data || 'Produção'}</span>
-                            <h2 class="text-3xl md:text-5xl font-black italic uppercase tracking-tighter leading-none mb-4">${w.titulo}</h2>
+                            <h2 class="text-3xl md:text-5xl font-black italic uppercase tracking-tighter leading-none mb-4">${w.titulo || 'Sem Título'}</h2>
                             <p class="text-neutral-400 text-sm line-clamp-3 mb-4 font-light">${w.descricao || 'Sem descrição.'}</p>
                             <span class="btn-details">
                                 Ver Detalhes
@@ -146,7 +169,11 @@
                 renderCount++;
             });
 
-            console.log(`[CEREBRO ADMIN] Obras renderizadas na tela: ${renderCount}`);
+            console.log(`[CEREBRO ADMIN] Total cards renderizados: ${renderCount}`);
+            
+            if(works.length !== renderCount) {
+                console.warn("ALERTA: Divergência na renderização. Verifique os logs.");
+            }
         });
     </script>
 </body>
