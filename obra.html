@@ -242,26 +242,32 @@
         }
 
         // Lógica de Compartilhamento Global
+        // ATUALIZADA: Aponta para a pasta /share/ para garantir o preview
         window.shareSocial = async (platform) => {
-            const url = window.location.href;
+            const baseUrl = window.location.origin; // https://fabiobenedetti.com.br
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            
+            // O link de compartilhamento aponta para a pasta estática
+            const shareUrl = id ? `${baseUrl}/share/${id}.html` : window.location.href;
             const text = `Confira esta obra de Fabio Benedetti: ${currentWorkTitle}`;
             
             if (platform === 'whatsapp') {
-                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`);
+                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + shareUrl)}`);
             } else if (platform === 'facebook') {
-                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`);
             } else if (platform === 'copy') {
                 try {
-                    await navigator.clipboard.writeText(url);
-                    alert("Link copiado para a área de transferência!");
+                    await navigator.clipboard.writeText(shareUrl);
+                    alert("Link de compartilhamento copiado!");
                 } catch(e) {
-                    alert("Erro ao copiar. Copie manualmente a URL.");
+                    alert("Erro ao copiar. Copie: " + shareUrl);
                 }
             } else if (platform === 'native' && navigator.share) {
                 navigator.share({
                     title: document.title,
                     text: text,
-                    url: url
+                    url: shareUrl
                 }).catch(console.error);
             }
         };

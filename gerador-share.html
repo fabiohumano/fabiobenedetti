@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cérebro | Gerador de Links de Compartilhamento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        body { background: #0f172a; color: white; font-family: sans-serif; padding: 2rem; }
+        .card { background: #1e293b; border: 1px solid #334155; padding: 2rem; border-radius: 1rem; max-width: 600px; mx-auto; margin-bottom: 2rem; }
+        .btn { background: #2563eb; color: white; font-weight: bold; padding: 1rem 2rem; border-radius: 0.5rem; width: 100%; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background: #1d4ed8; }
+        .log { font-family: monospace; font-size: 0.8rem; color: #94a3b8; margin-top: 1rem; height: 200px; overflow-y: auto; background: #000; padding: 1rem; border-radius: 0.5rem; }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-2xl mx-auto text-center mb-10">
+        <h1 class="text-3xl font-black italic mb-2">GERADOR DE COMPARTILHAMENTO</h1>
+        <p class="text-slate-400">Esta ferramenta cria arquivos leves para garantir que a foto e o título apareçam no WhatsApp/Facebook.</p>
+    </div>
+
+    <div class="card">
+        <h2 class="font-bold mb-4 text-xl">Instruções</h2>
+        <ol class="list-decimal pl-5 space-y-2 text-slate-300 mb-8 text-sm">
+            <li>Clique no botão abaixo.</li>
+            <li>O sistema vai baixar um arquivo <strong>share.zip</strong>.</li>
+            <li>Extraia o arquivo no seu computador.</li>
+            <li>Envie a pasta <strong>share</strong> inteira para a Hostinger (na raiz, junto com index.html).</li>
+        </ol>
+        <button onclick="startGeneration()" id="btn-gen" class="btn">GERAR ARQUIVOS DE SHARE</button>
+        <div id="logger" class="log">Aguardando início...</div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyDhSp-QPDZI2AbNrYdZO447NKTF2PMYjlQ", authDomain: "humano-studio.firebaseapp.com", projectId: "humano-studio", storageBucket: "humano-studio.firebasestorage.app", messagingSenderId: "938534325822", appId: "1:938534325822:web:abf5443336ce3224190b6f" };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Helper para extrair ID do Youtube
+        function getYouTubeId(url) {
+            if (!url || typeof url !== 'string') return null;
+            try {
+                if (url.includes('v=')) return url.split('v=')[1].split('&')[0];
+                if (url.includes('youtu.be/')) return url.split('youtu.be/')[1].split('?')[0];
+            } catch(e) { return null; }
+            return null;
+        }
+
+        const getTemplate = (work) => {
+            // Lógica de Capa (Idêntica ao site principal)
+            let imageSrc = work.capaUrl;
+            
+            // Se não tem capa manual, tenta vídeo
+            if (!imageSrc && work.videoUrl) {
+                const vId = getYouTubeId(work.videoUrl);
+                if(vId) imageSrc = `https://img.youtube.com/vi/${vId}/maxresdefault.jpg`;
+            }
+            
+            // Fallback
+            if (!imageSrc) imageSrc = 'https://fabiobenedetti.com.br/img/default-share.jpg';
+
+            const title = `${work.titulo} | Fabio Benedetti`;
+            const description = work.descricao ? work.descricao.substring(0, 150).replace(/"/g, '&quot;') + '...' : 'Produção Musical por Fabio Benedetti.';
+            
+            // URL Final para onde o arquivo vai redirecionar
+            const finalDestination = `https://fabiobenedetti.com.br/obra.html?id=${work.id}`;
+
+            return `<!DOCTYPE html>
+<html lang="pt-BR" prefix="og: http://ogp.me/ns#">
+<head>
+    <meta charset="UTF-8">
+    <title>${title}</title>
+    
+    <!-- Meta Tags para Robôs (WhatsApp, Facebook, LinkedIn) -->
+    <meta property="og:title" content="${title}">
+    <meta property="og:description" content="${description}">
+    <meta property="og:image" content="${imageSrc}">
+    <meta property="og:url" content="${finalDestination}">
+    <meta property="og:type" content="article">
+    <meta property="og:image:width" content="1280">
+    <meta property="og:image:height" content="720">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${title}">
+    <meta name="twitter:description" content="${description}">
+    <meta name="twitter:image" content="${imageSrc}">
+
+    <!-- Redirecionamento para Humanos -->
+    <script>
+        window.location.replace("${finalDestination}");
+    <\/script>
+    
+    <!-- Fallback se JS estiver desativado -->
+    <meta http-equiv="refresh" content="0;url=${finalDestination}">
+</head>
+<body style="background:#000; color:#fff; font-family:sans-serif; text-align:center; padding-top:50px;">
+    <p>Redirecionando para a obra...</p>
+    <a href="${finalDestination}" style="color:#fff;">Clique aqui se não for redirecionado</a>
+</body>
+</html>`;
+        };
+
+        const logger = document.getElementById('logger');
+        const log = (msg) => { logger.innerText += `> ${msg}\n`; logger.scrollTop = logger.scrollHeight; };
+
+        window.startGeneration = async () => {
+            const btn = document.getElementById('btn-gen');
+            btn.disabled = true;
+            btn.innerText = "GERANDO...";
+            log("Conectando ao banco de dados...");
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "trabalhos"));
+                const total = querySnapshot.size;
+                log(`Processando ${total} obras...`);
+
+                const zip = new JSZip();
+                const folder = zip.folder("share"); // Cria a pasta 'share' dentro do zip
+
+                let count = 0;
+                querySnapshot.forEach((doc) => {
+                    const data = { id: doc.id, ...doc.data() };
+                    const htmlContent = getTemplate(data);
+                    
+                    // Salva como ID.html dentro da pasta share
+                    folder.file(`${doc.id}.html`, htmlContent);
+                    
+                    count++;
+                    log(`Gerado: ${data.titulo}`);
+                });
+
+                log("Compactando (isso pode levar alguns segundos)...");
+                const content = await zip.generateAsync({type:"blob"});
+                
+                log("Download iniciado!");
+                saveAs(content, "share.zip");
+                
+                log("SUCESSO! Extraia 'share.zip' e envie a pasta 'share' para a Hostinger.");
+                btn.innerText = "GERAR NOVAMENTE";
+                btn.disabled = false;
+
+            } catch (err) {
+                log("ERRO: " + err.message);
+                console.error(err);
+                btn.disabled = false;
+                btn.innerText = "TENTAR NOVAMENTE";
+            }
+        };
+    </script>
+</body>
+</html>
